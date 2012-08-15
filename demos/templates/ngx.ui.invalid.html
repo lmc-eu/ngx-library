@@ -1,0 +1,8 @@
+<fieldset>
+	<legend>INVALID</legend>
+	<form name="form_invalid">
+		<label>enter number:</label> <input type="number" ng-model="invalid.text" name="text" required="" min="1" max="5"/>
+		<div ngx-invalid data-input="form_invalid.text" data-error="required">REQUIRED</div>
+		<div ngx-invalid data-input="form_invalid.text" data-error="number">INVALID NUMBER</div>
+	</form>
+</fieldset>

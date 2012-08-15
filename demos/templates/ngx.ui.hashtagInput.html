@@ -1,0 +1,9 @@
+<fieldset>
+	<legend>HASH TAG</legend>
+	<form name="form_hashtag">
+		<input type="text" ng-model="hashtag" ngx-hashtag-input name="hashtag" required=""/>
+		<ngx-invalid input="form_hashtag.hashtag" error="required">REQUIRED</ngx-invalid>
+		<ngx-invalid input="form_hashtag.hashtag" error="hashtag">INVALID HASH TAG</ngx-invalid>
+	</form>
+	<pre>{{hashtag}}</pre>
+</fieldset>

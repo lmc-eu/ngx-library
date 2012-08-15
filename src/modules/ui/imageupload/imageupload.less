@@ -1,0 +1,74 @@
+.ngx-imageupload {
+	.content {
+		padding: 0px 10px;
+	}
+	.source {
+		float: right;
+		width: 350px;
+		height: 300px;
+		text-align: center;
+		border: 1px dotted #ccc;
+	}
+	.no-crop .source {
+		float: none !important;
+		margin: 0 auto !important;
+		height: 120px !important;
+	}
+	.result {
+		float: left;
+		width: 215px;
+		text-align: center;
+
+		span {
+			color: #aaa;
+			padding-top: 2px;
+			display: block;
+			clear: both;
+		}
+		.blank {
+			border: 1px dotted #ccc;
+			width: 100%;
+			height: 100%;
+			background-color: white;
+		}
+	}
+	.dragdrop {
+		text-align: center;
+		line-height: 200%;
+		padding-top: 90px;
+
+		span {
+			display: block;
+			margin: 14px auto;
+		}
+	}
+	.no-fileapi .dragdrop {
+		padding-top: 27px !important;
+	}
+	.select {
+		position: relative;
+		overflow: hidden;
+		color: #0183C0;
+
+		input[type=file] {
+			position: absolute;
+			right: 0pt;
+			top: 0pt;
+			z-index: 1;
+			font-size: 460px;
+			margin: 0pt;
+			padding: 0pt;
+			cursor: pointer;
+			opacity: 0;
+			filter: alpha(opacity=0);
+		}
+	}
+	img {
+		border: 1px dotted #ccc;
+		display: block;
+		margin: 0 auto;
+	}
+	.jcrop-holder {
+		margin: 0 auto;
+	}
+}

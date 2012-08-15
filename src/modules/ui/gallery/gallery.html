@@ -1,0 +1,11 @@
+<div class="ngx-gallery" ng-cloak>
+    <ul class="items" ng-show="items.length">
+        <li class="item item-{{i.type}}" ng-repeat="i in items">
+            <a ng-href="{{i.src}}" ngx-lightbox="ngx-gallery" title="{{i.title}}">
+                <img ng-src="{{src(i)}}" />
+                <span></span>
+            </a>
+        </li>
+    </ul>
+    <div ng-transclude></div>
+</div>

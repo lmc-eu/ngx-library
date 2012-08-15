@@ -1,0 +1,24 @@
+{
+	"author": "https://github.com/pdanis",
+	"name": "ngx",
+	"description": "NGX - extension library for AngularJS",
+	"version": "0.0.1",
+	"homepage": "http://github.com/pdanis/ngx",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/pdanis/ngx.git"
+	},
+	"engines": {
+		"node": ">= 0.6.11"
+	},
+	"dependencies": {
+	},
+	"devDependencies": {
+		"grunt-recess": ">=0.1.0",
+		"rimraf": ">=2.0.2"
+	},
+	"paths": {
+		"src": "src/",
+		"dist": "dist/"
+	}
+}

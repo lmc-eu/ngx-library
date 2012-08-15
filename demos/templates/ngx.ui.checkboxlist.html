@@ -1,0 +1,13 @@
+<fieldset rel="checkboxlist">
+	<legend>CHECKBOXLIST</legend>
+	<form name="form_checkboxList">
+		<label ng-repeat="(key, value) in checkboxlist.items">
+			<input type="checkbox" name="checkbox" ng-model="checkboxlist.selected" value="{{key}}" ngx-checkboxlist ngx-checkboxlist-min="1"/>
+			{{value}}
+		</label>
+	</form>
+	<div ngx-invalid input="form_checkboxList.checkbox" error="min">
+		CHECKBOXLIST MIN ERROR
+	</div>
+	<pre>{{checkboxlist|json}}</pre>
+</fieldset>

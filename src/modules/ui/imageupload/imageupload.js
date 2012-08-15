@@ -1,0 +1,289 @@
+(function(angular) {
+    var module = angular.module('ngx.ui.imageupload', ['ngx.loader']);
+
+    /**
+     * Compute resize ratio by width/height
+     * @param width
+     * @param maxWidth
+     * @param height
+     * @param maxHeight
+     * @return {Number}
+     */
+    function resizeRatio(width, maxWidth, height, maxHeight) {
+        var ratio = [1];
+
+        if (width > maxWidth) {
+            ratio.push(maxWidth / width);
+        }
+        if (height > maxHeight) {
+            ratio.push(maxHeight / height);
+        }
+
+        ratio.sort();
+        return ratio[0];
+    }
+
+    /**
+     * Image uploader
+     */
+    module.directive('ngxImageupload', ['$timeout', 'ngxConfig', 'ngxLoader', function($timeout, ngxConfig, ngxLoader) {
+        // load libraries
+        ngxLoader([
+            ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.js',
+            ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.css',
+            ngxConfig.libsPath + 'jquery.fileupload/jquery.fileupload.js',
+            ngxConfig.libsPath + 'jquery.iframe-transport/jquery.iframe-transport.js'
+        ]);
+
+        return {
+            restrict: 'E',
+            replace: true,
+            require: 'ngModel',
+            templateUrl: ngxConfig.templatesPath + 'ui/imageupload/imageupload.html',
+            scope: {
+                model: '=ngModel',
+                config: '='
+            },
+            link: function(scope, element, attrs) {
+                var sourceScale,
+                    thumbScale,
+                    thumbCanvas = $('<canvas/>')[0],    // thumb canvas
+                    resultScale,
+                    resultImage,
+                    resultCanvas = $('<canvas/>')[0],   // result canvas for cropping
+                    resultFixed,
+                    resultMime;
+
+                // HTML5 feature detection
+                var features = {
+                    crop: (resultCanvas.getContext ? true : false),
+                    fileApi: (typeof window.FileReader !== 'undefined')
+                };
+
+                /**
+                 * Resets state
+                 */
+                function reset() {
+                    resultImage = undefined;
+                    scope.isSource = false;
+                }
+
+                /**
+                 * Image display handler (when image loaded)
+                 * @param sourceImage
+                 */
+                function showSourceImage(sourceImage) {
+                    var $sourceImage = $(sourceImage),
+                        sourceWidth = ($sourceImage.data('width') ? $sourceImage.data('width') : sourceImage.width),
+                        sourceHeight = ($sourceImage.data('height') ? $sourceImage.data('height') : sourceImage.height);
+
+                    // set isSource flag
+                    scope.isSource = (sourceImage ? true : false);
+
+                    // set source image width/height
+                    $sourceImage.css({
+                        'max-width': sourceScale[0] + 'px',
+                        'max-height': sourceScale[1] + 'px'
+                    }).show();
+
+                    if (features.crop) {
+                        var cropRatio = resizeRatio(sourceWidth, sourceScale[0], sourceHeight, sourceScale[1]),
+                            cropOptions = {
+                                setSelect: [0, 0, resultScale[0], resultScale[1]],
+                                bgColor: 'transparent',
+                                onSelect: function(coords) {
+                                    // apply source ratio to cropped content
+                                    coords.x = Math.floor(coords.x / cropRatio);
+                                    coords.y = Math.floor(coords.y / cropRatio);
+                                    coords.w = Math.floor(coords.w / cropRatio);
+                                    coords.h = Math.floor(coords.h / cropRatio);
+
+                                    function createResult(canvas, width, height, image) {
+                                        if (!resultFixed) {
+                                            var ratio = resizeRatio(coords.w, width, coords.h, height);
+                                            width = Math.floor(coords.w * ratio);
+                                            height = Math.floor(coords.h * ratio);
+                                        }
+
+                                        canvas.width = width;
+                                        canvas.height = height;
+
+                                        if (image) {
+                                            image.width = width;
+                                            image.height = height;
+                                        }
+
+                                        //canvas.getContext('2d').scale(scale, scale);
+
+                                        // draw result image into canvas
+                                        canvas.getContext('2d').drawImage(
+                                            sourceImage,
+                                            coords.x, coords.y,
+                                            coords.w - 1, coords.h - 1,
+                                            0, 0, width, height
+                                        );
+
+                                        return canvas.toDataURL(resultMime, 0.9);
+                                    }
+
+                                    // result image data
+                                    resultImage = {};
+                                    resultImage.src = createResult(resultCanvas, resultScale[0], resultScale[1], resultImage);
+
+                                    // generate thumbnail
+                                    if (thumbScale) {
+                                        resultImage.thumbSrc = createResult(thumbCanvas, thumbScale[0], thumbScale[1]);
+                                    }
+
+                                    // set result image
+                                    $('[data-imageupload-rel=result]').attr(resultImage);
+                                }
+                            };
+
+                        if (resultFixed) {
+                            cropOptions.aspectRatio = (resultScale[0] / resultScale[1]);
+                        }
+
+                        // destroy previously created Jcrop
+                        var jcrop = $sourceImage.data('Jcrop');
+                        if (jcrop) {
+                            jcrop.destroy();
+                        }
+
+                        // initialize Jcrop
+                        $sourceImage.Jcrop(cropOptions, function() {
+                            // fire cropHandler on start (plugin does not do it)
+                            cropOptions.onSelect(this.tellSelect());
+                        });
+                    } else {
+                        // result image = source image
+                        resultImage = {
+                            width: sourceWidth,
+                            height: sourceHeight,
+                            'src': $sourceImage.attr('src')
+                        };
+                    }
+                }
+
+                /**
+                 * Setup imageupload
+                 */
+                function setup() {
+                    var $element = $(element);
+
+                    var config = angular.extend({}, scope.config, attrs);
+                    sourceScale = (config.sourceScale || attrs.sourceScale || '400x400').split('x');
+                    resultScale = (config.resultScale || '215x125').split('x');
+                    resultFixed = !angular.isUndefined(config.resultFixed);
+                    resultMime = 'image/' + ((config.resultFormat || '').match(/^jpe?g$/) ? 'jpeg' : 'png');
+                    thumbScale = (config.resultThumbScale || undefined);
+
+                    if (thumbScale) {
+                        thumbScale = thumbScale.split('x');
+                    }
+
+                    reset();
+
+                    // setup preview containers
+                    $element.find('.source').css({
+                        width: sourceScale[0] + 'px',
+                        height: sourceScale[1] + 'px'
+                    });
+                    $element.find('.result').css({
+                        width: resultScale[0] + 'px',
+                        height: resultScale[1] + 'px'
+                    });
+
+                    // HTML5 features into scope
+                    scope.features = features;
+                    scope.featureClass = [];
+                    angular.forEach(['crop', 'fileApi'], function(feature) {
+                        scope.featureClass.push(features[feature] ? feature : 'no-' + feature.toLowerCase());
+                    });
+                    scope.featureClass = scope.featureClass.join(' ');
+
+                    // in dialog?
+                    if (attrs.dialogTrigger) {
+                        // bind dialog trigger
+                        $(attrs.dialogTrigger).click(function(e) {
+                            e.preventDefault();
+                            $element.dialog('open');
+                            return false;
+                        });
+
+                        // initialize dialog
+                        $element.dialog({
+                            autoOpen: false,
+                            minWidth: parseInt(sourceScale[0], 10) + parseInt(resultScale[0], 10) + 70,
+                            minHeight: parseInt(sourceScale[1] > resultScale[1] ? sourceScale[1] : resultScale[1], 10) + 50,
+                            resizable: false,
+                            title: attrs.dialogTitle,
+                            buttons: {
+                                'Zrušit': function() {
+                                    reset();
+                                    scope.$apply();
+                                    $(this).dialog('close');
+                                },
+                                'Nahrát': function() {
+                                    scope.model = (attrs.resultMode === 'simple' ? resultImage.src : resultImage);
+                                    reset();
+                                    scope.$apply();
+                                    $(this).dialog('close');
+                                }
+                            }
+                        });
+                    }
+
+                    // initialize fileupload
+                    $element.fileupload({
+                        url: attrs.sourceContentUrl,
+                        fileInput: $element.find('input[type=file]'),
+                        dropZone: $('[data-imageupload-rel=dragdrop]'),
+                        dataType: 'json',
+                        replaceFileInput: true,
+                        formData: {
+                            crop: (features.crop ? 'true' : 'false')
+                        },
+
+                        // when file added
+                        add: function(e, data) {
+                            var file = data.files[0],
+                                image = $('[data-imageupload-rel=source]')[0];
+
+                            $(image).hide();
+
+                            image.onload = function() {
+                                showSourceImage(this);
+                                scope.$apply();
+                            };
+                            image.onerror = function() {
+                                alert('Neplatný obrázek');
+                            };
+
+                            // try read file with FileAPI
+                            if (features.fileApi) {
+                                var fileReader = new FileReader();
+                                fileReader.onload = function(e) {
+                                    image.src = e.target.result;
+                                };
+                                fileReader.readAsDataURL(file);
+
+                            } else {
+                                // upload file to server and get content.. IE8 :-|
+                                data.submit()
+                                    .success(function(result) {
+                                        $(image).data('width', result.width).data('height', result.height);
+                                        image.src = result.source;
+                                    }).error(function() {
+                                        alert('Chyba při zpracování obrázku anebo neplatný obrázek');
+                                    });
+                            }
+                        }
+                    });
+                }
+
+                $timeout(setup, 0);
+            }
+        };
+    }]);
+})(angular);

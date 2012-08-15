@@ -1,0 +1,6 @@
+<fieldset>
+	<legend>GEO MAP</legend>
+	WGS84: <input type="text" ng-model="coords.lat"/> / <input type="text" ng-model="coords.lon"/>
+	<div ngx-geomap data-coords="{{coords.lat}},{{coords.lon}}" style="width: 500px; height: 200px; margin-top: 10px"></div>
+	<pre>{{geomap|json}}</pre>
+</fieldset>
