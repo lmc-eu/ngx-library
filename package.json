@@ -1,12 +1,12 @@
 {
-	"author": "https://github.com/pdanis",
-	"name": "ngx",
+	"author": "https://github.com/lmc-eu",
+	"name": "ngx-library",
 	"description": "NGX - extension library for AngularJS",
 	"version": "0.0.1",
-	"homepage": "http://github.com/pdanis/ngx",
+	"homepage": "http://github.com/lmc-eu/ngx-library",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/pdanis/ngx.git"
+		"url": "git://github.com/lmc-eu/ngx-library.git"
 	},
 	"engines": {
 		"node": ">= 0.6.11"

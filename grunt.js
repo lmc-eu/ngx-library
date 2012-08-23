@@ -17,7 +17,7 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: ['<banner:meta.banner>', 'src/ngx.js', 'src/**/*.js'],
-                dest: 'build/<%= pkg.name %>.js'
+                dest: 'build/ngx.js'
             }
         },
         clean: {
@@ -34,20 +34,20 @@ module.exports = function(grunt) {
         min: {
             dist: {
                 src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-                dest: 'build/<%= pkg.name %>.min.js'
+                dest: 'build/ngx.min.js'
             }
         },
         recess: {
             dist_css: {
                 src: 'src/**/*.less',
-                dest: 'build/styles/<%= pkg.name %>.css',
+                dest: 'build/styles/ngx.css',
                 options: {
                     compile: true
                 }
             },
             dist_min: {
                 src: '<config:recess.dist_css.dest>',
-                dest: 'build/styles/<%= pkg.name %>.min.css',
+                dest: 'build/styles/ngx.min.css',
                 options: {
                     compress: true
                 }
