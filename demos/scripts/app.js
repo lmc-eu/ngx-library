@@ -82,7 +82,7 @@
         };
 
         $scope.getContentClass = function() {
-            return ($scope.module ? $scope.module.replace('.', '-', 'g') : '');
+            return ($scope.module ? $scope.module.replace(/\./g, '-') : '');
         };
     }]);
 
