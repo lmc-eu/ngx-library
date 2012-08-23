@@ -2,7 +2,7 @@
 	<legend>ADDRESS</legend>
 	<form name="form_address">
 		<input type="text" name="address" ng-model="address" required=""
-			   ngx-address-input data-geomap="#address_map" />
+			   ngx-address-input data-geomap="#map_canvas" />
 		<img id="address_spinner" ng-show="form_address.address.loading" src="http://www.jobs.cz/images/preloader.gif"/>
 		<div ngx-invalid="form_address.address required">
 			NO ADDRESS
@@ -19,7 +19,7 @@
 			</span>
 		</div>
 	</form>
-	<div ngx-geomap id="address_map" style="width: 500px; height: 250px"></div>
+	<div ngx-geomap id="map_canvas" style="width: 500px; height: 250px"></div>
 	<pre>
 		{{address|json}}
 	</pre>

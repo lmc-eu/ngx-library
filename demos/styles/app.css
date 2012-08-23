@@ -11,35 +11,14 @@ input:invalid, textarea:invalid {
     box-shadow: none;
 }
 
-* {
-    font: 12pt Arial;
-    margin: 0;
-    padding: 0;
-}
 a img {
     border: 0;
-}
-fieldset {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    background-color: #f0f0f0;
-    padding: 10px;
-}
-legend {
-    font-weight: bold
 }
 pre {
     background-color: #fefefe;
     padding: 10px;
     font: 12pt "Courier New";
     margin-top: 10px;
-}
-h1 {
-    font-size: 40px;
-    font-weight: bold;
-    font-style: italic;
-    text-align: center;
-    margin-bottom: 15px;
 }
 
 
