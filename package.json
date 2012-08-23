@@ -16,9 +16,5 @@
 	"devDependencies": {
 		"grunt-recess": ">=0.1.0",
 		"rimraf": ">=2.0.2"
-	},
-	"paths": {
-		"src": "src/",
-		"dist": "dist/"
 	}
 }

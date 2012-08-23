@@ -1,49 +1,53 @@
-/*global module:false*/
 module.exports = function(grunt) {
     // tasks
-    grunt.loadTasks('build/tasks');
+    grunt.loadTasks('grunt/tasks');
     grunt.loadNpmTasks('grunt-recess');
 
     // configuration
     grunt.initConfig({
         pkg: '<json:package.json>',
         meta: {
-            banner: '/**\n' + ' * <%= pkg.description %>\n' + ' * @version v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %>\n' + ' * @link <%= pkg.homepage %>\n' + ' * @license MIT License, http://www.opensource.org/licenses/MIT\n' + ' */'
+            banner: '/**\n' +
+                ' * <%= pkg.description %>\n' +
+                ' * @version v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+                ' * @link <%= pkg.homepage %>\n' +
+                ' * @license MIT License, http://www.opensource.org/licenses/MIT\n' +
+                ' */'
         },
         concat: {
             dist: {
                 src: ['<banner:meta.banner>', 'src/ngx.js', 'src/**/*.js'],
-                dest: 'dist/<%= pkg.name %>.js'
+                dest: 'build/<%= pkg.name %>.js'
             }
         },
         clean: {
-            dist: ['dist/']
+            dist: ['build/']
         },
         copy: {
             dist: {
                 files: {
-                    'dist/templates/ui': ['src/modules/ui/**/*.html'],
-                    'dist/libs': ['libs/**']
+                    'build/templates/ui': ['src/modules/ui/**/*.html'],
+                    'build/libs': ['libs/**']
                 }
             }
         },
         min: {
             dist: {
                 src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-                dest: 'dist/<%= pkg.name %>.min.js'
+                dest: 'build/<%= pkg.name %>.min.js'
             }
         },
         recess: {
-            dist_basic: {
+            dist_css: {
                 src: 'src/**/*.less',
-                dest: 'dist/styles/<%= pkg.name %>.css',
+                dest: 'build/styles/<%= pkg.name %>.css',
                 options: {
                     compile: true
                 }
             },
             dist_min: {
-                src: '<config:recess.dist_basic.dest>',
-                dest: 'dist/styles/<%= pkg.name %>.min.css',
+                src: '<config:recess.dist_css.dest>',
+                dest: 'build/styles/<%= pkg.name %>.min.css',
                 options: {
                     compress: true
                 }
