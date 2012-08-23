@@ -7,16 +7,16 @@
      * Tags input
      */
     module.directive('ngxTagsInput', ['$http', '$filter', '$timeout', 'ngxConfig', 'ngxLoader', function($http, $filter, $timeout, ngxConfig, ngxLoader) {
-        ngxLoader([
+        var deps = [
             ngxConfig.libsPath + 'jquery.tagsinput/jquery.tagsinput.js',
             ngxConfig.libsPath + 'jquery.tagsinput/jquery.tagsinput.css'
-        ]);
+        ];
 
         var counter = 0;
 
         return {
             require: 'ngModel',
-            compile: function(element, attrs) {
+            link: function(scope, element, attrs, ctrl) {
                 // maximum allowed tags count
                 var maxCount = parseInt(attrs.ngxTagsMaxCount ? attrs.ngxTagsMaxCount : attrs.ngxTags, 10);
 
@@ -48,32 +48,32 @@
                     }
                 } : null);
 
-                // apply tagsInput plugin ... cannot be used in linking phase due to unexpected DOM transformations
-                element.tagsInput({
-                    autocomplete_url: (autocomplete ? autocomplete.url : undefined),
-                    autocomplete: (autocomplete && autocomplete.url ? { source: autocomplete.source, minLength: 2 } : undefined),
-                    maxChars: 30,
-                    maxCount: parseInt(maxCount, 10),
-                    width: null,
-                    height: null,
-                    defaultText: '',
-                    onChange: function(tagsInput) {
-                        var handler = element.data('ngx.tagsInput.onchange');
-                        if (handler) {
-                            handler($(tagsInput).val());
+                ngxLoader(deps, function() {
+                    // apply tagsInput plugin ... cannot be used in linking phase due to unexpected DOM transformations
+                    element.tagsInput({
+                        autocomplete_url: (autocomplete ? autocomplete.url : undefined),
+                        autocomplete: (autocomplete && autocomplete.url ? { source: autocomplete.source, minLength: 2 } : undefined),
+                        maxChars: 30,
+                        maxCount: parseInt(maxCount, 10),
+                        width: null,
+                        height: null,
+                        defaultText: '',
+                        onChange: function(tagsInput) {
+                            var handler = element.data('ngx.tagsInput.onchange');
+                            if (handler) {
+                                handler($(tagsInput).val());
+                            }
                         }
-                    }
-                });
-
-                // trigger original input focus/blur event callbacks on plugin input element
-                var tagElement = $('#' + attrs.id + '_tag');
-                angular.forEach(['focus', 'blur'], function(event) {
-                    tagElement.bind(event, function() {
-                        element.triggerHandler(event, [this]);
                     });
-                });
 
-                return function(scope, element, attrs, ctrl) {
+                    // trigger original input focus/blur event callbacks on plugin input element
+                    var tagElement = $('#' + attrs.id + '_tag');
+                    angular.forEach(['focus', 'blur'], function(event) {
+                        tagElement.bind(event, function() {
+                            element.triggerHandler(event, [this]);
+                        });
+                    });
+
                     // string view value <=> array model value
                     ctrl.$parsers.push(function(value) {
                         if (typeof(value) === 'string' && value.length) {
@@ -101,7 +101,7 @@
                             ctrl.$setViewValue(value);
                         }, 0);
                     });
-                };
+                });
             }
         };
     }]);

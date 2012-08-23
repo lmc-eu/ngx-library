@@ -29,13 +29,12 @@
      * Image uploader
      */
     module.directive('ngxImageupload', ['$timeout', 'ngxConfig', 'ngxLoader', function($timeout, ngxConfig, ngxLoader) {
-        // load libraries
-        ngxLoader([
+        var deps = [
             ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.js',
             ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.css',
             ngxConfig.libsPath + 'jquery.fileupload/jquery.fileupload.js',
             ngxConfig.libsPath + 'jquery.iframe-transport/jquery.iframe-transport.js'
-        ]);
+        ];
 
         return {
             restrict: 'E',
@@ -284,7 +283,13 @@
                     });
                 }
 
-                $timeout(setup, 0);
+                element.hide();
+
+                // load libraries
+                ngxLoader(deps, function() {
+                    element.show();
+                    $timeout(setup, 0);
+                });
             }
         };
     }]);

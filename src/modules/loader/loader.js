@@ -1,15 +1,19 @@
-(function(angular) {
+(function(angular, head) {
     'use strict';
 
-    var module = angular.module('ngx.loader', ['ngx']),
-        loaded = [];
+    var module = angular.module('ngx.loader', ['ngx']);
 
     module.factory('ngxLoader', ['ngxConfig', function(ngxConfig) {
+        var loaded = [];
+
         /**
          * Loads external js/css files
          * @param files
          */
-        return function(files) {
+        return function(files, onload) {
+            var js = [],
+                css = [];
+
             angular.forEach(typeof(files) === 'string' ? [files] : files, function(file) {
                 // add base path
                 if (!file.match(/^(\/|http)/)) {
@@ -22,17 +26,26 @@
                 }
 
                 if (file.match(/\.css$/i)) {
-                    // stylesheet
-                    angular.element('head').append(angular.element('<link rel="stylesheet" type="text/css" href="' + file + '"></link>'));
+                    css.push(file);
                 } else if (file.match(/\.js$/i)) {
-                    // script
-                    angular.element('head').append(angular.element('<script type="text/javascript" src="' + file + '"></script>'));
+                    js.push(file);
                 } else {
                     throw new Error('File type not supported');
                 }
-
-                loaded.push(file);
             });
+
+            if (js.length) {
+                head.js.apply(this, js);
+                head.ready(onload);
+            } else {
+                onload();
+            }
+
+            if (css.length) {
+                angular.forEach(css, function(file) {
+                    angular.element('head').append(angular.element('<link rel="stylesheet" type="text/css" href="' + file + '"></link>'));
+                });
+            }
         };
     }]);
-})(window.angular);
+})(window.angular, window.head);
