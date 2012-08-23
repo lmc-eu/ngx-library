@@ -3,6 +3,9 @@
 <head>
     <title>ngx library demos</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- bootstrap -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript" src="http://api4.mapy.cz/loader.js"></script>
 	<script type="text/javascript">Loader.load();</script>
 	<script type="text/javascript" src="scripts/libs/jquery.min.js"></script>
@@ -16,15 +19,26 @@
 	<link rel="stylesheet" type="text/css" href="styles/app.css"/>
 </head>
 <body ng-cloak ng-controller="ngxCtrl">
-	<div id="demo-modules">
-		<h1>NGX</h1>
-		<ul>
-			<li ng-repeat="m in modules" ng-switch="m == module" ng-class="{selected: m == module}" ng-click="load(m)">
-				<strong ng-switch-when="true">{{m}}</strong>
-				<a ng-click="load(m)" ng-switch-default>{{m}}</a>
-			</li>
-		</ul>
+	<div class="container">
+            <h1>NGX</h1>
+            <p class="lead">AngularJS library with custom directives, <a href="https://github.com/lmc-eu/ngx-library">Github sources</a> </p>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="span3">
+        		<ul class="nav nav-list well">
+                    <li class="nav-header">Demos</li>
+        			<li ng-repeat="m in modules" ng-switch="m == module" ng-class="{selected: m == module}" ng-click="load(m)">
+        				<strong ng-switch-when="true">{{m}}</strong>
+        				<a ng-click="load(m)" ng-switch-default>{{m}}</a>
+        			</li>
+        		</ul>
+            </div>
+            <div class="span9">
+                <div id="demo-content" ng-view ng-class="getContentClass()"></div>
+            </div>
+        </div>
 	</div>
-    <div id="demo-content" ng-view ng-class="getContentClass()"></div>
+
 </body>
 </html>
