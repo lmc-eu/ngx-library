@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, $, window) {
+    'use strict';
+
     var module = angular.module('ngx.ui.imageupload', ['ngx.loader']);
 
     /**
@@ -257,12 +259,12 @@
                                 scope.$apply();
                             };
                             image.onerror = function() {
-                                alert('Neplatný obrázek');
+                                window.alert('Neplatný obrázek');
                             };
 
                             // try read file with FileAPI
                             if (features.fileApi) {
-                                var fileReader = new FileReader();
+                                var fileReader = new window.FileReader();
                                 fileReader.onload = function(e) {
                                     image.src = e.target.result;
                                 };
@@ -275,7 +277,7 @@
                                         $(image).data('width', result.width).data('height', result.height);
                                         image.src = result.source;
                                     }).error(function() {
-                                        alert('Chyba při zpracování obrázku anebo neplatný obrázek');
+                                        window.alert('Chyba při zpracování obrázku anebo neplatný obrázek');
                                     });
                             }
                         }
@@ -286,4 +288,5 @@
             }
         };
     }]);
-})(angular);
+
+})(window.angular, window.jQuery, window);

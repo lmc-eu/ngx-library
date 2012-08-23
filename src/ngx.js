@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, document) {
+    'use strict';
+
     // determine base path
     var basePath = null,
         re = /ngx(\.min)?\.js(.*)$/;
@@ -24,12 +26,12 @@
         templatesPath: basePath + 'templates/'
     });
 
-})(angular);
-
+})(window.angular, window.document);
 
 // missing ECMAScript functions
 if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function(search) {
+        'use strict';
         for (var i = 0; i < this.length; i++) {
             if (this[i] === search) {
                 return i;

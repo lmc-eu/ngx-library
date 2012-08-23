@@ -1,4 +1,6 @@
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.geomap', ['ngx.ui.smap']);
 
     /**
@@ -13,4 +15,4 @@
             }
         };
     }]);
-})(angular);
+})(window.angular);

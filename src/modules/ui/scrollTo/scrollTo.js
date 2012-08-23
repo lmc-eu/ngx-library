@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, $) {
+    'use strict';
+
     var module = angular.module('ngx.ui.scrollTo', ['ngx']);
 
     /**
@@ -8,10 +10,10 @@
         return function(scope, element, attrs) {
             element.bind('click', function(e) {
                 e.preventDefault();
-                $('html, body').animate({ scrollTop: $(attrs.ngxScrollTo).offset().top + (attrs.ngxScrollOffset ? parseInt(attrs.ngxScrollOffset, 10) : 0) }, 600);
+                $('html, body').animate({ scrollTop: $(attrs.ngxScrollTo).offset().top + (attrs.scrollOffset ? parseInt(attrs.scrollOffset, 10) : 0) }, 600);
                 return false;
             });
         };
     });
 
-})(angular);
+})(window.angular, window.jQuery);

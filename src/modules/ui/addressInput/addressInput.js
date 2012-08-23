@@ -1,11 +1,13 @@
-(function(angular) {
+(function(angular, $) {
+    'use strict';
+
     var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap']);
 
     /**
      * Address input with autocomplete and reverse geocoding
      * @todo hacks cleanup
      */
-    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap) {
+    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, $window, ngxSmap) {
         return {
             require: 'ngModel',
             compile: function(element, attrs) {
@@ -156,7 +158,7 @@
 
                                 angular.forEach(results, function(item) {
                                     // ignore addresses without number in strict mode
-                                    if (strict && item.type != 'number') {
+                                    if (strict && item.type !== 'number') {
                                         return;
                                     }
 
@@ -166,7 +168,7 @@
                                     }
 
                                     // allow only these address types
-                                    if (item.type == 'street' || item.type == 'city' || item.type == 'number' || item.type == 'country') {
+                                    if (item.type === 'street' || item.type === 'city' || item.type === 'number' || item.type === 'country') {
                                         $results.push(item);
                                     }
                                 });
@@ -187,11 +189,11 @@
                         }
                     });
 
-                    $(window).click(function() {
+                    $($window).click(function() {
                         element.autocomplete('close');
                     });
                 };
             }
         };
     }]);
-})(angular);
+})(window.angular, window.jQuery);

@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, $) {
+    'use strict';
+
     var module = angular.module('ngx.ui.gallery', ['ngx.ui.lightbox']);
 
     /**
@@ -100,4 +102,4 @@
         };
     });
 
-})(angular);
+})(window.angular, window.jQuery);

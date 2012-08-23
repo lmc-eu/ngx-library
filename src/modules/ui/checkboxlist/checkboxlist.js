@@ -1,4 +1,6 @@
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.checkboxlist', ['ngx']);
 
     /**
@@ -62,4 +64,4 @@
         };
     }]);
 
-})(angular);
+})(window.angular);

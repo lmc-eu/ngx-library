@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, window) {
+    'use strict';
+
     var modules = [
         'ngx.ui.invalid',
         'ngx.ui.scrollTo',
@@ -48,6 +50,7 @@
             selected: ['201600001', '201600003']
         };
         $scope.hashtag = '#test';
+        $scope.www = 'lmc.eu';
         $scope.wysiwyg = '<p>lorem ipsum <strong>strong</strong></p>';
         $scope.tags = ['tag1', 'tag2', 'tag3'];
         $scope.coords = {
@@ -69,15 +72,14 @@
         }];
         $scope.dialog = {
             input: undefined,
-            submit: function(inputValue, dialogCtrl) {
-                alert('submitted ' + (inputValue === undefined ? 'empty' : '"' + inputValue + '"'));
-                dialogCtrl.close();
+            submit: function(inputValue, $dialog) {
+                window.alert('submitted ' + (inputValue === undefined ? 'empty' : '"' + inputValue + '"'));
+                $dialog.close();
             },
             onclose: function() {
                 $scope.dialog.input = undefined;
             }
-
-        }
+        };
     }]);
 
-})(angular);
+})(window.angular, window);

@@ -1,8 +1,13 @@
+// IE8 support
+document.createElement('ngx-invalid');
+
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.invalid', ['ngx']);
 
     /**
-     * Input/expression invalid status
+     * Input/Form invalid status
      */
     module.directive('ngxInvalid', function() {
         return {
@@ -10,46 +15,32 @@
             link: function(scope, element, attrs) {
                 element.addClass('ngx-invalid');
 
-                // input name in angular scope
-                var input = attrs.input;
+                var parts = (attrs.ngxInvalid ? attrs.ngxInvalid.split(' ') : []),
+                    input = (attrs.input ? attrs.input : parts[0]),
+                    errors = (attrs.error ? attrs.error : parts[1]),
+                    watch = [];
 
-                // error types (can be comma-separated list)
-                var errors = attrs.error;
+                // error types
                 if (errors) {
-                    errors = errors.split(',');
-                }
-
-                // watch to watch
-                var watch = [];
-
-                // expression
-                var expression = attrs.expression;
-                if (expression) {
-                    watch.push(expression);
-                }
-
-                // input error/valid
-                if (input) {
-                    var expressions = [];
-
-                    if (errors) {
-                        angular.forEach(errors, function(type) {
-                            expressions.push(input + '.$error.' + type);
-                        });
-                    } else {
-                        expressions.push(input + '.$invalid');
-                    }
-
-                    watch.push(expressions.length > 1 ? '(' + expressions.join(' || ') + ')' : expressions[0]);
-                }
-
-                if (watch.length) {
-                    scope.$watch(watch.join(' && '), function(value) {
-                        $(element).toggle(value ? true : false);
+                    // can be comma-separated list
+                    angular.forEach(errors.split(','), function(type) {
+                        watch.push(input + '.$error.' + type);
                     });
+                } else {
+                    watch.push(input + '.$invalid');
                 }
+
+                watch = [watch.length > 1 ? '(' + watch.join(' || ') + ')' : watch[0]];
+
+                if (attrs.ngShow) {
+                    watch.push(attrs.ngShow);
+                }
+
+                scope.$watch(watch.join(' && '), function(value) {
+                    element.toggle(value ? true : false);
+                });
             }
         };
     });
 
-})(angular);
+})(window.angular);

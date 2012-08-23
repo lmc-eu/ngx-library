@@ -1,7 +1,9 @@
 // initialize CKEditor base path global variable
-var CKEDITOR_BASEPATH = '';
+window.CKEDITOR_BASEPATH = '';
 
-(function(angular) {
+(function(angular, window) {
+    'use strict';
+
     var module = angular.module('ngx.ui.ckeditor', ['ngx.loader']);
 
     /**
@@ -9,15 +11,15 @@ var CKEDITOR_BASEPATH = '';
      */
     module.directive('ngxCkeditor', ['$parse', 'ngxConfig', 'ngxLoader', function($parse, ngxConfig, ngxLoader) {
         // load editor
-        CKEDITOR_BASEPATH = ngxConfig.libsPath + 'ckeditor/';
-        ngxLoader([CKEDITOR_BASEPATH + 'ckeditor.js']);
+        window.CKEDITOR_BASEPATH = ngxConfig.libsPath + 'ckeditor/';
+        ngxLoader([window.CKEDITOR_BASEPATH + 'ckeditor.js']);
 
         return {
             restrict: 'A',
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
                 // editor instance
-                var editor = CKEDITOR.replace(element[0], {
+                var editor = window.CKEDITOR.replace(element[0], {
                     toolbar: [['Bold', 'BulletedList', 'Link']],
                     toolbarLocation: 'bottom',
                     toolbarCanCollapse: false,
@@ -57,4 +59,4 @@ var CKEDITOR_BASEPATH = '';
             }
         };
     }]);
-})(angular);
+})(window.angular, window);

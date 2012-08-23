@@ -1,4 +1,6 @@
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.smap', ['ngx.smap']);
 
     /**
@@ -10,7 +12,7 @@
                 element.addClass('ngx-smap');
 
                 // create map
-                var map = new ngxSmap(element[0]);
+                var map = ngxSmap(element[0]);
                 map.create({
                     controls: attrs.controls
                 });
@@ -34,4 +36,5 @@
             }
         };
     }]);
-})(angular);
+
+})(window.angular);

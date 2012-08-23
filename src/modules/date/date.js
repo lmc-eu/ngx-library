@@ -3,6 +3,8 @@
  * @todo avoid implementations from phpjs.org
  */
 (function(angular) {
+    'use strict';
+
     var ngxDate = {};
 
     /**
@@ -70,7 +72,7 @@
             },
             S: function () { // Ordinal suffix for day of month; st, nd, rd, th
                 var j = f.j();
-                return j < 4 | j > 20 && ['st', 'nd', 'rd'][j%10 - 1] || 'th';
+                return j < 4 || j > 20 && ['st', 'nd', 'rd'][j%10 - 1] || 'th';
             },
             w: function () { // Day of week; 0[Sun]..6[Sat]
                 return jsdate.getDay();
@@ -108,7 +110,7 @@
             // Year
             L: function () { // Is leap year?; 0 or 1
                 var j = f.Y();
-                return j%4===0 & j%100!==0 | j%400===0;
+                return j%4===0 && j%100!==0 || j%400===0;
             },
             o: function () { // ISO-8601 year
                 var n = f.n(),
@@ -229,7 +231,7 @@
                 return 'D, d M Y H:i:s O'.replace(formatChr, formatChrCb);
             },
             U: function () { // Seconds since UNIX epoch
-                return jsdate / 1000 | 0;
+                return parseInt(jsdate / 1000, 10);
             }
         };
         this.date = function (format, timestamp) {
@@ -269,4 +271,4 @@
     angular.module('ngx.date', ['ngx'])
        .value('ngxDate', ngxDate);
 
-})(angular);
+})(window.angular);

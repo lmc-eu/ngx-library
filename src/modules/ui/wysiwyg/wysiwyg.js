@@ -1,4 +1,6 @@
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.wysiwyg', ['ngx.ui.ckeditor']);
 
     /**
@@ -14,4 +16,5 @@
             }
         };
     }]);
-})(angular);
+
+})(window.angular);

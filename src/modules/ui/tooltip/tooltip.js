@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, $) {
+    'use strict';
+
     var module = angular.module('ngx.ui.tooltip', ['ngx']);
 
     /**
@@ -35,4 +37,4 @@
         };
     });
 
-})(angular);
+})(window.angular, window.jQuery);

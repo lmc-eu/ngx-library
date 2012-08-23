@@ -1,9 +1,11 @@
-(function(angular) {
+(function(angular, $, window) {
+    'use strict';
+
     var module = angular.module('ngx.smap', []);
 
     module.config(function() {
         // some Seznam library disables console debug mode :-/
-        console.DEBUG = true;
+        window.console.DEBUG = true;
     });
 
     /**
@@ -16,7 +18,7 @@
             throw 'Seznam map API is not loaded, see http://api4.mapy.cz/view?page=instruction';
         }
 
-        return function(wrapper) {
+        function NgxSmap(wrapper) {
             var map, card, markerLayer, geocoder,
                 self = this;
 
@@ -150,7 +152,7 @@
                 }
 
                 // reverse geocode
-                new SMap.Geocoder.Reverse(coords, function(geocoder) {
+                var geocoder = new SMap.Geocoder.Reverse(coords, function(geocoder) {
                     var results = geocoder.getResults(),
                         coords = results.coords.toWGS84();
 
@@ -162,13 +164,12 @@
                     };
 
                     // create address fields from items[]
-                    var item, type, label;
-                    for (var i in results.items) {
-                        item = results.items[i];
+                    var type, label;
+                    angular.forEach(results.items, function(item) {
                         type = typeList[item.type];
 
                         if (!type) {
-                            continue;
+                            return;
                         }
 
                         label = item.name;
@@ -204,7 +205,7 @@
                                 } catch (e) {}
                                 break;
                         }
-                    }
+                    });
 
                     // if street field is empty, set ward name as street name
                     if (!data.street && data.ward) {
@@ -247,7 +248,7 @@
             // formats label by query and reverse geocoded data
             this.formatLabel = function(data, query) {
                 // format only when firm or address
-                if (query.source == 'firm' || query.source == 'addr') {
+                if (query.source === 'firm' || query.source === 'addr') {
                     var label = (data.street ? data.street : data.ward) + ' ' + data.number;
 
                     if (data.city) {
@@ -272,6 +273,10 @@
                     lat: $coords[1]
                 };
             };
+        }
+
+        return function(wrapper) {
+            return new NgxSmap(wrapper);
         };
     });
-})(angular);
+})(window.angular, window.jQuery, window);

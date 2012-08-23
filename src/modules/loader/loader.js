@@ -1,6 +1,8 @@
 (function(angular) {
-    var module = angular.module('ngx.loader', ['ngx']);
-    var loaded = [];
+    'use strict';
+
+    var module = angular.module('ngx.loader', ['ngx']),
+        loaded = [];
 
     module.factory('ngxLoader', ['ngxConfig', function(ngxConfig) {
         /**
@@ -33,4 +35,4 @@
             });
         };
     }]);
-})(angular);
+})(window.angular);

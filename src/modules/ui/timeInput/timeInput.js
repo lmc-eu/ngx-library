@@ -1,4 +1,6 @@
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.timeInput', ['ngx']);
 
     /**
@@ -65,4 +67,4 @@
         };
     }]);
 
-})(angular);
+})(window.angular);

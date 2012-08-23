@@ -1,4 +1,6 @@
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.hashtagInput', ['ngx']);
 
     /**
@@ -26,4 +28,4 @@
         };
     });
 
-})(angular);
+})(window.angular);

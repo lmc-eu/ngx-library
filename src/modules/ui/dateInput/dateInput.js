@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, $) {
+    'use strict';
+
     var module = angular.module('ngx.ui.dateInput', ['ngx.date']);
 
     /**
@@ -70,7 +72,7 @@
                                     var minutes = ctrl.timeInput.minutes;
 
                                     // when in range (as max) and has no time .. set time to 23:59
-                                    if (ctrl.range && ctrl.range.type == 'max' && hours === undefined) {
+                                    if (ctrl.range && ctrl.range.type === 'max' && hours === undefined) {
                                         hours = 23;
                                         minutes = 59;
                                     }
@@ -100,8 +102,8 @@
                         }
 
                         // range validation
-                        var min = (ctrl.range.type == 'min' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
-                        var max = (ctrl.range.type == 'max' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
+                        var min = (ctrl.range.type === 'min' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
+                        var max = (ctrl.range.type === 'max' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
                         valid = (min && max ? (min <= max) : true);
                         ctrl.$setValidity('range', valid);
                         ctrl.range.ctrl.$setValidity('range', valid);
@@ -113,4 +115,4 @@
         };
     }]);
 
-})(angular);
+})(window.angular, window.jQuery);

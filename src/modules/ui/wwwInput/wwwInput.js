@@ -1,4 +1,6 @@
 (function(angular) {
+    'use strict';
+
     var module = angular.module('ngx.ui.wwwInput', ['ngx']);
 
     /**
@@ -13,17 +15,22 @@
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
-                ctrl.$parsers.push(function(value) {
-                    var result = (value.length ? (!protocol.test(value) ? 'http://' + value : value) : undefined);
-                    var valid = !(result && result.length && !format.test(result));
+                function parse(value) {
+                    var result = (value !== undefined && value.length ? (!protocol.test(value) ? 'http://' + value : value) : undefined),
+                        valid = !(result && result.length && !format.test(result));
 
                     // validation
                     ctrl.$setValidity('www', valid);
-
                     return (valid ? result : value);
-                });
+                }
+
+                ctrl.$parsers.push(parse);
+                ctrl.$render = function() {
+                    ctrl.$setViewValue(ctrl.$viewValue);
+                    element.val(ctrl.$modelValue);
+                };
             }
         };
     });
 
-})(angular);
+})(window.angular);

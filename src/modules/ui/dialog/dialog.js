@@ -1,4 +1,6 @@
-(function(angular) {
+(function(angular, $) {
+    'use strict';
+
     var module = angular.module('ngx.ui.dialog', ['ngx']);
 
     /**
@@ -24,6 +26,7 @@
                     autoOpen: false,
                     width: (attrs.width ? attrs.width : 'auto'),
                     height: (attrs.height ? attrs.height : 'auto'),
+                    modal: (attrs.modal ? true : false),
                     title: attrs.title,
                     resizable: false
                 };
@@ -36,6 +39,12 @@
                     element.dialog('open');
                     return false;
                 });
+
+                if (attrs.title === undefined) {
+                    attrs.$observe('title', function (value) {
+                        element.dialog('option', 'title', value);
+                    });
+                }
 
                 // apply onClose handler
                 if (attrs.onclose) {
@@ -67,12 +76,12 @@
                 var expression = attrs.ngxDialogButton;
                 element.bind('click', function(e) {
                     // close dialog
-                    if (expression == '@close') {
+                    if (expression === '@close') {
                         dialogCtrl.close();
                     } else {
                         scope.$apply(function() {
                             $parse(expression)(scope, {
-                                dialogCtrl: dialogCtrl
+                                $dialog: dialogCtrl
                             });
                         });
                     }
@@ -84,4 +93,4 @@
         };
     }]);
 
-})(angular);
+})(window.angular, window.jQuery);
