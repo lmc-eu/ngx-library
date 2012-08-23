@@ -1,11 +1,11 @@
 <fieldset>
 	<legend>DATE RANGE</legend>
 	<form name="form_date">
-		<input type="date" name="dateFrom" ng-model="dateFrom" ngx-date-input required="" />
-		<input type="time" name="timeFrom" ng-model="timeFrom" ngx-time-input ngx-time-date-input="form_date.dateFrom" />
+		<input type="text" name="dateFrom" ng-model="dateFrom" ngx-date-input required="" />
+		<input type="text" name="timeFrom" ng-model="timeFrom" ngx-time-input ngx-time-date-input="form_date.dateFrom" />
 		<span> – </span>
-		<input type="date" name="dateTo" ng-model="dateTo" required="" ngx-date-input ngx-date-range-input="form_date.dateFrom" />
-		<input type="time" name="timeTo" ng-model="timeTo" ngx-time-input ngx-time-date-input="form_date.dateTo" />
+		<input type="text" name="dateTo" ng-model="dateTo" required="" ngx-date-input ngx-date-range-input="form_date.dateFrom" />
+		<input type="text" name="timeTo" ng-model="timeTo" ngx-time-input ngx-time-date-input="form_date.dateTo" />
 		<div ngx-invalid="form_date.dateFrom" data-error="required,date">
 			INVALID DATE-FROM
 		</div>

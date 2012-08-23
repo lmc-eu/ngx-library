@@ -1,7 +1,23 @@
+/* hide webkit html5 spin button */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* reset firefox invalid input style */
+input:invalid, textarea:invalid {
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
 * {
     font: 12pt Arial;
     margin: 0;
     padding: 0;
+}
+a img {
+    border: 0;
 }
 fieldset {
     margin-top: 10px;
@@ -79,4 +95,10 @@ h1 {
 }
 .ngx-ui-scrollTo .space {
     height: 1000px;
+}
+.ngx-ui-dateInput input[ngx-date-input] {
+    width: 100px;
+}
+.ngx-ui-dateInput input[ngx-time-input] {
+    width: 50px;
 }
