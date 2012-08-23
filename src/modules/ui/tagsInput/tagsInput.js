@@ -6,7 +6,7 @@
     /**
      * Tags input
      */
-    module.directive('ngxTagsInput', ['$http', '$filter', 'ngxConfig', 'ngxLoader', function($http, $filter, ngxConfig, ngxLoader) {
+    module.directive('ngxTagsInput', ['$http', '$filter', '$timeout', 'ngxConfig', 'ngxLoader', function($http, $filter, $timeout, ngxConfig, ngxLoader) {
         ngxLoader([
             ngxConfig.libsPath + 'jquery.tagsinput/jquery.tagsinput.js',
             ngxConfig.libsPath + 'jquery.tagsinput/jquery.tagsinput.css'
@@ -90,14 +90,16 @@
                         }
                     });
 
-                    ctrl.$formatters.push(function(value) {
-                        return (angular.isArray(value) ? value.join(',') : '');
-                    });
+                    ctrl.$render = function() {
+                        if (ctrl.$modelValue) {
+                            element.importTags(ctrl.$modelValue.join(','));
+                        }
+                    };
 
                     element.data('ngx.tagsInput.onchange', function(value) {
-                        scope.$apply(function() {
+                        $timeout(function() {
                             ctrl.$setViewValue(value);
-                        });
+                        }, 0);
                     });
                 };
             }
