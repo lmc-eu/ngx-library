@@ -1,5 +1,4 @@
 div.tagsinput {
-    background: url("/images/sprite.png") no-repeat scroll right -607px #FFFFFF;
     border: 1px solid #C7C7C7;
     padding: 5px;
     overflow-y: auto;
@@ -19,7 +18,6 @@ div.tagsinput span.tag {
 }
 
 div.tagsinput span.tag a {
-    background: url("/images/icons.png") no-repeat scroll 0 -441px transparent;
     text-decoration: none;
     color: transparent;
     font-size: 0px;

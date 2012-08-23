@@ -19,7 +19,7 @@
         }
 
         function NgxSmap(wrapper) {
-            var map, card, markerLayer, geocoder,
+            var smap, card, markerLayer, geocoder,
                 self = this;
 
             // api cache
@@ -72,15 +72,15 @@
 
             // initialize map
             this.create = function(options) {
-                map = new SMap(wrapper);
-                map.addDefaultLayer(SMap.DEF_BASE).enable();
+                smap = new SMap(wrapper);
+                smap.addDefaultLayer(SMap.DEF_BASE).enable();
 
                 if (!options) {
                     options = {};
                 }
 
                 if (options.controls !== 'off') {
-                    map.addDefaultControls();
+                    smap.addDefaultControls();
                 }
 
                 // card
@@ -89,12 +89,12 @@
 
                 // marker layer
                 markerLayer = new SMap.Layer.Marker();
-                map.addLayer(markerLayer);
+                smap.addLayer(markerLayer);
                 markerLayer.enable();
 
                 // bind map-click event on control click event
-                map.getSignals().addListener(window, 'map-click', function(signal) {
-                    $(self).triggerHandler('click', [SMap.Coords.fromEvent(signal.data.event, map)]);
+                smap.getSignals().addListener(window, 'map-click', function(signal) {
+                    $(self).triggerHandler('click', [SMap.Coords.fromEvent(signal.data.event, smap)]);
                 });
             };
 
@@ -227,9 +227,9 @@
 
                 // zoom into coords
                 if (options.zoom) {
-                    map.setCenterZoom(coords, (options.zoom === true ? 15 : options.zoom));
+                    smap.setCenterZoom(coords, (options.zoom === true ? 15 : options.zoom));
                 } else {
-                    map.setCenter(coords);
+                    smap.setCenter(coords);
                 }
 
                 // add marker
@@ -240,7 +240,7 @@
 
                 // add card with label
                 if (options.card) {
-                    map.addCard(card, coords);
+                    smap.addCard(card, coords);
                     card.getBody().innerHTML = options.card;
                 }
             };
@@ -279,4 +279,5 @@
             return new NgxSmap(wrapper);
         };
     });
+
 })(window.angular, window.jQuery, window);

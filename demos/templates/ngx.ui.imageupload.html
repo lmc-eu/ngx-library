@@ -2,7 +2,7 @@
 	<legend>IMAGEUPLOAD</legend>
 	<a id="imageuploadTrigger" ng-show="!image.src">nahrát obrázek</a>
 	<a ng-show="image.src" ng-click="image=undefined">smazat obrázek</a>
-	<img ng-src="{{image.src}}" style="display: block"/>
+	<img ng-src="{{image.src}}"/>
 	<ngx-imageupload ng-model="image" dialog-trigger="#imageuploadTrigger" dialog-title="Nahrát obrázek"
 					 source-scale="350x300" result-scale="198x116"/>
 </fieldset>

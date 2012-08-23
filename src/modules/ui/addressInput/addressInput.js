@@ -1,4 +1,4 @@
-(function(angular, $) {
+(function(angular, $, window) {
     'use strict';
 
     var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap']);
@@ -7,11 +7,11 @@
      * Address input with autocomplete and reverse geocoding
      * @todo hacks cleanup
      */
-    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, $window, ngxSmap) {
+    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap) {
         return {
             require: 'ngModel',
             compile: function(element, attrs) {
-                var hasGeomap = (attrs.ngxAddressGeomap ? true : false);
+                var hasGeomap = angular.isDefined(attrs.geomap);
 
                 return function(scope, element, attrs, ctrl) {
                     var strict,      // is strict? .. require address by street number
@@ -123,7 +123,7 @@
                             data.label = geomap.formatLabel(data, query);
 
                             // center map
-                            if ($(attrs.ngxAddressGeomap).is(':visible')) {
+                            if ($(attrs.geomap).is(':visible')) {
                                 geomap.setCenter(data.coords, {
                                     zoom: true,
                                     card: data.label
@@ -137,7 +137,7 @@
 
                     // use existing geomap element service if available
                     if (hasGeomap) {
-                        attrs.$observe('ngxAddressGeomap', function(value) {
+                        attrs.$observe('geomap', function(value) {
                             setGeomap(angular.element(value).data('ngx.ui.geomap'));
                         });
                     } else {
@@ -189,11 +189,11 @@
                         }
                     });
 
-                    $($window).click(function() {
+                    $(window).click(function() {
                         element.autocomplete('close');
                     });
                 };
             }
         };
     }]);
-})(window.angular, window.jQuery);
+})(window.angular, window.jQuery, window);

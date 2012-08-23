@@ -58,3 +58,25 @@ h1 {
     margin-left: 230px;
     margin-right: 20px;
 }
+
+.ngx-ui-tagsInput div.tagsinput {
+    background: url('images/sprite.png') no-repeat scroll right -607px #FFFFFF;
+}
+.ngx-ui-tagsInput div.tagsinput span.tag span {
+    font-size: 11px;
+}
+.ngx-ui-tagsInput div.tagsinput span.tag a {
+    background: url('images/icons.png') no-repeat scroll 0 -441px transparent;
+}
+.ngx-ui-addressInput input[name="address"] {
+    width: 98%;
+}
+.ngx-ui-addressInput #address_map {
+    margin-top: 10px;
+}
+.ngx-ui-imageupload img {
+    display: block;
+}
+.ngx-ui-scrollTo .space {
+    height: 1000px;
+}

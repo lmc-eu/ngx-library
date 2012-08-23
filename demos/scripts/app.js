@@ -80,6 +80,10 @@
                 $scope.dialog.input = undefined;
             }
         };
+
+        $scope.getContentClass = function() {
+            return ($scope.module ? $scope.module.replace('.', '-', 'g') : '');
+        };
     }]);
 
 })(window.angular, window);
