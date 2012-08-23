@@ -35,6 +35,9 @@ document.createElement('ngx-invalid');
                 if (attrs.ngShow) {
                     watch.push(attrs.ngShow);
                 }
+                if (attrs.expression) {
+                    watch.push(attrs.expression);
+                }
 
                 scope.$watch(watch.join(' && '), function(value) {
                     element.toggle(value ? true : false);
