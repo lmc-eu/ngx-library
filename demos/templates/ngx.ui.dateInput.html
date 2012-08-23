@@ -6,15 +6,15 @@
 		<span> – </span>
 		<input type="date" name="dateTo" ng-model="dateTo" required="" ngx-date-input ngx-date-range-input="form_date.dateFrom" />
 		<input type="time" name="timeTo" ng-model="timeTo" ngx-time-input ngx-time-date-input="form_date.dateTo" />
-		<ngx-invalid input="form_date.dateFrom" error="required,date">
+		<div ngx-invalid="form_date.dateFrom" data-error="required,date">
 			INVALID DATE-FROM
-		</ngx-invalid>
-		<ngx-invalid input="form_date.dateTo" error="required,datetime">
+		</div>
+		<div ngx-invalid="form_date.dateTo" data-error="required,datetime">
 			INVALID DATE-TO
-		</ngx-invalid>
-		<ngx-invalid input="form_date.dateTo" error="range">
+		</div>
+		<div ngx-invalid="form_date.dateTo" data-error="range">
 			INVALID DATE RANGE
-		</ngx-invalid>
+		</div>
 		<pre>{{dateFrom}} {{timeFrom}} --- {{dateTo}} {{timeTo}}</pre>
 	</form>
 </fieldset>

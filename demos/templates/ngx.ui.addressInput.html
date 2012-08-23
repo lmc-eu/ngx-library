@@ -1,24 +1,23 @@
 <fieldset>
 	<legend>ADDRESS</legend>
 	<form name="form_address">
-		<input type="text" name="address" ng-model="address" required="" ngx-address-input ngx-address-geomap="#address_map" placeholder="{{placeholder('ulice, město, stát','město, stát')}}" style="width: 98%" />
+		<input type="text" name="address" ng-model="address" required="" style="width: 98%"
+			   ngx-address-input data-geomap="#address_map" placeholder="{{placeholder('ulice, město, stát','město, stát')}}"  />
 		<img id="address_spinner" ng-show="form_address.address.loading" src="http://www.jobs.cz/images/preloader.gif"/>
-		<ngx-invalid input="form_address.address" error="required">
+		<div ngx-invalid="form_address.address required">
 			NO ADDRESS
-		</ngx-invalid>
-		<ngx-invalid input="form_address.address" error="number">
+		</div>
+		<div ngx-invalid="form_address.address number">
 			NO STREET NUMBER
-		</ngx-invalid>
-		<ngx-invalid input="form_address.address" error="found_number">
-			<ng-switch on="form_address.address.$error.found">
-                        <span ng-switch-when="true">
-                            NOT FOUND
-                        </span>
-                        <span ng-switch-default="">
-                            NOT FOUND WITH NUMBER
-                        </span>
-			</ng-switch>
-		</ngx-invalid>
+		</div>
+		<div ngx-invalid="form_address.address found_number" ng-switch="form_address.address.$error.found">
+			<span ng-switch-when="true">
+				NOT FOUND
+			</span>
+			<span ng-switch-default="">
+				NOT FOUND WITH NUMBER
+			</span>
+		</div>
 	</form>
 	<div ngx-geomap id="address_map" style="width: 500px; height: 250px; margin-top: 10px"></div>
 	<pre>

@@ -1,8 +1,8 @@
 <fieldset>
 	<legend>WWW</legend>
 	<form name="form_www">
-		<input type="text" ng-model="www" ngx-www-input name="www"/>
-		<ngx-invalid input="form_www.www" error="www">INVALID WWW</ngx-invalid>
+		<label for="www">www:</label> <input type="text" id="www" ng-model="www" ngx-www-input name="www"/>
+		<div ngx-invalid="form_www.www">INVALID WWW</div>
 	</form>
 	<pre>{{www}}</pre>
 </fieldset>

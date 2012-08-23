@@ -1,10 +1,11 @@
 <fieldset rel="ngxDialog">
 	<legend>DIALOG</legend>
 	<a>open dialog</a>
-	<div ngx-dialog data-width="400" data-height="300" data-title="dialog title" data-onclose="dialog.onclose()" data-trigger="fieldset[rel=ngxDialog] > a">
+	<div ngx-dialog="" data-width="400" data-height="300" data-title="dialog title"
+		 data-onclose="dialog.onclose()" data-trigger="fieldset[rel=ngxDialog] > a">
 		<input type="text" ng-model="dialog.input" placeholder="dialog input..."/>
 		<div class="ngx-dialog-buttons">
-			<a ngx-dialog-button="dialog.submit(dialog.input, dialogCtrl)" href="">submit</a>
+			<a ngx-dialog-button="dialog.submit(dialog.input, $dialog)" href="">submit</a>
 			<a ngx-dialog-button="@close" href="">close</a>
 		</div>
 	</div>
