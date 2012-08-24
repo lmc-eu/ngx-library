@@ -51,27 +51,17 @@
             },
             selected: ['ng', 'gc']
         };
+
         $scope.hashtag = '#test';
         $scope.www = 'lmc.eu';
         $scope.wysiwyg = '<p>lorem ipsum <strong>strong</strong></p>';
         $scope.tags = ['tag1', 'tag2', 'tag3'];
+
         $scope.coords = {
             lat: 50.1028650,
             lon: 14.4568872
         };
-        $scope.addresses = [{
-            "label": "Jankovcova 1569/2c, 170 00 Praha, Česká republika",
-            "coords": {
-                "lon": 14.456887168480652,
-                "lat": 50.10286494790839
-            }
-        }, {
-            "label": "Stračenská 616, 411 08 Štětí, Česká republika",
-            "coords": {
-                "lon": 14.381299871658682,
-                "lat": 50.45214591776182
-            }
-        }];
+
         $scope.dialog = {
             input: undefined,
             submit: function(inputValue, $dialog) {
