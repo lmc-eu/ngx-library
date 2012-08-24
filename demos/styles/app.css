@@ -43,6 +43,25 @@ legend {
     line-height: 150%;
 }
 
+.header {
+    background: url('images/bg.png') repeat-x;
+    margin-bottom: 30px;
+    color: white;
+}
+.header p {
+    color: #ccc;
+}
+.header a {
+    color: white;
+    text-decoration: underline;
+}
+h1 {
+    font-weight: normal;
+    font-size: 30pt;
+    color: white;
+    margin-top: 18px;
+}
+
 .ngx-invalid {
     border-radius: 3px 3px 3px 3px;
     padding: 1px 4px 2px;
