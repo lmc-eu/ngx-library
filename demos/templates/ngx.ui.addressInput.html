@@ -1,26 +1,13 @@
 <fieldset>
-	<legend>ADDRESS</legend>
+	<legend>Example using Seznam maps API</legend>
 	<form name="form_address">
-		<input type="text" name="address" ng-model="address" required=""
-			   ngx-address-input data-geomap="#map_canvas" />
+		<label>Address with house number:</label>
+		<input type="text" name="address" ng-model="address" ngx-address-input data-geomap="#map_canvas" />
 		<img id="address_spinner" ng-show="form_address.address.loading" src="http://www.jobs.cz/images/preloader.gif"/>
-		<div ngx-invalid="form_address.address required">
-			NO ADDRESS
-		</div>
-		<div ngx-invalid="form_address.address number">
-			NO STREET NUMBER
-		</div>
-		<div ngx-invalid="form_address.address found_number" ng-switch="form_address.address.$error.found">
-			<span ng-switch-when="true">
-				NOT FOUND
-			</span>
-			<span ng-switch-default="">
-				NOT FOUND WITH NUMBER
-			</span>
+		<div ngx-invalid="form_address.address found_number">
+			Address not found
 		</div>
 	</form>
 	<div ngx-geomap id="map_canvas" style="width: 500px; height: 250px"></div>
-	<pre>
-		{{address|json}}
-	</pre>
 </fieldset>
+<pre ng-show="address">{{address|json}}</pre>

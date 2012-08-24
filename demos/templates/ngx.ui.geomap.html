@@ -1,6 +1,19 @@
 <fieldset>
-	<legend>GEO MAP</legend>
-	WGS84: <input type="text" ng-model="coords.lat"/> / <input type="text" ng-model="coords.lon"/>
+	<legend>Seznam maps</legend>
+	<form class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label">Latitude:</label>
+			<div class="controls">
+				<input type="text" ng-model="coords.lat"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">Longitude:</label>
+			<div class="controls">
+				<input type="text" ng-model="coords.lon"/>
+			</div>
+		</div>
+	</form>
 	<div ngx-geomap data-coords="{{coords.lat}},{{coords.lon}}" style="width: 500px; height: 200px; margin-top: 10px" id="map_canvas"></div>
-	<pre>{{coords|json}}</pre>
 </fieldset>
+<pre>{{coords|json}}</pre>

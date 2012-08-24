@@ -1,20 +1,29 @@
 <fieldset>
-	<legend>DATE RANGE</legend>
-	<form name="form_date">
-		<input type="text" name="dateFrom" ng-model="dateFrom" ngx-date-input required="" />
-		<input type="text" name="timeFrom" ng-model="timeFrom" ngx-time-input ngx-time-date-input="form_date.dateFrom" />
-		<span> – </span>
-		<input type="text" name="dateTo" ng-model="dateTo" required="" ngx-date-input ngx-date-range-input="form_date.dateFrom" />
-		<input type="text" name="timeTo" ng-model="timeTo" ngx-time-input ngx-time-date-input="form_date.dateTo" />
-		<div ngx-invalid="form_date.dateFrom" data-error="required,date">
-			INVALID DATE-FROM
+	<legend>Example</legend>
+	<form name="form_date" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label">Start date:</label>
+			<div class="controls">
+				<input type="text" name="dateFrom" ng-model="dateFrom" ngx-date-input required="" />
+				<input type="text" name="timeFrom" ng-model="timeFrom" ngx-time-input ngx-time-date-input="form_date.dateFrom" />
+				<span ngx-invalid="form_date.dateFrom" data-error="date" class="help-inline">
+					Invalid start date
+				</span>
+			</div>
 		</div>
-		<div ngx-invalid="form_date.dateTo" data-error="required,datetime">
-			INVALID DATE-TO
+		<div class="control-group">
+			<label class="control-label">End date:</label>
+			<div class="controls">
+				<input type="text" name="dateTo" ng-model="dateTo" required="" ngx-date-input ngx-date-range-input="form_date.dateFrom" />
+				<input type="text" name="timeTo" ng-model="timeTo" ngx-time-input ngx-time-date-input="form_date.dateTo" />
+				<span ngx-invalid="form_date.dateTo" data-error="date" class="help-inline">
+					Invalid end date
+				</span>
+				<span ngx-invalid="form_date.dateTo" data-error="range" class="help-inline">
+					Invalid date range
+				</span>
+			</div>
 		</div>
-		<div ngx-invalid="form_date.dateTo" data-error="range">
-			INVALID DATE RANGE
-		</div>
-		<pre>{{dateFrom}} {{timeFrom}} --- {{dateTo}} {{timeTo}}</pre>
 	</form>
 </fieldset>
+<pre ng-show="dateFrom || dateTo">{{dateFrom}} {{timeFrom}} --&gt; {{dateTo}} {{timeTo}}</pre>

@@ -1,8 +1,10 @@
 <fieldset rel="scrollTo">
-	<legend>SCROLL TO</legend>
-	<a ngx-scroll-to="#ngxScrollTo">scroll to target</a>
+	<legend>Example</legend>
+	<a class="btn" ngx-scroll-to="#ngxScrollTo">scroll to target</a>
 </fieldset>
 <div class="space"></div>
-<p id="ngxScrollTo">scroll target...</p>
-<a ngx-scroll-to="fieldset[rel=scrollTo]" data-scroll-offset="-10">&lt;&lt; back</a>
+<fieldset id="ngxScrollTo">
+	<legend>Scroll target</legend>
+	<a class="btn" ngx-scroll-to="fieldset[rel=scrollTo]" data-scroll-offset="-10">scroll back</a>
+</fieldset>
 <div class="space"></div>

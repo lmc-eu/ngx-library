@@ -79,8 +79,8 @@
                     }
 
                     function found(count, byNumber) {
-                        ctrl.$setValidity('count', angular.isNumber(count) ? (count > 0) : count);
-                        ctrl.$setValidity('count_number', angular.isDefined(byNumber) ? (angular.isNumber(byNumber) ? (byNumber > 0) : byNumber) : count);
+                        ctrl.$setValidity('found', angular.isNumber(count) ? (count > 0) : count);
+                        ctrl.$setValidity('found_number', angular.isDefined(byNumber) ? (angular.isNumber(byNumber) ? (byNumber > 0) : byNumber) : count);
                     }
 
                     // strict mode by default

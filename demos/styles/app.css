@@ -14,14 +14,39 @@ input:invalid, textarea:invalid {
 a img {
     border: 0;
 }
-pre {
-    background-color: #fefefe;
-    padding: 10px;
-    font: 12pt "Courier New";
-    margin-top: 10px;
+
+fieldset {
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px 4px 4px 4px;
+    margin: 30px 0 0 0;
+    padding: 39px 19px 14px;
+    position: relative;
+}
+fieldset ~ pre {
+    margin-top: -4px;
+    padding-top: 12px;
+}
+legend {
+    background-color: #F5F5F5;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px 0 4px 0;
+    color: #9DA0A4;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    left: -1px;
+    padding: 3px 7px;
+    position: absolute;
+    top: -1px;
+    width: auto;
+    line-height: 150%;
 }
 
-
+.ngx-invalid {
+    border-radius: 3px 3px 3px 3px;
+    padding: 1px 4px 2px;
+}
 .ngx-ui-tagsInput div.tagsinput {
     background: url('images/sprite.png') no-repeat scroll right -607px #FFFFFF;
 }
@@ -39,6 +64,7 @@ pre {
 }
 .ngx-ui-imageupload img {
     display: block;
+    margin-top: 20px;
 }
 .ngx-ui-scrollTo .space {
     height: 1000px;

@@ -33,21 +33,23 @@
 
     app.controller('ngxCtrl', ['$scope', '$route', '$location', function($scope, $route, $location) {
         $scope.modules = modules;
+
         $scope.$on('$routeChangeSuccess', function(event, route) {
             $scope.module = route.module;
         });
+
         $scope.load = function(m) {
             $location.path('/' + m);
         };
 
         $scope.checkboxlist = {
             items: {
-                201600001: 'A',
-                201600002: 'B',
-                201600003: 'C',
-                201600004: 'D'
+                'bb': 'Backbone',
+                'gc': 'Google Closure',
+                'jq': 'jQuery',
+                'ng': 'AngularJS'
             },
-            selected: ['201600001', '201600003']
+            selected: ['ng', 'gc']
         };
         $scope.hashtag = '#test';
         $scope.www = 'lmc.eu';

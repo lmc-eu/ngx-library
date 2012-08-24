@@ -1,9 +1,13 @@
 <fieldset>
-	<legend>HASH TAG</legend>
-	<form name="form_hashtag">
-		<input type="text" ng-model="hashtag" ngx-hashtag-input name="hashtag" required=""/>
-		<div ngx-invalid="form_hashtag.hashtag" data-error="required">REQUIRED</div>
-		<div ngx-invalid="form_hashtag.hashtag" data-error="hashtag">INVALID HASH TAG</div>
+	<legend>Example</legend>
+	<form name="form_hashtag" class="form-horizontal">
+		<label class="control-label">hashtag:</label>
+		<div class="controls">
+			<input type="text" ng-model="hashtag" ngx-hashtag-input name="hashtag"/>
+			<span ngx-invalid="form_hashtag.hashtag hashtag" class="help-inline">
+				Invalid hash tag
+			</span>
+		</div>
 	</form>
-	<pre>{{hashtag}}</pre>
 </fieldset>
+<pre ng-show="hashtag">{{hashtag}}</pre>
