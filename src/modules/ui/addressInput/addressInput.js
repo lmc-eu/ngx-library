@@ -1,7 +1,7 @@
 (function(angular, $, window) {
     'use strict';
 
-    var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap']);
+    var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap', 'ngx.ui.geomap']);
 
     /**
      * Address input with autocomplete and reverse geocoding
