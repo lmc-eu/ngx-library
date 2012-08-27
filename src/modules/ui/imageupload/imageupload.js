@@ -37,7 +37,7 @@
         ];
 
         return {
-            restrict: 'E',
+            restrict: 'EA',
             replace: true,
             require: 'ngModel',
             templateUrl: ngxConfig.templatesPath + 'ui/imageupload/imageupload.html',
@@ -120,7 +120,7 @@
                                         canvas.getContext('2d').drawImage(
                                             sourceImage,
                                             coords.x, coords.y,
-                                            coords.w - 1, coords.h - 1,
+                                            coords.w - 2, coords.h - 2,
                                             0, 0, width, height
                                         );
 
@@ -182,6 +182,9 @@
                     if (thumbScale) {
                         thumbScale = thumbScale.split('x');
                     }
+
+                    scope.resultWidth = resultScale[0];
+                    scope.resultHeight = resultScale[1];
 
                     reset();
 
@@ -274,7 +277,7 @@
                                 data.submit()
                                     .success(function(result) {
                                         $(image).data('width', result.width).data('height', result.height);
-                                        image.src = result.source;
+                                        image.src = result.src;
                                     }).error(function() {
                                         window.alert('Chyba při zpracování obrázku anebo neplatný obrázek');
                                     });
