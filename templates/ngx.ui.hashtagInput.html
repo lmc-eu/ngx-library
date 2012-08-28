@@ -1,0 +1,13 @@
+<fieldset>
+	<legend>Example</legend>
+	<form name="form_hashtag" class="form-horizontal">
+		<label class="control-label">hashtag:</label>
+		<div class="controls">
+			<input type="text" ng-model="hashtag" ngx-hashtag-input name="hashtag"/>
+			<span ngx-invalid="form_hashtag.hashtag hashtag" class="help-inline">
+				Invalid hash tag
+			</span>
+		</div>
+	</form>
+</fieldset>
+<pre ng-show="hashtag">{{hashtag}}</pre>

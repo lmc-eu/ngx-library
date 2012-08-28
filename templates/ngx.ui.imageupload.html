@@ -1,0 +1,8 @@
+<fieldset>
+	<legend>Example</legend>
+	<a id="imageuploadTrigger" class="btn" ng-show="!image.src">nahrát obrázek</a>
+	<a ng-show="image.src" class="btn" ng-click="image=undefined">smazat obrázek</a>
+	<img ng-src="{{image.src}}" ng-show="image.src" class="well"/>
+	<ngx-imageupload ng-model="image" dialog-trigger="#imageuploadTrigger" dialog-title="Nahrát obrázek"
+					 source-scale="350x300" result-scale="198x116"/>
+</fieldset>

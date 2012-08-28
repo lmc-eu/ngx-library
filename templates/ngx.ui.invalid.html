@@ -1,0 +1,29 @@
+<fieldset>
+	<legend>Example</legend>
+	<form name="form_invalid" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="number">Number (1 - 5):</label>
+			<div class="controls">
+				<input type="number" ng-model="invalid.number" name="number" id="number" required="" min="1" max="5"/>
+				<span ngx-invalid="form_invalid.number required" class="help-inline">Number is required</span>
+				<div ngx-invalid="form_invalid.number number">Invalid number</div>
+				<ngx-invalid input="form_invalid.number" error="min,max">Not in range</ngx-invalid>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<label class="checkbox"><input type="checkbox" name="checked" ng-model="invalid.checked" required/> check this</label>
+				<div ngx-invalid="form_invalid.checked">Checkbox is not checked</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="letter">Letter:</label>
+			<div class="controls">
+				<input type="text" name="letter" id="letter" ng-model="invalid.letter" ng-pattern="/^[a-zA-Z]$/" required maxlength="1">
+				<span ngx-invalid="form_invalid.letter" class="help-inline">Invalid letter</span>
+			</div>
+		</div>
+		<div ngx-invalid="form_invalid" data-expression="invalid.submitted">Form is invalid</div>
+	</form>
+	<a class="btn" ng-click="invalid.submitted=true">Submit</a>
+</fieldset>

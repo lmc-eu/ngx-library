@@ -1,0 +1,13 @@
+<fieldset>
+	<legend>Example</legend>
+	<form name="form_www" class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="www">www:</label>
+			<div class="controls">
+				<input type="text" id="www" ng-model="www" ngx-www-input name="www"/>
+				<span ngx-invalid="form_www.www" class="help-inline">Invalid www</span>
+			</div>
+		</div>
+	</form>
+</fieldset>
+<pre ng-show="www">{{www}}</pre>

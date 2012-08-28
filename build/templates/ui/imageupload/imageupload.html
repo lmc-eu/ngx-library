@@ -1,0 +1,28 @@
+<div ng-class="featureClass" class="ngx-imageupload">
+    <div ng-show="features.crop" class="result">
+        <img data-imageupload-rel="result" ng-show="isSource"/>
+        <div class="blank" ng-show="!isSource"/>
+        <span>náhled</span>
+    </div>
+    <div class="source" data-imageupload-rel="dragdrop">
+        <div ng-show="!isSource" class="dragdrop">
+            <span ng-show="features.fileApi">
+                Sem přetáhněte obrázek
+            </span>
+            <span ng-show="features.fileApi" style="color: #999">
+                nebo můžete...
+            </span>
+            <span class="select">
+                vybrat z počítače
+                <input type="file" name="files[]" />
+            </span>
+            <span ng-show="!features.crop" style="color: #999">
+                maximální povolené rozměry obrázku jsou {{resultWidth}} x {{resultHeight}}
+            </span>
+        </div>
+        <div ng-show="isSource">
+            <img data-imageupload-rel="source"/>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+</div>
