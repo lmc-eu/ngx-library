@@ -1,7 +1,11 @@
 (function(angular, $, window) {
     'use strict';
 
-    var module = angular.module('ngx.ui.imageupload', ['ngx.loader']);
+    var module = angular.module('ngx.ui.imageupload', [
+        'ngx.loader',
+        'ngx.dictionary',
+        'ngx.ui.translate'
+    ]);
 
     /**
      * Compute resize ratio by width/height
@@ -28,7 +32,7 @@
     /**
      * Image uploader
      */
-    module.directive('ngxImageupload', ['$timeout', 'ngxConfig', 'ngxLoader', function($timeout, ngxConfig, ngxLoader) {
+    module.directive('ngxImageupload', ['$timeout', 'ngxConfig', 'ngxLoader', 'ngxDictionary', function($timeout, ngxConfig, ngxLoader, ngxDictionary) {
         var deps = [
             ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.js',
             ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.css',
@@ -172,8 +176,8 @@
                 function setup() {
                     var $element = $(element);
 
-                    var config = angular.extend({}, scope.config, attrs);
-                    sourceScale = (config.sourceScale || attrs.sourceScale || '400x400').split('x');
+                    var config = angular.extend({}, ngxConfig.ui.imageupload, scope.config, attrs);
+                    sourceScale = (config.sourceScale || '400x400').split('x');
                     resultScale = (config.resultScale || '215x125').split('x');
                     resultFixed = !angular.isUndefined(config.resultFixed);
                     resultMime = 'image/' + ((config.resultFormat || '').match(/^jpe?g$/) ? 'jpeg' : 'png');
@@ -207,9 +211,9 @@
                     scope.featureClass = scope.featureClass.join(' ');
 
                     // in dialog?
-                    if (attrs.dialogTrigger) {
+                    if (config.dialogTrigger) {
                         // bind dialog trigger
-                        $(attrs.dialogTrigger).click(function(e) {
+                        $(config.dialogTrigger).click(function(e) {
                             e.preventDefault();
                             $element.dialog('open');
                             return false;
@@ -221,26 +225,32 @@
                             minWidth: parseInt(sourceScale[0], 10) + parseInt(resultScale[0], 10) + 70,
                             minHeight: parseInt(sourceScale[1] > resultScale[1] ? sourceScale[1] : resultScale[1], 10) + 50,
                             resizable: false,
-                            title: attrs.dialogTitle,
-                            buttons: {
-                                'Zrušit': function() {
-                                    reset();
-                                    scope.$apply();
-                                    $(this).dialog('close');
+                            title: config.dialogTitle,
+                            buttons: [
+                                {
+                                    text: ngxDictionary('NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT'),
+                                    click: function() {
+                                        scope.model = (config.resultMode === 'simple' ? resultImage.src : resultImage);
+                                        $(this).dialog('close');
+                                    }
                                 },
-                                'Nahrát': function() {
-                                    scope.model = (attrs.resultMode === 'simple' ? resultImage.src : resultImage);
-                                    reset();
-                                    scope.$apply();
-                                    $(this).dialog('close');
+                                {
+                                    text: ngxDictionary('NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL'),
+                                    click: function() {
+                                        $(this).dialog('close');
+                                    }
                                 }
+                            ],
+                            close: function() {
+                                reset();
+                                scope.$apply();
                             }
                         });
                     }
 
                     // initialize fileupload
                     $element.fileupload({
-                        url: attrs.sourceContentUrl,
+                        url: config.sourceContentUrl,
                         fileInput: $element.find('input[type=file]'),
                         dropZone: $('[data-imageupload-rel=dragdrop]'),
                         dataType: 'json',
@@ -261,7 +271,7 @@
                                 scope.$apply();
                             };
                             image.onerror = function() {
-                                window.alert('Neplatný obrázek');
+                                window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INVALID_IMAGE'));
                             };
 
                             // try read file with FileAPI
@@ -279,7 +289,7 @@
                                         $(image).data('width', result.width).data('height', result.height);
                                         image.src = result.src;
                                     }).error(function() {
-                                        window.alert('Chyba při zpracování obrázku anebo neplatný obrázek');
+                                        window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_PROCESS_ERROR'));
                                     });
                             }
                         }
