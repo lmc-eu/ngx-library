@@ -62,6 +62,10 @@ h1 {
     margin-top: 18px;
 }
 
+h1 a  {
+    text-decoration: none !important;
+}
+
 .ngx-invalid {
     border-radius: 3px 3px 3px 3px;
     padding: 1px 4px 2px;
