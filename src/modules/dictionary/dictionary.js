@@ -6,15 +6,23 @@
     /**
      * Dictionary provider
      */
-    module.provider('ngxDictionary', function() {
+    module.factory('ngxDictionary', function() {
         var dictionary = {},
             currentLanguage = 'en';
+
+        /**
+         * Returns items by current language
+         * @param language
+         */
+        function ngxDictionary(key, language) {
+            return dictionary[language ? language : currentLanguage][key];
+        }
 
         /**
          * Sets dictionary current language
          * @param language
          */
-        this.setLanguage = function(language) {
+        ngxDictionary.setLanguage = function(language) {
             currentLanguage = language;
             return this;
         };
@@ -24,7 +32,7 @@
          * @param language
          * @param items
          */
-        this.addItems = function(language, items) {
+        ngxDictionary.addItems = function(language, items) {
             if (angular.isUndefined(dictionary[language])) {
                 dictionary[language] = {};
             }
@@ -33,19 +41,7 @@
             return this;
         };
 
-        /**
-         * Factory function.
-         * @return {Object}
-         */
-        this.$get = function() {
-            /**
-             * Returns items by current language
-             * @param language
-             */
-            return function(key, language) {
-                return dictionary[language ? language : currentLanguage][key];
-            };
-        };
+        return ngxDictionary;
     });
 
 })(window.angular);

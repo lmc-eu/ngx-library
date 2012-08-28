@@ -1,8 +1,8 @@
 (function(angular) {
     'use strict';
 
-    angular.module('ngx.ui.imageupload').config(['ngxDictionaryProvider', function(ngxDictionaryProvider) {
-        ngxDictionaryProvider.addItems('cz', {
+    angular.module('ngx.ui.imageupload').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('cz', {
             NGX_UI_IMAGEUPLOAD_PREVIEW: 'náhled',
             NGX_UI_IMAGEUPLOAD_INPUT_DRAG: 'Sem přetáhněte obrázek',
             NGX_UI_IMAGEUPLOAD_INPUT_OR: 'nebo můžete...',

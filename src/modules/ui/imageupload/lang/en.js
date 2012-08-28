@@ -1,8 +1,8 @@
 (function(angular) {
     'use strict';
 
-    angular.module('ngx.ui.imageupload').config(['ngxDictionaryProvider', function(ngxDictionaryProvider) {
-        ngxDictionaryProvider.addItems('en', {
+    angular.module('ngx.ui.imageupload').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('en', {
             NGX_UI_IMAGEUPLOAD_PREVIEW: 'preview',
             NGX_UI_IMAGEUPLOAD_INPUT_DRAG: 'Drag image here',
             NGX_UI_IMAGEUPLOAD_INPUT_OR: 'or...',

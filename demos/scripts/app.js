@@ -19,7 +19,7 @@
 
     var app = angular.module('ngxDemoApp', modules.concat(['ngx.ui.timeInput']));
 
-    app.config(['$routeProvider', function($routeProvider) {
+    app.config(function($routeProvider) {
         angular.forEach(modules, function(name) {
             $routeProvider.when('/' + name, {
                 templateUrl: 'templates/' + name + '.html',
@@ -29,9 +29,13 @@
         $routeProvider.otherwise({
             redirectTo: '/' + modules[0]
         });
-    }]);
+    });
 
-    app.controller('ngxCtrl', ['$scope', '$route', '$location', function($scope, $route, $location) {
+    app.run(function(ngxDictionary) {
+        ngxDictionary.setLanguage('en');
+    });
+
+    app.controller('ngxCtrl', function($scope, $route, $location) {
         $scope.modules = modules;
 
         $scope.$on('$routeChangeSuccess', function(event, route) {
@@ -76,6 +80,6 @@
         $scope.getContentClass = function() {
             return ($scope.module ? $scope.module.replace(/\./g, '-') : '');
         };
-    }]);
+    });
 
 })(window.angular, window);
