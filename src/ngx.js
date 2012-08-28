@@ -23,7 +23,8 @@
     module.value('ngxConfig', {
         basePath: basePath,
         libsPath: basePath + 'libs/',
-        templatesPath: basePath + 'templates/'
+        templatesPath: basePath + 'templates/',
+        ui: {}
     });
 
 })(window.angular, window.document);
