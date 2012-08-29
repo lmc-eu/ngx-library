@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     // tasks
-    grunt.loadTasks('grunt/tasks');
+    grunt.loadTasks('build/tasks');
     grunt.loadNpmTasks('grunt-recess');
 
     // configuration
@@ -17,37 +17,37 @@ module.exports = function(grunt) {
         concat: {
             dist: {
                 src: ['<banner:meta.banner>', 'src/ngx.js', 'src/**/*.js'],
-                dest: 'build/ngx.js'
+                dest: 'dist/ngx.js'
             }
         },
         clean: {
-            dist: ['build/']
+            dist: ['dist/']
         },
         copy: {
             dist: {
                 files: {
-                    'build/templates/ui': ['src/modules/ui/**/*.html'],
-                    'build/libs': ['libs/**']
+                    'dist/templates/ui': ['src/modules/ui/**/*.html'],
+                    'dist/libs': ['libs/**']
                 }
             }
         },
         min: {
             dist: {
                 src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-                dest: 'build/ngx.min.js'
+                dest: 'dist/ngx.min.js'
             }
         },
         recess: {
             dist_css: {
                 src: 'src/**/*.less',
-                dest: 'build/styles/ngx.css',
+                dest: 'dist/styles/ngx.css',
                 options: {
                     compile: true
                 }
             },
             dist_min: {
                 src: '<config:recess.dist_css.dest>',
-                dest: 'build/styles/ngx.min.css',
+                dest: 'dist/styles/ngx.min.css',
                 options: {
                     compress: true
                 }
