@@ -26,10 +26,14 @@ grunt
 
 This is an initial open-sourced version of this library, more to come soon.
 
+- ngx.ui.imageupload with flash upload for browsers without File API (IE8)
+- more global configuration via ngxConfig
+- separate modules which use external libraries (ngx.ui.fancybox, ngx.ui.jqDialog, ngx.ui.twDialog) with configurable usage in ngx.ui.wysiwyg/lightbox/dialog
+- more demos
 - documentation
 - tests
-- optimize grunt script, custom build
-- lots of refactoring.. and ideas :-)
+- custom build
+- lots of refactoring
 
 [AngularJS]: http://angularjs.org/
 [Angular-UI]: https://github.com/angular-ui/angular-ui
