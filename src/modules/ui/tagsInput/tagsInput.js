@@ -17,8 +17,9 @@
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
-                // maximum allowed tags count
-                var maxCount = parseInt(attrs.ngxTagsMaxCount ? attrs.ngxTagsMaxCount : attrs.ngxTags, 10);
+                // minimum/maximum allowed tags count
+                var minCount = (attrs.min ? parseInt(attrs.min, 10) : null),
+                    maxCount = (attrs.max ? parseInt(attrs.max, 10) : null);
 
                 element = $(element);
 
@@ -28,33 +29,39 @@
                 }
 
                 // autocomplete definition
-                var autocomplete = (attrs.ngxTagsAutocompleteUrl ? {
-                    url: attrs.ngxTagsAutocompleteUrl,
-                    data: undefined,
-                    source: function(request, response) {
-                        // load data
-                        if (autocomplete.data === undefined) {
-                            $http.get(autocomplete.url)
-                                .success(function(data) {
-                                    autocomplete.data = data;
-                                    response(autocomplete.filter(request.term));
-                                });
-                        } else {
-                            response(autocomplete.filter(request.term));
+                var autocomplete;
+                if (attrs.autocompleteUrl || attrs.autocompleteSource) {
+                    autocomplete = {
+                        url: (attrs.autocompleteUrl ? attrs.autocompleteUrl : true),
+                        data: (attrs.autocompleteSource ? scope.$eval(attrs.autocompleteSource) : undefined),
+                        source: function(request, response) {
+                            // load data
+                            if (autocomplete.data === undefined) {
+                                $http.get(autocomplete.url)
+                                    .success(function(data) {
+                                        autocomplete.data = data;
+                                        response(autocomplete.filter(request.term));
+                                    });
+                            } else {
+                                response(autocomplete.filter(request.term));
+                            }
+                        },
+                        filter: function(term) {
+                            return $filter('filter')(autocomplete.data, term);
                         }
-                    },
-                    filter: function(term) {
-                        return $filter('filter')(autocomplete.data, term);
-                    }
-                } : null);
+                    };
+                }
 
                 ngxLoader(deps, function() {
                     // apply tagsInput plugin ... cannot be used in linking phase due to unexpected DOM transformations
                     element.tagsInput({
                         autocomplete_url: (autocomplete ? autocomplete.url : undefined),
-                        autocomplete: (autocomplete && autocomplete.url ? { source: autocomplete.source, minLength: 2 } : undefined),
+                        autocomplete: (autocomplete ? {
+                            source: autocomplete.source,
+                            minLength: (attrs.autocompleteMinLength ? parseInt(attrs.autocompleteMinLength, 10) : 2)
+                        } : undefined),
                         maxChars: 30,
-                        maxCount: parseInt(maxCount, 10),
+                        maxCount: (maxCount ? maxCount : null),
                         width: null,
                         height: null,
                         defaultText: '',
@@ -76,17 +83,18 @@
 
                     // string view value <=> array model value
                     ctrl.$parsers.push(function(value) {
+                        var values;
+
                         if (typeof(value) === 'string' && value.length) {
-                            var values = value.split(',');
+                            values = value.split(',');
+                        }
 
-                            // validate maximum allowed tags count
-                            if (maxCount) {
-                                ctrl.$setValidity('max_count', values.length <= maxCount);
-                            }
-
-                            return values;
-                        } else {
-                            return undefined;
+                        // validate allowed tags count
+                        if (minCount) {
+                            ctrl.$setValidity('min', (values && values.length >= minCount));
+                        }
+                        if (maxCount) {
+                            ctrl.$setValidity('max', (values ? values.length <= maxCount : true));
                         }
                     });
 
