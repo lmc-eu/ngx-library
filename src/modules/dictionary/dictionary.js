@@ -6,9 +6,9 @@
     /**
      * Dictionary provider
      */
-    module.factory('ngxDictionary', function() {
+    module.factory('ngxDictionary', function($locale) {
         var dictionary = {},
-            currentLanguage = 'en';
+            currentLanguage = $locale.id.split('-')[0];
 
         /**
          * Returns items by current language
