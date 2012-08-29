@@ -25,7 +25,7 @@
                             model = data;
 
                             // exclude meta when not required
-                            if (attrs.ngxAddressMeta !== 'true') {
+                            if (attrs.meta !== 'true') {
                                 delete model.meta;
                             }
 
@@ -87,8 +87,8 @@
                     setStrictMode(true);
 
                     // watch strict flag attribute expression
-                    if (attrs.ngxAddressStrict) {
-                        scope.$watch(attrs.ngxAddressStrict, function(value) {
+                    if (attrs.strict) {
+                        scope.$watch(attrs.strict, function(value) {
                             setStrictMode(value);
                         });
                     }

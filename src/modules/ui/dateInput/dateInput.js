@@ -36,11 +36,11 @@
                 ctrl.element = element;
 
                 // related date range input (from-to)
-                if (attrs.ngxDateRangeInput) {
+                if (attrs.rangeInput) {
                     // range config
                     ctrl.range = {
                         type: 'max',
-                        ctrl: $parse(attrs.ngxDateRangeInput)(scope)
+                        ctrl: $parse(attrs.rangeInput)(scope)
                     };
                     // back reference
                     ctrl.range.ctrl.range = {

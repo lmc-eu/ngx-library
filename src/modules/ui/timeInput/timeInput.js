@@ -12,8 +12,8 @@
             link: function(scope, element, attrs, ctrl) {
                 // related date input
                 var dateInput;
-                if (attrs.ngxTimeDateInput) {
-                    dateInput = $parse(attrs.ngxTimeDateInput)(scope);
+                if (attrs.dateInput) {
+                    dateInput = $parse(attrs.dateInput)(scope);
                     dateInput.timeInput = ctrl;    // back reference
                 }
 

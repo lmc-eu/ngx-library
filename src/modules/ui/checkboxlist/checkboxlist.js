@@ -14,8 +14,8 @@
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
                 var id = attrs.ngModel,
-                    required = (attrs.ngxCheckboxlistRequired ? true : false),
-                    min = parseInt(attrs.ngxCheckboxlistMin, 10);
+                    required = angular.isDefined(attrs.required),
+                    minCount = (attrs.min ? parseInt(attrs.min, 10) : null);
 
                 ctrl.value = $interpolate(element.val())(scope);
 
@@ -39,7 +39,7 @@
                     });
 
                     ctrl.$setValidity('required', required ? values.length > 0 : true);
-                    ctrl.$setValidity('min', values.length >= min);
+                    ctrl.$setValidity('min', values.length >= minCount);
 
                     return values;
                 });
@@ -50,7 +50,7 @@
                     }
 
                     ctrl.$setValidity('required', required ? values.length > 0 : true);
-                    ctrl.$setValidity('min', values.length >= min);
+                    ctrl.$setValidity('min', values.length >= minCount);
 
                     for (var i = 0; i < values.length; i++) {
                         if (values[i] === ctrl.value) {

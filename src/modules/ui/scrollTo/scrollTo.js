@@ -10,7 +10,7 @@
         return function(scope, element, attrs) {
             element.bind('click', function(e) {
                 e.preventDefault();
-                $('html, body').animate({ scrollTop: $(attrs.ngxScrollTo).offset().top + (attrs.scrollOffset ? parseInt(attrs.scrollOffset, 10) : 0) }, 600);
+                $('html, body').animate({ scrollTop: $(attrs.ngxScrollTo).offset().top + (attrs.offset ? parseInt(attrs.offset, 10) : 0) }, 600);
                 return false;
             });
         };
