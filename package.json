@@ -12,9 +12,15 @@
 		"node": ">= 0.6.11"
 	},
 	"dependencies": {
+		"grunt": ">= 0.3.12",
+		"grunt-recess": ">=0.1.0",
+		"rimraf": ">=2.0.2"
 	},
 	"devDependencies": {
 		"grunt-recess": ">=0.1.0",
 		"rimraf": ">=2.0.2"
+	},
+	"scripts" : {
+		"test": "grunt"
 	}
 }
