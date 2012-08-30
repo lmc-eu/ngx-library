@@ -22,6 +22,12 @@ grunt
 ... and try demos
 
 
+## Requirements
+
+- AngularJS v1.0+
+- jQuery, jQuery UI - for some directives
+
+
 ## To do
 
 This is an initial open-sourced version of this library, more to come soon.
@@ -32,6 +38,7 @@ This is an initial open-sourced version of this library, more to come soon.
 - more demos
 - documentation
 - tests
+- dependency map
 - custom build
 - lots of refactoring
 
