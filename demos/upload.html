@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FileReader</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script> window.FileReader = null; </script>
+    <script type="text/javascript" src="scripts/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="../libs/swfobject/swfobject.js"></script>
+    <script type="text/javascript" src="../libs/filereader/jquery.FileReader.js"></script>
+    <style> object { border: 1px dotted gray } </style>
+</head>
+<body>
+    <div id="file" style="width:200px;height:100px">upload</div>
+    <script>
+        console.log(window.FileReader);
+        $('#file').fileReader({
+            id: 'swfFile',
+            filereader: '../libs/filereader/filereader.swf',
+            debugMode: true,
+            extensions: '*.jpg;*.png;*.bmp',
+            callback: function() {
+                $('#file').trigger('mouseover');
+            }
+        }).on('change', function(evt) {
+            for (var i = 0; i < evt.target.files.length; i++) {
+                var file = evt.target.files[i];
+                var fileReader = new window.FileReader();
+                fileReader.onload = function(e) {
+                    console.log(e.target.result);
+                };
+                fileReader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

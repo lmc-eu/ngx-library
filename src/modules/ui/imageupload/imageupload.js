@@ -36,10 +36,18 @@
     module.directive('ngxImageupload', ['$timeout', 'ngxConfig', 'ngxLoader', 'ngxDictionary', function($timeout, ngxConfig, ngxLoader, ngxDictionary) {
         var deps = [
             ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.js',
-            ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.css',
-            ngxConfig.libsPath + 'jquery.fileupload/jquery.fileupload.js',
-            ngxConfig.libsPath + 'jquery.iframe-transport/jquery.iframe-transport.js'
+            ngxConfig.libsPath + 'jquery.jcrop/jquery.Jcrop.css'
         ];
+
+        window.FileReader = undefined;
+        var html5FileApi = angular.isDefined(window.FileReader);
+        if (html5FileApi) {
+            deps.push(ngxConfig.libsPath + 'jquery.fileupload/jquery.fileupload.js');
+        } else {
+            // load Flash FileApi polyfill
+            deps.push(ngxConfig.libsPath + 'swfobject/swfobject.js');
+            deps.push(ngxConfig.libsPath + 'filereader/jquery.FileReader.js');
+        }
 
         return {
             restrict: 'EA',
@@ -60,11 +68,13 @@
                     resultFixed,
                     resultMime;
 
-                // HTML5 feature detection
+                // features detection
                 var features = {
                     crop: (resultCanvas.getContext ? true : false),
-                    fileApi: (typeof window.FileReader !== 'undefined')
+                    dragDrop: html5FileApi
                 };
+
+                var $element = $(element);
 
                 /**
                  * Resets state
@@ -142,7 +152,7 @@
                                     }
 
                                     // set result image
-                                    $('[data-imageupload-rel=result]').attr(resultImage);
+                                    $element.find('[data-imageupload-rel=result]').attr(resultImage);
                                 }
                             };
 
@@ -175,8 +185,6 @@
                  * Setup imageupload
                  */
                 function setup() {
-                    var $element = $(element);
-
                     var config = angular.extend({}, ngxConfig.ui.imageupload, scope.config, attrs);
                     sourceScale = (config.sourceScale || '400x400').split('x');
                     resultScale = (config.resultScale || '215x125').split('x');
@@ -202,6 +210,9 @@
                         width: resultScale[0] + 'px',
                         height: resultScale[1] + 'px'
                     });
+
+                    // File API support
+                    features.fileApi = (typeof window.FileReader !== 'undefined');
 
                     // HTML5 features into scope
                     scope.features = features;
@@ -249,52 +260,61 @@
                         });
                     }
 
-                    // initialize fileupload
-                    $element.fileupload({
-                        url: config.sourceContentUrl,
-                        fileInput: $element.find('input[type=file]'),
-                        dropZone: $('[data-imageupload-rel=dragdrop]'),
-                        dataType: 'json',
-                        replaceFileInput: true,
-                        formData: {
-                            crop: (features.crop ? 'true' : 'false')
-                        },
+                    /**
+                     * Loads image
+                     * @param file
+                     */
+                    function loadSourceImage(file) {
+                        var image = $('[data-imageupload-rel=source]')[0];
 
-                        // when file added
-                        add: function(e, data) {
-                            var file = data.files[0],
-                                image = $('[data-imageupload-rel=source]')[0];
+                        $(image).hide();
 
-                            $(image).hide();
+                        image.onload = function() {
+                            showSourceImage(this);
+                            scope.$apply();
+                        };
+                        image.onerror = function() {
+                            window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INVALID_IMAGE'));
+                        };
 
-                            image.onload = function() {
-                                showSourceImage(this);
-                                scope.$apply();
-                            };
-                            image.onerror = function() {
-                                window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INVALID_IMAGE'));
-                            };
+                        // try read file with FileAPI
+                        var fileReader = new window.FileReader();
+                        fileReader.onload = function(e) {
+                            image.src = e.target.result;
+                        };
+                        fileReader.readAsDataURL(file);
+                    }
 
-                            // try read file with FileAPI
-                            if (features.fileApi) {
-                                var fileReader = new window.FileReader();
-                                fileReader.onload = function(e) {
-                                    image.src = e.target.result;
-                                };
-                                fileReader.readAsDataURL(file);
+                    if (html5FileApi) {
+                        // initialize fileupload
+                        $element.fileupload({
+                            fileInput: $element.find('input[type=file]'),
+                            dropZone: $element.find('[data-imageupload-rel=dragdrop]'),
+                            dataType: 'json',
+                            replaceFileInput: true,
+                            formData: {
+                                crop: (features.crop ? 'true' : 'false')
+                            },
 
-                            } else {
-                                // upload file to server and get content.. IE8 :-|
-                                data.submit()
-                                    .success(function(result) {
-                                        $(image).data('width', result.width).data('height', result.height);
-                                        image.src = result.src;
-                                    }).error(function() {
-                                        window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_PROCESS_ERROR'));
-                                    });
+                            // when file added
+                            add: function(e, data) {
+                                loadSourceImage(data.files[0]);
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        // initialize flash filereader on browse text ... on file input crashes the flash component
+                        //$element.find('input[type=file]').fileReader({
+                        var $fileReaderElement = $element.find('[data-imageupload-rel="browse"]');
+                        $fileReaderElement.fileReader({
+                            filereader: ngxConfig.libsPath + 'filereader/filereader.swf',
+                            debugMode: true,
+                            extensions: '*.jpg;*.png;*.bmp'
+                        }).on('change', function(event) {
+                            angular.forEach(event.target.files, function(file) {
+                                loadSourceImage(file);
+                            });
+                        });
+                    }
                 }
 
                 element.hide();
