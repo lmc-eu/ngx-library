@@ -2,6 +2,8 @@
 
 Simple extension library for [AngularJS] used in LMC projects. Mostly UI components, inspired by [Angular-UI] project.
 
+[![Build Status](https://secure.travis-ci.org/lmc-eu/ngx-library.png?branch=master)](http://travis-ci.org/lmc-eu/ngx-library)
+
 
 ## Prerequisites
 
