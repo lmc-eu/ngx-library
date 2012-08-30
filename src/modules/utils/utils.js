@@ -26,7 +26,7 @@
         return dst;
     };
 
-    angular.module('ngx.utils', ['ngx'])
+    angular.module('ngx.utils', [])
        .value('ngxUtils', ngxUtils);
 
 })(window.angular);

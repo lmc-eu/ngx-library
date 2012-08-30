@@ -1,10 +1,24 @@
 (function(angular, head) {
     'use strict';
 
-    var module = angular.module('ngx.loader', ['ngx']);
+    var module = angular.module('ngx.loader', ['ngx.config']);
 
     module.factory('ngxLoader', ['ngxConfig', function(ngxConfig) {
         var loaded = [];
+
+        /**
+         * Checks if file is already loaded
+         * @param file
+         * @return {Boolean}
+         */
+        function isLoaded(file) {
+            for (var i = 0; i < loaded.length; i++) {
+                if (loaded[i] === file) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         /**
          * Loads external js/css files
@@ -21,7 +35,7 @@
                 }
 
                 // already loaded
-                if (loaded.indexOf(file) !== -1) {
+                if (isLoaded(file)) {
                     return;
                 }
 

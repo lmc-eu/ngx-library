@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var module = angular.module('ngx.ui.translate', ['ngx', 'ngx.dictionary']);
+    var module = angular.module('ngx.ui.translate', ['ngx.dictionary']);
 
     var markupSymbol;
 

@@ -4,7 +4,7 @@ document.createElement('ngx-invalid');
 (function(angular) {
     'use strict';
 
-    var module = angular.module('ngx.ui.invalid', ['ngx']);
+    var module = angular.module('ngx.ui.invalid', []);
 
     /**
      * Input/Form invalid status

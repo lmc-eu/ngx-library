@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var module = angular.module('ngx.ui.timeInput', ['ngx']);
+    var module = angular.module('ngx.ui.timeInput', []);
 
     /**
      * Time input type

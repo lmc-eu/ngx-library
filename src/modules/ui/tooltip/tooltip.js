@@ -1,7 +1,7 @@
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.tooltip', ['ngx']);
+    var module = angular.module('ngx.ui.tooltip', []);
 
     /**
      * Tooltip

@@ -1,7 +1,7 @@
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.scrollTo', ['ngx']);
+    var module = angular.module('ngx.ui.scrollTo', []);
 
     /**
      * Scroll to on click

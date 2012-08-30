@@ -17,7 +17,7 @@
         'ngx.ui.addressInput'
     ];
 
-    var app = angular.module('ngxDemoApp', modules.concat(['ngx.ui.timeInput']));
+    var app = angular.module('ngxDemoApp', ['ngx']);
 
     app.config(function($routeProvider) {
         angular.forEach(modules, function(name) {

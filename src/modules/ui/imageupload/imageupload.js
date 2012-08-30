@@ -2,6 +2,7 @@
     'use strict';
 
     var module = angular.module('ngx.ui.imageupload', [
+        'ngx.config',
         'ngx.loader',
         'ngx.dictionary',
         'ngx.ui.translate'

@@ -1,7 +1,7 @@
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.tagsInput', ['ngx.loader']);
+    var module = angular.module('ngx.ui.tagsInput', ['ngx.config', 'ngx.loader']);
 
     /**
      * Tags input

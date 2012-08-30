@@ -4,7 +4,7 @@ window.CKEDITOR_BASEPATH = '';
 (function(angular, window) {
     'use strict';
 
-    var module = angular.module('ngx.ui.ckeditor', ['ngx.loader']);
+    var module = angular.module('ngx.ui.ckeditor', ['ngx.config', 'ngx.loader']);
 
     /**
      * WYSIWYG editor

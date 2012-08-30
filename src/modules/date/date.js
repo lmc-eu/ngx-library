@@ -268,7 +268,7 @@
         return m > 0 && m < 13 && y > 0 && y < 32768 && d > 0 && d <= (new Date(y, m, 0)).getDate();
     };
 
-    angular.module('ngx.date', ['ngx'])
+    angular.module('ngx.date', [])
        .value('ngxDate', ngxDate);
 
 })(window.angular);

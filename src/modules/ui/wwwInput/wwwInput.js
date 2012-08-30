@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var module = angular.module('ngx.ui.wwwInput', ['ngx']);
+    var module = angular.module('ngx.ui.wwwInput', []);
 
     /**
      * Www input type

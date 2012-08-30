@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var module = angular.module('ngx.ui.hashtagInput', ['ngx']);
+    var module = angular.module('ngx.ui.hashtagInput', []);
 
     /**
      * Hash tag (twitter)

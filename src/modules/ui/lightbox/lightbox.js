@@ -1,7 +1,7 @@
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.lightbox', ['ngx.loader']);
+    var module = angular.module('ngx.ui.lightbox', ['ngx.config', 'ngx.loader']);
 
     /**
      * Lightbox directive

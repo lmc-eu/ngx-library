@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var module = angular.module('ngx.ui.checkboxlist', ['ngx']);
+    var module = angular.module('ngx.ui.checkboxlist', []);
 
     /**
      * Checkbox list

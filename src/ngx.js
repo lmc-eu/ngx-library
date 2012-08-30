@@ -1,43 +1,32 @@
-(function(angular, document) {
+(function(angular) {
     'use strict';
 
-    // determine base path
-    var basePath = null,
-        re = /ngx(\.min)?\.js(.*)$/;
+    angular.module('ngx', [
+        'ngx.config',
+        'ngx.date',
+        'ngx.dictionary',
+        'ngx.loader',
+        'ngx.smap',
+        'ngx.utils',
+        'ngx.ui.addressInput',
+        'ngx.ui.checkboxlist',
+        'ngx.ui.ckeditor',
+        'ngx.ui.dateInput',
+        'ngx.ui.dialog',
+        'ngx.ui.gallery',
+        'ngx.ui.geomap',
+        'ngx.ui.hashtagInput',
+        'ngx.ui.imageupload',
+        'ngx.ui.invalid',
+        'ngx.ui.lightbox',
+        'ngx.ui.scrollTo',
+        'ngx.ui.smap',
+        'ngx.ui.tagsInput',
+        'ngx.ui.timeInput',
+        'ngx.ui.tooltip',
+        'ngx.ui.translate',
+        'ngx.ui.wwwInput',
+        'ngx.ui.wysiwyg'
+    ]);
 
-    angular.forEach(document.getElementsByTagName('script'), function(script) {
-        if (script.src.match(re)) {
-            basePath = script.src.replace(re, '');
-        }
-    });
-    if (basePath === null) {
-        throw new Error('ngx base path cannot be determined.');
-    }
-
-    // register as angular module
-    var module = angular.module('ngx', []);
-
-    /**
-     * Configuration
-     */
-    module.value('ngxConfig', {
-        basePath: basePath,
-        libsPath: basePath + 'libs/',
-        templatesPath: basePath + 'templates/',
-        ui: {}
-    });
-
-})(window.angular, window.document);
-
-// missing ECMAScript functions
-if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function(search) {
-        'use strict';
-        for (var i = 0; i < this.length; i++) {
-            if (this[i] === search) {
-                return i;
-            }
-        }
-        return -1;
-    };
-}
+})(window.angular);

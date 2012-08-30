@@ -1,7 +1,7 @@
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.gallery', ['ngx.ui.lightbox']);
+    var module = angular.module('ngx.ui.gallery', ['ngx.config', 'ngx.ui.lightbox']);
 
     /**
      * Gallery directive

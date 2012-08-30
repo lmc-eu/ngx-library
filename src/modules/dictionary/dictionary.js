@@ -1,7 +1,7 @@
 (function(angular) {
     'use strict';
 
-    var module = angular.module('ngx.dictionary', ['ngx']);
+    var module = angular.module('ngx.dictionary', []);
 
     /**
      * Dictionary provider
