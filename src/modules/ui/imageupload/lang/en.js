@@ -2,11 +2,11 @@
     'use strict';
 
     angular.module('ngx.ui.imageupload').run(['ngxDictionary', function(ngxDictionary) {
-        ngxDictionary.addItems('en', {
+        ngxDictionary.items('en', {
             NGX_UI_IMAGEUPLOAD_PREVIEW: 'preview',
             NGX_UI_IMAGEUPLOAD_INPUT_DRAG: 'Drag image here',
             NGX_UI_IMAGEUPLOAD_INPUT_OR: 'or...',
-            NGX_UI_IMAGEUPLOAD_INPUT_BROWSE: 'choose from your disk',
+            NGX_UI_IMAGEUPLOAD_INPUT_BROWSE: 'choose file from disk',
             NGX_UI_IMAGEUPLOAD_SCALE_INFO: 'maximum allowed dimensions are {{resultWidth}} x {{resultHeight}}',
             NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Submit',
             NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Cancel',

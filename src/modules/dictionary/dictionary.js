@@ -19,26 +19,29 @@
         }
 
         /**
-         * Sets dictionary current language
-         * @param language
+         * Sets/gets dictionary current language
+         * @param [language]
          */
-        ngxDictionary.setLanguage = function(language) {
-            currentLanguage = language;
-            return this;
+        ngxDictionary.language = function(language) {
+            if (language) {
+                currentLanguage = language;
+            }
+            return currentLanguage;
         };
 
         /**
-         * Adds items to dictionary
+         * Sets/gets items to/from dictionary
          * @param language
-         * @param items
+         * @param [items]
          */
-        ngxDictionary.addItems = function(language, items) {
-            if (angular.isUndefined(dictionary[language])) {
-                dictionary[language] = {};
+        ngxDictionary.items = function(language, items) {
+            if (items) {
+                if (angular.isUndefined(dictionary[language])) {
+                    dictionary[language] = {};
+                }
+                angular.extend(dictionary[language], items);
             }
-
-            angular.extend(dictionary[language], items);
-            return this;
+            return dictionary[language];
         };
 
         return ngxDictionary;

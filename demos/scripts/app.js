@@ -32,7 +32,11 @@
     });
 
     app.run(function(ngxDictionary) {
-        ngxDictionary.setLanguage('en');
+        // sample dictionary modification
+        ngxDictionary.language('en');
+        ngxDictionary.items('en', {
+            NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Submit image'
+        });
     });
 
     app.controller('ngxCtrl', function($scope, $route, $location) {
