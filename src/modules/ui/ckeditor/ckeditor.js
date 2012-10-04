@@ -18,13 +18,12 @@ window.CKEDITOR_BASEPATH = '';
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
                 element.hide();
-                var toolbarLocation = (attrs.toolbarLocation ? attrs.toolbarLocation : 'bottom');
                 ngxLoader(deps, function() {
                     element.show();
                     // editor instance
                     var editor = window.CKEDITOR.replace(element[0], {
                         toolbar: [['Bold', 'BulletedList', 'Link']],
-                        toolbarLocation: toolbarLocation,
+                        toolbarLocation: (attrs.toolbarLocation ? attrs.toolbarLocation : 'bottom'),
                         toolbarCanCollapse: false,
                         removePlugins: 'elementspath',
                         extraPlugins : 'autogrow',
