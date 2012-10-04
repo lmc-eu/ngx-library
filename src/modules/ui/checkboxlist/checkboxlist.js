@@ -15,7 +15,8 @@
             link: function(scope, element, attrs, ctrl) {
                 var id = attrs.ngModel,
                     required = angular.isDefined(attrs.required),
-                    minCount = (attrs.min ? parseInt(attrs.min, 10) : null);
+                    minCount = (attrs.min ? parseInt(attrs.min, 10) : null),
+                    maxCount = (attrs.max ? parseInt(attrs.max, 10) : null);
 
                 ctrl.value = $interpolate(element.val())(scope);
 
@@ -40,6 +41,7 @@
 
                     ctrl.$setValidity('required', required ? values.length > 0 : true);
                     ctrl.$setValidity('min', values.length >= minCount);
+                    ctrl.$setValidity('max', values.length <= maxCount);
 
                     return values;
                 });
@@ -51,6 +53,7 @@
 
                     ctrl.$setValidity('required', required ? values.length > 0 : true);
                     ctrl.$setValidity('min', values.length >= minCount);
+                    ctrl.$setValidity('max', values.length <= maxCount);
 
                     for (var i = 0; i < values.length; i++) {
                         if (values[i] === ctrl.value) {
