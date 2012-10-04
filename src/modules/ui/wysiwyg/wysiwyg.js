@@ -10,7 +10,7 @@
         return {
             require: 'ngModel',
             link: function(scope, element, attrs) {
-                var toolbar = (attrs.location ? attrs.location : 'bottom');
+                var toolbar = (attrs.toolbarLocation ? attrs.toolbarLocation : 'bottom');
                 attrs.$set('ngxWysiwyg', undefined);
                 attrs.$set('ngxCkeditor', '');
                 attrs.$set('toolbarLocation', toolbar);
