@@ -13,7 +13,6 @@
                 var toolbar = (attrs.toolbarLocation ? attrs.toolbarLocation : 'bottom');
                 attrs.$set('ngxWysiwyg', undefined);
                 attrs.$set('ngxCkeditor', '');
-                attrs.$set('toolbarLocation', toolbar);
                 $compile(element)(scope);
             }
         };
