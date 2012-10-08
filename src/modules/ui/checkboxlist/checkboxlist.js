@@ -40,8 +40,12 @@
                     });
 
                     ctrl.$setValidity('required', required ? values.length > 0 : true);
-                    ctrl.$setValidity('min', values.length >= minCount);
-                    ctrl.$setValidity('max', values.length <= maxCount);
+                    if (angular.isNumber(minCount)) {
+                        ctrl.$setValidity('min', values.length >= minCount);
+                    }
+                    if (angular.isNumber(maxCount)) {
+                        ctrl.$setValidity('max', values.length <= maxCount);
+                    }
 
                     return values;
                 });
@@ -50,11 +54,13 @@
                     if (!values) {
                         values = [];
                     }
-
                     ctrl.$setValidity('required', required ? values.length > 0 : true);
-                    ctrl.$setValidity('min', values.length >= minCount);
-                    ctrl.$setValidity('max', values.length <= maxCount);
-
+                    if (angular.isNumber(minCount)) {
+                        ctrl.$setValidity('min', values.length >= minCount);
+                    }
+                    if (angular.isNumber(maxCount)) {
+                        ctrl.$setValidity('max', values.length <= maxCount);
+                    }
                     for (var i = 0; i < values.length; i++) {
                         if (values[i] === ctrl.value) {
                             return true;
