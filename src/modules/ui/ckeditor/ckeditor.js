@@ -22,7 +22,7 @@ window.CKEDITOR_BASEPATH = '';
                     element.show();
                     // editor instance
                     var editor = window.CKEDITOR.replace(element[0], {
-                        toolbar: [['Bold', 'BulletedList', 'Link']],
+                        toolbar: (attrs.toolbarItems ? [attrs.toolbarItems.split(',')] : [['Bold', 'BulletedList', 'Link']]),
                         toolbarLocation: (attrs.toolbarLocation ? attrs.toolbarLocation : 'bottom'),
                         toolbarCanCollapse: false,
                         removePlugins: 'elementspath',
