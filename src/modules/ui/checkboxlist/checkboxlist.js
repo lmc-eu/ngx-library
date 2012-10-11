@@ -9,7 +9,6 @@
      */
     module.directive('ngxCheckboxlist', ['$interpolate', function($interpolate) {
         var lists = {};
-
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -30,6 +29,12 @@
                 lists[id].list[ctrl.value] = attrs.title;
                 ctrl.list = lists[id].list;
 
+                function setValidity(values) {
+                    ctrl.$setValidity('required', required ? values.length > 0 : true);
+                    ctrl.$setValidity('min', angular.isNumber(minCount) ? values.length >= minCount : true);
+                    ctrl.$setValidity('max', angular.isNumber(maxCount) ? values.length <= maxCount : true);
+                }
+
                 ctrl.$parsers.push(function() {
                     var values = [];
 
@@ -39,14 +44,7 @@
                         }
                     });
 
-                    ctrl.$setValidity('required', required ? values.length > 0 : true);
-                    if (angular.isNumber(minCount)) {
-                        ctrl.$setValidity('min', values.length >= minCount);
-                    }
-                    if (angular.isNumber(maxCount)) {
-                        ctrl.$setValidity('max', values.length <= maxCount);
-                    }
-
+                    setValidity(values);
                     return values;
                 });
 
@@ -54,13 +52,9 @@
                     if (!values) {
                         values = [];
                     }
-                    ctrl.$setValidity('required', required ? values.length > 0 : true);
-                    if (angular.isNumber(minCount)) {
-                        ctrl.$setValidity('min', values.length >= minCount);
-                    }
-                    if (angular.isNumber(maxCount)) {
-                        ctrl.$setValidity('max', values.length <= maxCount);
-                    }
+
+                    setValidity(values);
+
                     for (var i = 0; i < values.length; i++) {
                         if (values[i] === ctrl.value) {
                             return true;
