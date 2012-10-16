@@ -8,6 +8,21 @@
      * @todo range/time refactoring
      */
     module.directive('ngxDateInput', ['$parse', 'ngxDate', function($parse, ngxDate) {
+
+        /**
+         * Parse date
+         * @param inputValue
+         * @return {*}
+         */
+        module.getDate = function(inputValue) {
+            var r = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(inputValue);
+            if (r && ngxDate.check(r[2], r[1], r[3])) {
+                return new Date(r[3], r[2] - 1, r[1]);
+            }
+
+            return undefined;
+        };
+
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -32,15 +47,41 @@
                     }
                 });
 
+                if (attrs.ngxMask) {
+                    element.mask(attrs.ngxMask, {
+                        placeholder: attrs.ngxMaskPlaceholder ? attrs.ngxMaskPlaceholder : "_",
+                        completed: function() {
+                            var that = this;
+                            scope.$apply(function() {
+                                ctrl.$setViewValue(that.val());
+                            });
+                        }
+                    });
+                }
+
                 // store element reference into widget scope for future datepicker update
                 ctrl.element = element;
 
+                var dateRangeMaxDays = attrs.ngxDateRangeMaxdays ? attrs.ngxDateRangeMaxdays : undefined;
+                var dateInputMin = module.getDate(attrs.ngxDateInputMin);
+                var dateInputMax = module.getDate(attrs.ngxDateInputMax);
+
+                // set initial minimum date
+                if (dateInputMin) {
+                    ctrl.element.datepicker('option', 'minDate', dateInputMin);
+                }
+
+                // set initial maximum date
+                if (dateInputMax) {
+                    ctrl.element.datepicker('option', 'maxDate', dateInputMax);
+                }
+
                 // related date range input (from-to)
-                if (attrs.rangeInput) {
+                if (attrs.ngxDateRangeInput) {
                     // range config
                     ctrl.range = {
                         type: 'max',
-                        ctrl: $parse(attrs.rangeInput)(scope)
+                        ctrl: $parse(attrs.ngxDateRangeInput)(scope)
                     };
                     // back reference
                     ctrl.range.ctrl.range = {
@@ -64,6 +105,23 @@
 
                         if (valid) {
                             date = new Date(pd[3], pd[2] - 1, pd[1]);
+
+                            // check min input date
+                            if (dateInputMin && date < dateInputMin) {
+                                valid = false;
+                            }
+
+                            // check max input date
+                            if (dateInputMax) {
+                                // if max-days range is set, move max input to range end
+                                if (dateRangeMaxDays && ctrl.range.ctrl.timestampValue) {
+                                    dateInputMax = new Date(ctrl.range.ctrl.timestampValue*1000 + (60*60*24*dateRangeMaxDays*1000));
+                                }
+
+                                if (date > dateInputMax) {
+                                    valid = false;
+                                }
+                            }
 
                             // apply related time input
                             if (ctrl.timeInput) {
@@ -99,6 +157,10 @@
                         // update related date picker min/max
                         if (!ctrl.$error.date) {
                             ctrl.range.ctrl.element.datepicker('option', ctrl.range.type + 'Date', viewValue);
+
+                            if (ctrl.range.type == 'min' && dateRangeMaxDays) {
+                                ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateRangeMaxDays);
+                            }
                         }
 
                         // range validation
