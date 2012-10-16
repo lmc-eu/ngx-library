@@ -226,6 +226,7 @@
                             minWidth: parseInt(sourceScale[0], 10) + parseInt(resultScale[0], 10) + 70,
                             minHeight: parseInt(sourceScale[1] > resultScale[1] ? sourceScale[1] : resultScale[1], 10) + 50,
                             resizable: false,
+                            modal: attrs.modal ? attrs.modal : false,
                             title: config.dialogTitle,
                             buttons: [
                                 {
