@@ -96,6 +96,7 @@
                         if (maxCount) {
                             ctrl.$setValidity('max', (values ? values.length <= maxCount : true));
                         }
+                        return values;
                     });
 
                     ctrl.$render = function() {
