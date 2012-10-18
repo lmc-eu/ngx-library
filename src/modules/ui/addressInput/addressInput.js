@@ -1,13 +1,13 @@
 (function(angular, $, window) {
     'use strict';
 
-    var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap', 'ngx.ui.geomap']);
+    var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap', 'ngx.ui.geomap', 'ngx.utils']);
 
     /**
      * Address input with autocomplete and reverse geocoding
      * @todo hacks cleanup
      */
-    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap) {
+    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap, ngxUtils) {
         return {
             require: 'ngModel',
             compile: function(element, attrs) {
