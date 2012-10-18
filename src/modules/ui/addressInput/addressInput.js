@@ -17,7 +17,7 @@
                     var strict,      // is strict? .. require address by street number
                         geomap;
 
-                    var allowedTypes = attrs.ngxAllowedTypes ? attrs.ngxAllowedTypes.replace(/[ ]+/g, '').split(',') : [];
+                    var allowedTypes = attrs.allowedTypes ? attrs.allowedTypes.replace(/[ ]+/g, '').split(',') : [];
 
                     // parse input value and set into model
                     ctrl.$parsers.push(function(data) {
