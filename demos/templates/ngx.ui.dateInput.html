@@ -4,7 +4,7 @@
 		<div class="control-group">
 			<label class="control-label">Start date:</label>
 			<div class="controls">
-				<input type="text" name="dateFrom" ng-model="dateFrom" ngx-date-input required="" ngx-date-input-min="today" ngx-date-input-max="+30d" ngx-date-range-maxdays="10" ngx-mask="99.99.9999" ngx-mask-placeholder="_" />
+				<input type="text" name="dateFrom" ng-model="dateFrom" ngx-date-input required="" date-input-min="today" date-input-max="+30d" date-range-maxdays="10" mask="99.99.9999" mask-placeholder="_" />
 				<input type="text" name="timeFrom" ng-model="timeFrom" ngx-time-input ngx-time-date-input="form_date.dateFrom" />
 				<span ngx-invalid="form_date.dateFrom" data-error="date" class="help-inline">
 					Invalid start date
@@ -14,7 +14,7 @@
 		<div class="control-group">
 			<label class="control-label">End date:</label>
 			<div class="controls">
-				<input type="text" name="dateTo" ng-model="dateTo" required="" ngx-date-input ngx-date-range-input="form_date.dateFrom" ngx-date-input-min="today"  ngx-date-input-max="+30d" ngx-date-range-maxdays="10" ngx-mask="99.99.9999" ngx-mask-placeholder="_" />
+				<input type="text" name="dateTo" ng-model="dateTo" required="" ngx-date-input date-range-input="form_date.dateFrom" ngx-date-input-min="today"  date-input-max="+30d" date-range-maxdays="10" mask="99.99.9999" mask-placeholder="_" />
 				<input type="text" name="timeTo" ng-model="timeTo" ngx-time-input ngx-time-date-input="form_date.dateTo" />
 				<span ngx-invalid="form_date.dateTo" data-error="date" class="help-inline">
 					Invalid end date

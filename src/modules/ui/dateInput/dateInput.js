@@ -66,9 +66,9 @@
                     }
                 });
 
-                if (attrs.ngxMask) {
-                    element.mask(attrs.ngxMask, {
-                        placeholder: attrs.ngxMaskPlaceholder ? attrs.ngxMaskPlaceholder : "_",
+                if (attrs.mask) {
+                    element.mask(attrs.mask, {
+                        placeholder: attrs.maskPlaceholder ? attrs.maskPlaceholder : "_",
                         completed: function() {
                             var that = this;
                             scope.$apply(function() {
@@ -81,9 +81,9 @@
                 // store element reference into widget scope for future datepicker update
                 ctrl.element = element;
 
-                var dateRangeMaxDays = attrs.ngxDateRangeMaxdays ? attrs.ngxDateRangeMaxdays : undefined;
-                var dateInputMin = module.getDate(attrs.ngxDateInputMin);
-                var dateInputMax = module.getDate(attrs.ngxDateInputMax);
+                var dateRangeMaxDays = attrs.dateRangeMaxdays ? attrs.dateRangeMaxdays : undefined;
+                var dateInputMin = module.getDate(attrs.dateInputMin);
+                var dateInputMax = module.getDate(attrs.dateInputMax);
 
                 // set initial minimum date
                 if (dateInputMin) {
@@ -96,11 +96,11 @@
                 }
 
                 // related date range input (from-to)
-                if (attrs.ngxDateRangeInput) {
+                if (attrs.dateRangeInput) {
                     // range config
                     ctrl.range = {
                         type: 'max',
-                        ctrl: $parse(attrs.ngxDateRangeInput)(scope)
+                        ctrl: $parse(attrs.dateRangeInput)(scope)
                     };
                     // back reference
                     ctrl.range.ctrl.range = {
@@ -170,6 +170,7 @@
 
                     ctrl.timestampValue = (date && valid ? date.getTime() / 1000 : undefined);
                     ctrl.$setValidity('date', valid);
+                    ctrl.$error.date = !valid;
 
                     // date range
                     if (ctrl.range) {
