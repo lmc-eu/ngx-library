@@ -7,7 +7,7 @@
      * Address input with autocomplete and reverse geocoding
      * @todo hacks cleanup
      */
-    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap, ngxUtils) {
+    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', 'ngxUtils', function($timeout, ngxSmap, ngxUtils) {
         return {
             require: 'ngModel',
             compile: function(element, attrs) {
