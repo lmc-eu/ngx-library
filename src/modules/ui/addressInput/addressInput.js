@@ -165,7 +165,7 @@
                                     }
 
                                     // allow only address types defined in attribute
-                                    if (!allowedTypes.length || PHPJS.in_array(item.type, allowedTypes, true)) {
+                                    if (!allowedTypes.length || ngxUtils.in_array(item.type, allowedTypes, true)) {
                                         $results.push(item);
                                     }
                                 });
