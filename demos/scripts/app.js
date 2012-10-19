@@ -3,6 +3,7 @@
 
     var modules = [
         'ngx.ui.invalid',
+        'ngx.ui.validate',
         'ngx.ui.scrollTo',
         'ngx.ui.wwwInput',
         'ngx.ui.dateInput',
@@ -79,6 +80,16 @@
 
         $scope.getContentClass = function() {
             return ($scope.module ? $scope.module.replace(/\./g, '-') : '');
+        };
+
+        $scope.validateEven = function(number) {
+            return (!number || ((number % 2) === 0));
+        };
+        $scope.validatePassword = function(cpassword, password) {
+            return (!password && !cpassword) || (password === cpassword);
+        };
+        $scope.validateFavorites = function(movie, actor, later) {
+            return (later ? true : (movie && actor));
         };
     });
 

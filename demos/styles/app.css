@@ -23,6 +23,10 @@ fieldset {
     padding: 39px 19px 14px;
     position: relative;
 }
+fieldset fieldset {
+    margin: 0 0 10px 0;
+    padding-top: 0;
+}
 fieldset ~ pre {
     margin-top: -4px;
     padding-top: 12px;

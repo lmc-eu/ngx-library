@@ -25,6 +25,7 @@
         'ngx.ui.timeInput',
         'ngx.ui.tooltip',
         'ngx.ui.translate',
+        'ngx.ui.validate',
         'ngx.ui.wwwInput',
         'ngx.ui.wysiwyg'
     ]);
