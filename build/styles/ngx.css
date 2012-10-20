@@ -1,10 +1,38 @@
-.ngx-invalid {
-  display: block;
-  padding: 7px 25px;
-  margin-top: 1px;
-  clear: both;
-  color: #333;
-  background-color: #FFD1D1;
+.ngx-dialog {
+  position: relative;
+  display: none;
+}
+
+.ngx-dialog .ngx-dialog-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.ngx-dialog .ngx-dialog-button {
+  margin-left: 20px !important;
+}
+
+.ngx-gallery ul.items {
+  height: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.ngx-gallery ul.items li.item {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  vertical-align: top;
+  background: none;
+}
+
+.ngx-gallery ul.items li.item img {
+  margin: 0;
+}
+
+.ngx-gallery ul.items li.item a {
+  margin: 0 6px 6px 0;
 }
 
 .ngx-imageupload .content {
@@ -66,6 +94,10 @@
   color: #0183C0;
 }
 
+.ngx-imageupload .select span {
+  margin: 0;
+}
+
 .ngx-imageupload .select input[type=file] {
   position: absolute;
   top: 0;
@@ -81,6 +113,7 @@
 
 .ngx-imageupload img {
   display: block;
+  max-width: none;
   margin: 0 auto;
   border: 1px dotted #ccc;
 }
@@ -89,39 +122,19 @@
   margin: 0 auto;
 }
 
-.ngx-gallery ul.items {
-  height: auto;
-  padding: 0;
-  margin: 0;
+.ngx-imageupload .input-or {
+  color: #999;
 }
 
-.ngx-gallery ul.items li.item {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-  vertical-align: top;
-  background: none;
+.ngx-imageupload .scale-info {
+  color: #999;
 }
 
-.ngx-gallery ul.items li.item img {
-  margin: 0;
-}
-
-.ngx-gallery ul.items li.item a {
-  margin: 0 6px 6px 0;
-}
-
-.ngx-dialog {
-  position: relative;
-  display: none;
-}
-
-.ngx-dialog .ngx-dialog-buttons {
-  margin-top: 20px;
-  text-align: right;
-}
-
-.ngx-dialog .ngx-dialog-button {
-  margin-left: 20px !important;
+.ngx-invalid {
+  display: block;
+  padding: 7px 25px;
+  margin-top: 1px;
+  clear: both;
+  color: #333;
+  background-color: #FFD1D1;
 }
