@@ -84,6 +84,7 @@
                 var dateRangeMaxDays = attrs.dateRangeMaxdays ? attrs.dateRangeMaxdays : undefined;
                 var dateInputMin = module.getDate(attrs.dateInputMin);
                 var dateInputMax = module.getDate(attrs.dateInputMax);
+                var dateInputMaxRange = undefined;
 
                 // set initial minimum date
                 if (dateInputMin) {
@@ -134,7 +135,7 @@
                             if (dateInputMax) {
                                 // if max-days range is set, move max input to range end
                                 if (dateRangeMaxDays) {
-                                    dateInputMax = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
+                                    dateInputMaxRange = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
 
                                     if (ctrl.range.ctrl.timestampValue) {
                                         if (date.getTime() - (60*60*24*dateRangeMaxDays*1000) > (ctrl.range.ctrl.timestampValue * 1000)) {
@@ -184,8 +185,8 @@
                         if (!ctrl.$error.date) {
                             ctrl.range.ctrl.element.datepicker('option', ctrl.range.type + 'Date', viewValue);
 
-                            if (ctrl.range.type == 'min' && dateInputMax) {
-                                ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateInputMax);
+                            if (ctrl.range.type == 'min' && dateInputMaxRange) {
+                                ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateInputMaxRange);
                             }
                         }
 
