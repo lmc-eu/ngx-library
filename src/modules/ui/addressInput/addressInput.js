@@ -1,13 +1,13 @@
 (function(angular, $, window) {
     'use strict';
 
-    var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap', 'ngx.ui.geomap']);
+    var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap', 'ngx.ui.geomap', 'ngx.utils']);
 
     /**
      * Address input with autocomplete and reverse geocoding
      * @todo hacks cleanup
      */
-    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap) {
+    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', 'ngxUtils', function($timeout, ngxSmap, ngxUtils) {
         return {
             require: 'ngModel',
             compile: function(element, attrs) {
@@ -16,6 +16,8 @@
                 return function(scope, element, attrs, ctrl) {
                     var strict,      // is strict? .. require address by street number
                         geomap;
+
+                    var allowedTypes = attrs.allowedTypes ? attrs.allowedTypes.replace(/[ ]+/g, '').split(',') : [];
 
                     // parse input value and set into model
                     ctrl.$parsers.push(function(data) {
@@ -157,18 +159,13 @@
                                 var foundCount = results.length;
 
                                 angular.forEach(results, function(item) {
-                                    // ignore addresses without number in strict mode
-                                    if (strict && item.type !== 'number') {
-                                        return;
-                                    }
-
                                     // ignore ČR in strict mode .. @hack
                                     if (!strict && item.label.match(/Česká republika/)) {
                                         return;
                                     }
 
-                                    // allow only these address types
-                                    if (item.type === 'street' || item.type === 'city' || item.type === 'number' || item.type === 'country') {
+                                    // allow only address types defined in attribute
+                                    if (!allowedTypes.length || ngxUtils.in_array(item.type, allowedTypes, true)) {
                                         $results.push(item);
                                     }
                                 });
