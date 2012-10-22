@@ -135,6 +135,12 @@
                                 // if max-days range is set, move max input to range end
                                 if (dateRangeMaxDays) {
                                     dateInputMax = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
+
+                                    if (ctrl.range.ctrl.timestampValue) {
+                                        if (date.getTime() - (60*60*24*dateRangeMaxDays*1000) > (ctrl.range.ctrl.timestampValue * 1000)) {
+                                            valid = false;
+                                        }
+                                    }
                                 }
 
                                 if (date > dateInputMax) {
