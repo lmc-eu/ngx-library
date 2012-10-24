@@ -2,7 +2,7 @@
 	<legend>Example using Seznam maps API</legend>
 	<form name="form_address">
 		<label>Address with house number:</label>
-		<input type="text" name="address" ng-model="address" ngx-address-input data-geomap="#map_canvas" />
+		<input type="text" name="address" ng-model="address" ngx-address-input allowed-types="firm,city,street,number" data-geomap="#map_canvas" />
 		<img id="address_spinner" ng-show="form_address.address.loading" src="http://www.jobs.cz/images/preloader.gif"/>
 		<div ngx-invalid="form_address.address found_number">
 			Address not found
