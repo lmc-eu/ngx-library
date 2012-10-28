@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     // tasks
     grunt.loadTasks('build/tasks');
     grunt.loadNpmTasks('grunt-recess');
+    grunt.loadNpmTasks('grunt-testacular');
 
     // configuration
     grunt.initConfig({
@@ -16,7 +17,7 @@ module.exports = function(grunt) {
         },
         concat: {
             dist: {
-                src: ['<banner:meta.banner>', 'src/ngx.js', 'src/**/!(lang)/*.js', 'src/**/lang/*.js'],
+                src: ['<banner:meta.banner>', 'src/ngx.js', 'src/**/!(lang|test)/*.js', 'src/**/lang/*.js'],
                 dest: 'dist/ngx.js'
             }
         },
@@ -58,8 +59,8 @@ module.exports = function(grunt) {
         },
         watch: {
             scripts: {
-                files: ['grunt.js', 'src/*.js', 'src/**/*.js'],
-                tasks: 'lint concat min'
+                files: ['grunt.js', 'src/*.js', 'src/**/*.js', 'test/**/*.js'],
+                tasks: 'lint concat min testacularRun'
             },
             styles: {
                 files: ['src/**/*.less'],
@@ -69,10 +70,19 @@ module.exports = function(grunt) {
                 files: ['src/modules/**/*.html'],
                 tasks: 'copy'
             }
+        },
+        testacularServer: {
+            unit: {
+                configFile: 'test/unit/config.js'
+            }
+        },
+        testacularRun: {
+            unit: {
+                runnerPort: 9100
+            }
         }
     });
 
-    // default task
     grunt.registerTask('default', 'lint clean concat copy min recess');
-
+    grunt.registerTask('devel', 'testacularServer watch');
 };
