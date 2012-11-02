@@ -14,10 +14,8 @@
                 var hasGeomap = angular.isDefined(attrs.geomap);
 
                 return function(scope, element, attrs, ctrl) {
-                    var geomap;
-
-                    var allowedTypes = attrs.allowedTypes ? attrs.allowedTypes.replace(/[ ]+/g, '').split(',') : [];
-                    var requiredTypes = attrs.requiredTypes ? attrs.requiredTypes.replace(/[ ]+/g, '').split(',') : [];
+                    var strict,      // is strict? .. require address by street number
+                        geomap;
 
                     // parse input value and set into model
                     ctrl.$parsers.push(function(data) {
@@ -33,9 +31,14 @@
 
                             element.val(data.label);
                         } else if (angular.isString(data) || angular.isUndefined(data)) {
-                            model = { label: data };
+                            model = (strict ? undefined : { label: data });
                         } else {
                             throw 'Invalid address data';
+                        }
+
+                        // valid by address number
+                        if (strict) {
+                            ctrl.$setValidity('number', model && model.number ? true : false);
                         }
 
                         return model;
@@ -53,8 +56,41 @@
                         }
                     });
 
-                    function found(count) {
+                    function setStrictMode(value) {
+                        if (strict === value) {
+                            return;
+                        }
+
+                        strict = value;
+
+                        // update validation state
+                        ctrl.$setValidity('number', !strict);
+                        found(true);
+
+                        // close possible opened autocomplete
+                        element.autocomplete('close');
+
+                        // force search when non-strict mode
+                        if (!strict) {
+                            $timeout(function() {
+                                element.autocomplete('search');
+                            }, 0);
+                        }
+                    }
+
+                    function found(count, byNumber) {
                         ctrl.$setValidity('found', angular.isNumber(count) ? (count > 0) : count);
+                        ctrl.$setValidity('found_number', angular.isDefined(byNumber) ? (angular.isNumber(byNumber) ? (byNumber > 0) : byNumber) : count);
+                    }
+
+                    // strict mode by default
+                    setStrictMode(true);
+
+                    // watch strict flag attribute expression
+                    if (attrs.strict) {
+                        scope.$watch(attrs.strict, function(value) {
+                            setStrictMode(value);
+                        });
                     }
 
                     ctrl.loading = false;
@@ -96,10 +132,6 @@
 
                             loading(false);
                             found(true);
-
-                            angular.forEach(requiredTypes, function (requiredType) {
-                                ctrl.$setValidity(requiredType, data && data[requiredType] ? true : false);
-                            });
                         });
                     }
 
@@ -122,16 +154,28 @@
 
                             geomap.geocodeQuery(request.term, function(results) {
                                 var $results = [];
+                                var foundCount = results.length;
 
                                 angular.forEach(results, function(item) {
+                                    // ignore addresses without number in strict mode
+                                    if (strict && item.type !== 'number') {
+                                        return;
+                                    }
 
-                                    // allow only address types defined in attribute
-                                    if (!allowedTypes.length || allowedTypes.indexOf(item.type) > -1) {
+                                    // ignore ČR in strict mode .. @hack
+                                    if (!strict && item.label.match(/Česká republika/)) {
+                                        return;
+                                    }
+
+                                    // allow only these address types
+                                    if (item.type === 'street' || item.type === 'city' || item.type === 'number' || item.type === 'country') {
                                         $results.push(item);
                                     }
                                 });
 
-                                found($results.length);
+                                if (strict) {
+                                    found(foundCount, $results.length);
+                                }
 
                                 response($results);
                                 loading(false);
