@@ -12,6 +12,7 @@
 
         /**
          * Returns items by current language
+         * @param key
          * @param language
          */
         function ngxDictionary(key, language) {
