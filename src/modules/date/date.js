@@ -247,12 +247,12 @@
 
     /**
      * Date validator (from phpjs.org)
-     * @param year
-     * @param month
-     * @param day
+     * @param m
+     * @param d
+     * @param y
      * @return {Boolean}
      */
-    ngxDate.check = function(year, month, day) {
+    ngxDate.check = function(m, d, y) {
         // http://kevin.vanzonneveld.net
         // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
         // +   improved by: Pyerre
@@ -265,7 +265,7 @@
         // *     returns 3: true
         // *     example 4: checkdate(1, 390, 2000);
         // *     returns 4: false
-        return (month > 0 && month < 13 && year > 0 && year < 32768 && day > 0 && day <= (new Date(year, month, 0)).getDate());
+        return m > 0 && m < 13 && y > 0 && y < 32768 && d > 0 && d <= (new Date(y, m, 0)).getDate();
     };
 
     angular.module('ngx.date', [])

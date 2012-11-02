@@ -2,21 +2,23 @@
 	"author": "https://github.com/lmc-eu",
 	"name": "ngx-library",
 	"description": "NGX - extension library for AngularJS",
-	"version": "0.0.2",
+	"version": "0.0.1",
 	"homepage": "http://github.com/lmc-eu/ngx-library",
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/lmc-eu/ngx-library.git"
 	},
 	"engines": {
-		"node": ">=0.8.0"
+		"node": ">= 0.6.11"
 	},
 	"dependencies": {
-        "rimraf": ">=2.0.2",
-        "testacular": ">=0.4.0",
-        "grunt": ">=0.3.12",
+		"grunt": ">= 0.3.12",
 		"grunt-recess": ">=0.1.0",
-        "grunt-testacular": ">=0.2.0"
+		"rimraf": ">=2.0.2"
+	},
+	"devDependencies": {
+		"grunt-recess": ">=0.1.0",
+		"rimraf": ">=2.0.2"
 	},
 	"scripts" : {
 		"test": "grunt"

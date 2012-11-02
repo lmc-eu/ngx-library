@@ -24,7 +24,7 @@
          * Loads external js/css files
          * @param files
          */
-        var ngxLoader = function(files, onload) {
+        return function(files, onload) {
             var js = [],
                 css = [];
 
@@ -46,8 +46,6 @@
                 } else {
                     throw new Error('File type not supported');
                 }
-
-                loaded.push(file);
             });
 
             if (js.length) {
@@ -63,15 +61,5 @@
                 });
             }
         };
-
-        /**
-         * Returns loaded files
-         * @return {Array}
-         */
-        ngxLoader.getLoaded = function() {
-            return loaded;
-        };
-
-        return ngxLoader;
     }]);
 })(window.angular, window.head);
