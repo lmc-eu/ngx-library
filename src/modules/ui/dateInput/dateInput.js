@@ -8,6 +8,35 @@
      * @todo range/time refactoring
      */
     module.directive('ngxDateInput', ['$parse', 'ngxDate', function($parse, ngxDate) {
+
+        var parseInputDate =  function(inputValue) {
+            var r = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(inputValue);
+            var str = new RegExp('^([\\-|\\+]?)([0-9]+)d').exec(inputValue);
+            var now = new Date();
+
+            if (inputValue == 'today') {
+                // just return today's date
+                return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            } else if (r && ngxDate.check(r[2], r[1], r[3])) {
+                // parse exact date
+                return new Date(r[3], r[2] - 1, r[1]);
+            } else if (str) {
+                // parse relative date
+                var inc = str[2]*60*60*24*1000;
+                var timestamp = now.getTime();
+
+                if (str[1] == '-') {
+                    timestamp -= inc;
+                } else {
+                    timestamp += inc;
+                }
+
+                return new Date(timestamp);
+            }
+
+            return undefined;
+        };
+
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -35,12 +64,27 @@
                 // store element reference into widget scope for future datepicker update
                 ctrl.element = element;
 
+                var dateRangeMaxDays = attrs.dateRangeMaxdays ? attrs.dateRangeMaxdays : undefined;
+                var dateInputMin = parseInputDate(attrs.dateInputMin);
+                var dateInputMax = parseInputDate(attrs.dateInputMax);
+                var dateInputMaxRange = null;
+
+                // set initial minimum date
+                if (dateInputMin) {
+                    ctrl.element.datepicker('option', 'minDate', dateInputMin);
+                }
+
+                // set initial maximum date
+                if (dateInputMax) {
+                    ctrl.element.datepicker('option', 'maxDate', dateInputMax);
+                }
+
                 // related date range input (from-to)
-                if (attrs.rangeInput) {
+                if (attrs.dateRangeInput) {
                     // range config
                     ctrl.range = {
                         type: 'max',
-                        ctrl: $parse(attrs.rangeInput)(scope)
+                        ctrl: $parse(attrs.dateRangeInput)(scope)
                     };
                     // back reference
                     ctrl.range.ctrl.range = {
@@ -64,6 +108,29 @@
 
                         if (valid) {
                             date = new Date(pd[3], pd[2] - 1, pd[1]);
+
+                            // check min input date
+                            if (dateInputMin && date < dateInputMin) {
+                                valid = false;
+                            }
+
+                            // check max input date
+                            if (dateInputMax) {
+                                if (date > dateInputMax) {
+                                    valid = false;
+                                }
+
+                                // if max-days range is set, move max input to range end
+                                if (dateRangeMaxDays) {
+                                    dateInputMaxRange = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
+
+                                    if (ctrl.range.ctrl.timestampValue) {
+                                        if (date.getTime() - (60*60*24*dateRangeMaxDays*1000) > (ctrl.range.ctrl.timestampValue * 1000)) {
+                                            valid = false;
+                                        }
+                                    }
+                                }
+                            }
 
                             // apply related time input
                             if (ctrl.timeInput) {
@@ -93,12 +160,18 @@
 
                     ctrl.timestampValue = (date && valid ? date.getTime() / 1000 : undefined);
                     ctrl.$setValidity('date', valid);
+                    ctrl.$error.date = !valid;
 
                     // date range
                     if (ctrl.range) {
                         // update related date picker min/max
                         if (!ctrl.$error.date) {
+
                             ctrl.range.ctrl.element.datepicker('option', ctrl.range.type + 'Date', viewValue);
+
+                            if (ctrl.range.type == 'min' && dateInputMaxRange) {
+                                ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateInputMaxRange);
+                            }
                         }
 
                         // range validation
