@@ -1,4 +1,4 @@
-(function(angular, $, window) {
+(function(angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap', 'ngx.ui.geomap']);
@@ -7,17 +7,16 @@
      * Address input with autocomplete and reverse geocoding
      * @todo hacks cleanup
      */
-    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap) {
+    module.directive('ngxAddressInput', ['$timeout', '$window', 'ngxSmap', function($timeout, $window, ngxSmap) {
         return {
             require: 'ngModel',
             compile: function(element, attrs) {
                 var hasGeomap = angular.isDefined(attrs.geomap);
 
                 return function(scope, element, attrs, ctrl) {
-                    var geomap;
-
-                    var allowedTypes = attrs.allowedTypes ? attrs.allowedTypes.replace(/[ ]+/g, '').split(',') : [];
-                    var requiredTypes = attrs.requiredTypes ? attrs.requiredTypes.replace(/[ ]+/g, '').split(',') : [];
+                    var geomap,
+                        allowedTypes = (attrs.allowedTypes ? attrs.allowedTypes.replace(/[ ]+/g, '').split(',') : []),
+                        requiredTypes = (attrs.requiredTypes ? attrs.requiredTypes.replace(/[ ]+/g, '').split(',') : []);
 
                     // parse input value and set into model
                     ctrl.$parsers.push(function(data) {
@@ -98,7 +97,7 @@
                             found(true);
 
                             angular.forEach(requiredTypes, function (requiredType) {
-                                ctrl.$setValidity(requiredType, data && data[requiredType] ? true : false);
+                                ctrl.$setValidity(requiredType, data && data[requiredType]);
                             });
                         });
                     }
@@ -124,7 +123,6 @@
                                 var $results = [];
 
                                 angular.forEach(results, function(item) {
-
                                     // allow only address types defined in attribute
                                     if (!allowedTypes.length || allowedTypes.indexOf(item.type) > -1) {
                                         $results.push(item);
@@ -145,7 +143,7 @@
                         }
                     });
 
-                    $(window).click(function() {
+                    $($window).click(function() {
                         element.autocomplete('close');
                     });
                 };
