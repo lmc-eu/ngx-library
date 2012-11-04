@@ -1,4 +1,4 @@
-(function(angular, Array) {
+(function(angular) {
     'use strict';
 
     angular.module('ngx', [
@@ -30,16 +30,4 @@
         'ngx.ui.wysiwyg'
     ]);
 
-    // missing ECMAScript functions
-    if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function(search) {
-            for (var i = 0; i < this.length; i++) {
-                if (this[i] === search) {
-                    return i;
-                }
-            }
-            return -1;
-        };
-    }
-
-})(window.angular, Array);
+})(window.angular);

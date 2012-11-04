@@ -17,7 +17,7 @@ module.exports = function(grunt) {
         },
         concat: {
             dist: {
-                src: ['<banner:meta.banner>', 'src/ngx.js', 'src/**/!(lang|test)/*.js', 'src/**/lang/*.js'],
+                src: ['<banner:meta.banner>', 'src/ngx.js', 'src/deps/**/*.js', 'src/modules/**/!(lang|test)/*.js', 'src/modules/**/lang/*.js'],
                 dest: 'dist/ngx.js'
             }
         },
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
             }
         },
         lint: {
-            files: ['grunt.js', 'src/ngx.js', 'src/lang/*.js', 'src/modules/**/*.js']
+            files: ['grunt.js', 'src/ngx.js', 'src/modules/**/*.js']
         },
         watch: {
             scripts: {
