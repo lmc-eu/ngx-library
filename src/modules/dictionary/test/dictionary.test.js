@@ -27,7 +27,6 @@ describe('ngx.dictionary', function() {
     });
 
     it('should return item by default $locale language', inject(function(ngxDictionary) {
-        // default angular locale is english
         expect(ngxDictionary('test')).toEqual(items.cz.test);
         expect(ngxDictionary('item')).toEqual(items.cz.item);
         expect(ngxDictionary('dictionary')).toEqual(items.cz.dictionary);
