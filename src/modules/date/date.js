@@ -268,6 +268,40 @@
         return (month > 0 && month < 13 && year > 0 && year < 32768 && day > 0 && day <= (new Date(year, month, 0)).getDate());
     };
 
+    /**
+     * Date parser
+     * Accepts date in format DD.MM.YYYY or placeholder string "today" or relative number of days +1d / -1d
+     * @param inputValue Date (DD.MM.YYYY) or relative date placeholder
+     * @return {Date}
+     */
+    ngxDate.parse =  function(inputValue) {
+        var r = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(inputValue);
+        var str = new RegExp('^([\\-|\\+]?)([0-9]+)d').exec(inputValue);
+        var now = new Date();
+
+        if (inputValue == 'today') {
+            // just return today's date
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+        } else if (r && ngxDate.check(r[3], r[2], r[1])) {
+            // parse exact date
+            return new Date(r[3], r[2] - 1, r[1]);
+        } else if (str) {
+            // parse relative date
+            var inc = str[2]*60*60*24*1000;
+            var timestamp = now.getTime();
+
+            if (str[1] == '-') {
+                timestamp -= inc;
+            } else {
+                timestamp += inc;
+            }
+
+            return new Date(timestamp);
+        }
+
+        return undefined;
+    };
+
     angular.module('ngx.date', [])
        .value('ngxDate', ngxDate);
 

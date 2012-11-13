@@ -9,34 +9,6 @@
      */
     module.directive('ngxDateInput', ['$parse', 'ngxDate', function($parse, ngxDate) {
 
-        var parseInputDate =  function(inputValue) {
-            var r = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(inputValue);
-            var str = new RegExp('^([\\-|\\+]?)([0-9]+)d').exec(inputValue);
-            var now = new Date();
-
-            if (inputValue == 'today') {
-                // just return today's date
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-            } else if (r && ngxDate.check(r[2], r[1], r[3])) {
-                // parse exact date
-                return new Date(r[3], r[2] - 1, r[1]);
-            } else if (str) {
-                // parse relative date
-                var inc = str[2]*60*60*24*1000;
-                var timestamp = now.getTime();
-
-                if (str[1] == '-') {
-                    timestamp -= inc;
-                } else {
-                    timestamp += inc;
-                }
-
-                return new Date(timestamp);
-            }
-
-            return undefined;
-        };
-
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -65,8 +37,8 @@
                 ctrl.element = element;
 
                 var dateRangeMaxDays = attrs.dateRangeMaxdays ? attrs.dateRangeMaxdays : undefined;
-                var dateInputMin = parseInputDate(attrs.dateInputMin);
-                var dateInputMax = parseInputDate(attrs.dateInputMax);
+                var dateInputMin = ngxDate.parse(attrs.dateInputMin);
+                var dateInputMax = ngxDate.parse(attrs.dateInputMax);
                 var dateInputMaxRange = null;
 
                 // set initial minimum date
@@ -160,7 +132,6 @@
 
                     ctrl.timestampValue = (date && valid ? date.getTime() / 1000 : undefined);
                     ctrl.$setValidity('date', valid);
-                    ctrl.$error.date = !valid;
 
                     // date range
                     if (ctrl.range) {
