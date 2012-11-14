@@ -1,58 +1,60 @@
-<fieldset>
-    <legend>Example</legend>
-    <form name="form_even" class="form-horizontal">
-        <div class="control-group">
-            <label class="control-label">Even number:</label>
-            <div class="controls">
-                <input type="text" name="number" ng-model="validate.number" ngx-validate="validateEven" />
+<div ng-controller="ngx.ui.validate">
+    <fieldset>
+        <legend>Example</legend>
+        <form name="form_even" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">Even number:</label>
+                <div class="controls">
+                    <input type="text" name="number" ng-model="validate.number" ngx-validate="validateEven" />
+                </div>
             </div>
-        </div>
-        <div ngx-invalid="form_even.number">Even number required</div>
-    </form>
-</fieldset>
-
-<fieldset>
-    <legend>Example</legend>
-    <fieldset ng-repeat="num in [1, 2]" ng-form="form_pwd" class="form-horizontal">
-        <legend>User {{num}}</legend>
-        <div class="control-group">
-            <label class="control-label">Password:</label>
-            <div class="controls">
-                <input type="password" name="password" ng-model="validate.password[$index]" />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">Confirm password:</label>
-            <div class="controls">
-                <input type="password" name="cpassword" ng-model="validate.cpassword[$index]" ngx-validate="{match: [validatePassword, form_pwd.password] }" />
-            </div>
-        </div>
-        <div ngx-invalid="form_pwd.password match">Password and confirmation does not match</div>
+            <div ngx-invalid="form_even.number">Even number required</div>
+        </form>
     </fieldset>
-</fieldset>
 
-<fieldset>
-    <legend>Example</legend>
-    <form name="form_fav" class="form-horizontal">
-        <div class="control-group" ng-disabled="validate.later">
-            <label class="control-label">Favorite movies:</label>
-            <div class="controls">
-                <input type="text" name="movies" ng-model="validate.movies" ng-disabled="validate.later" />
+    <fieldset>
+        <legend>Example</legend>
+        <fieldset ng-repeat="num in [1, 2]" ng-form="form_pwd" class="form-horizontal">
+            <legend>User {{num}}</legend>
+            <div class="control-group">
+                <label class="control-label">Password:</label>
+                <div class="controls">
+                    <input type="password" name="password" ng-model="validate.password[$index]" />
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">Favorite actors:</label>
-            <div class="controls">
-                <input type="text" name="actors" ng-model="validate.actors" ng-disabled="validate.later" />
+            <div class="control-group">
+                <label class="control-label">Confirm password:</label>
+                <div class="controls">
+                    <input type="password" name="cpassword" ng-model="validate.cpassword[$index]" ngx-validate="{match: [validatePassword, form_pwd.password] }" />
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">Decide Later:</label>
-            <div class="controls">
-                <input type="checkbox" name="later" ng-model="validate.later" />
+            <div ngx-invalid="form_pwd.password match">Password and confirmation does not match</div>
+        </fieldset>
+    </fieldset>
+
+    <fieldset>
+        <legend>Example</legend>
+        <form name="form_fav" class="form-horizontal">
+            <div class="control-group" ng-disabled="validate.later">
+                <label class="control-label">Favorite movies:</label>
+                <div class="controls">
+                    <input type="text" name="movies" ng-model="validate.movies" ng-disabled="validate.later" />
+                </div>
             </div>
-        </div>
-        <ngx-validate validators="{favorite: [validateFavorites, form_fav.movies, form_fav.actors, form_fav.later] }"></ngx-validate>
-        <div ngx-invalid="form_fav.movies favorite">Enter your favorites</div>
-    </form>
-</fieldset>
+            <div class="control-group">
+                <label class="control-label">Favorite actors:</label>
+                <div class="controls">
+                    <input type="text" name="actors" ng-model="validate.actors" ng-disabled="validate.later" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Decide Later:</label>
+                <div class="controls">
+                    <input type="checkbox" name="later" ng-model="validate.later" />
+                </div>
+            </div>
+            <ngx-validate validators="{favorite: [validateFavorites, form_fav.movies, form_fav.actors, form_fav.later] }"></ngx-validate>
+            <div ngx-invalid="form_fav.movies favorite">Enter your favorites</div>
+        </form>
+    </fieldset>
+</div>

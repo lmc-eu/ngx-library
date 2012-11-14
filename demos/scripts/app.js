@@ -1,6 +1,10 @@
 (function(angular, window) {
     'use strict';
 
+    /**
+     * Demo modules
+     * @type {Array}
+     */
     var modules = [
         'ngx.ui.invalid',
         'ngx.ui.validate',
@@ -18,8 +22,15 @@
         'ngx.ui.addressInput'
     ];
 
+    /**
+     * Initialize application module
+     * @type {*}
+     */
     var app = angular.module('ngxDemoApp', ['ngx']);
 
+    /**
+     * Setup routes
+     */
     app.config(function($routeProvider) {
         angular.forEach(modules, function(name) {
             $routeProvider.when('/' + name, {
@@ -32,11 +43,17 @@
         });
     });
 
+    /**
+     * Startup
+     */
     app.run(function(ngxDictionary) {
         ngxDictionary.setLanguage('en');
     });
 
-    app.controller('ngxCtrl', function($scope, $route, $location) {
+    /**
+     * Main controller
+     */
+    app.controller('ngx', function($scope, $route, $location) {
         $scope.modules = modules;
 
         $scope.$on('$routeChangeSuccess', function(event, route) {
@@ -47,6 +64,15 @@
             $location.path('/' + m);
         };
 
+        $scope.getContentClass = function() {
+            return ($scope.module ? $scope.module.replace(/\./g, '-') : '');
+        };
+    });
+
+    /**
+     * ngx.ui.checkboxlist demo controller
+     */
+    app.controller('ngx.ui.checkboxlist', function($scope) {
         $scope.checkboxlist = {
             items: {
                 'bb': 'Backbone',
@@ -56,17 +82,50 @@
             },
             selected: ['ng', 'gc']
         };
+    });
 
+    /**
+     * ngx.ui.hashtagInput demo controller
+     */
+    app.controller('ngx.ui.hashtagInput', function($scope) {
         $scope.hashtag = '#test';
-        $scope.www = 'lmc.eu';
-        $scope.wysiwyg = '<p>lorem ipsum <strong>strong</strong></p>';
-        $scope.tags = ['tag1', 'tag2', 'tag3'];
+    });
 
+    /**
+     * ngx.ui.wwwInput demo controller
+     */
+    app.controller('ngx.ui.wwwInput', function($scope) {
+        $scope.www = 'lmc.eu';
+    });
+
+    /**
+     * ngx.ui.wysiwyg demo controller
+     */
+    app.controller('ngx.ui.wysiwyg', function($scope) {
+        $scope.wysiwyg = '<p>lorem ipsum <strong>strong</strong></p>';
+    });
+
+    /**
+     * ngx.ui.tagsInput demo controller
+     */
+    app.controller('ngx.ui.tagsInput', function($scope) {
+        $scope.tags = ['tag1', 'tag2', 'tag3'];
+    });
+
+    /**
+     * ngx.ui.geomap demo controller
+     */
+    app.controller('ngx.ui.geomap', function($scope) {
         $scope.coords = {
             lat: 50.1028650,
             lon: 14.4568872
         };
+    });
 
+    /**
+     * ngx.ui.dialog demo controller
+     */
+    app.controller('ngx.ui.dialog', function($scope) {
         $scope.dialog = {
             input: undefined,
             submit: function(inputValue, $dialog) {
@@ -77,11 +136,12 @@
                 $scope.dialog.input = undefined;
             }
         };
+    });
 
-        $scope.getContentClass = function() {
-            return ($scope.module ? $scope.module.replace(/\./g, '-') : '');
-        };
-
+    /**
+     * ngx.ui.validate demo controller
+     */
+    app.controller('ngx.ui.validate', function($scope) {
         $scope.validateEven = function(number) {
             return (!number || ((number % 2) === 0));
         };
