@@ -3,9 +3,9 @@ describe('ngx.loader', function() {
         module('ngx.loader');
     });
 
-    it('should not load same files twice', inject(function(ngxLoader) {
-        ngxLoader(['test1.js', 'test2.js', 'test1.js'], waitsFor(function() {
-            expect(ngxLoader.getLoaded().length).toEqual(2);
+    it('should call onload callback', inject(function(ngxLoader) {
+        ngxLoader(['test1.js', 'test2.js'], waitsFor(function() {
+            expect(1).toEqual(1);
             return true;
         }));
     }));

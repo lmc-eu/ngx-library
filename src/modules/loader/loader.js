@@ -7,71 +7,69 @@
         var loaded = [];
 
         /**
-         * Checks if file is already loaded
-         * @param file
-         * @return {Boolean}
-         */
-        function isLoaded(file) {
-            for (var i = 0; i < loaded.length; i++) {
-                if (loaded[i] === file) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
          * Loads external js/css files
          * @param files
          */
-        var ngxLoader = function(files, onload) {
-            var js = [],
-                css = [];
+        return function(files, onload) {
+            var queue = {
+                js: [],
+                css: []
+            };
 
+            // group files to load by type
             angular.forEach(typeof(files) === 'string' ? [files] : files, function(file) {
+                var type,
+                    force = false;
+
                 // add base path
                 if (!file.match(/^(\/|http)/)) {
                     file = ngxConfig.basePath + file;
                 }
 
-                // already loaded
-                if (isLoaded(file)) {
-                    return;
-                }
-
                 if (file.match(/\.css$/i)) {
-                    css.push(file);
+                    type = 'css';
                 } else if (file.match(/\.js$/i)) {
-                    js.push(file);
+                    type = 'js';
+                    force = (onload ? true : false);
                 } else {
                     throw new Error('File type not supported');
                 }
 
+                // already loaded
+                if (loaded.indexOf(file) >= 0 && !force) {
+                    return;
+                }
+
+                queue[type].push(file);
                 loaded.push(file);
             });
 
-            if (js.length) {
-                head.js.apply(this, js);
-                head.ready(onload);
-            } else {
+            // process queue
+            angular.forEach(queue, function(files, type) {
+                if (!files.length) {
+                    return;
+                }
+                switch (type) {
+                    case 'js':
+                        // handle onload callback with head.js
+                        if (onload) {
+                            files.push(onload);
+                            onload = null;
+                        }
+                        head.js.apply(this, files);
+                        break;
+
+                    case 'css':
+                        angular.forEach(files, function(file) {
+                            angular.element('head').append(angular.element('<link rel="stylesheet" type="text/css" href="' + file + '"></link>'));
+                        });
+                        break;
+                }
+            });
+
+            if (onload) {
                 onload();
             }
-
-            if (css.length) {
-                angular.forEach(css, function(file) {
-                    angular.element('head').append(angular.element('<link rel="stylesheet" type="text/css" href="' + file + '"></link>'));
-                });
-            }
         };
-
-        /**
-         * Returns loaded files
-         * @return {Array}
-         */
-        ngxLoader.getLoaded = function() {
-            return loaded;
-        };
-
-        return ngxLoader;
     }]);
 })(window.angular, window.head);
