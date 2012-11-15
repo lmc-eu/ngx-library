@@ -36,9 +36,9 @@
                 // store element reference into widget scope for future datepicker update
                 ctrl.element = element;
 
-                var dateRangeMaxDays = attrs.dateRangeMaxdays ? attrs.dateRangeMaxdays : undefined;
-                var dateInputMin = ngxDate.parse(attrs.dateInputMin);
-                var dateInputMax = ngxDate.parse(attrs.dateInputMax);
+                var dateRangeMaxDays = attrs.rangeMaxdays ? attrs.rangeMaxdays : undefined;
+                var dateInputMin = ngxDate.parse(attrs.min);
+                var dateInputMax = ngxDate.parse(attrs.max);
                 var dateInputMaxRange = null;
 
                 // set initial minimum date
@@ -52,11 +52,11 @@
                 }
 
                 // related date range input (from-to)
-                if (attrs.dateRangeInput) {
+                if (attrs.rangeInput) {
                     // range config
                     ctrl.range = {
                         type: 'max',
-                        ctrl: $parse(attrs.dateRangeInput)(scope)
+                        ctrl: $parse(attrs.rangeInput)(scope)
                     };
                     // back reference
                     ctrl.range.ctrl.range = {
