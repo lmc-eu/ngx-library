@@ -8,6 +8,7 @@
      * @todo range/time refactoring
      */
     module.directive('ngxDateInput', ['$parse', 'ngxDate', function($parse, ngxDate) {
+
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -34,6 +35,21 @@
 
                 // store element reference into widget scope for future datepicker update
                 ctrl.element = element;
+
+                var dateRangeMaxDays = attrs.rangeMaxdays ? attrs.rangeMaxdays : undefined;
+                var dateInputMin = ngxDate.parse(attrs.min);
+                var dateInputMax = ngxDate.parse(attrs.max);
+                var dateInputMaxRange = null;
+
+                // set initial minimum date
+                if (dateInputMin) {
+                    ctrl.element.datepicker('option', 'minDate', dateInputMin);
+                }
+
+                // set initial maximum date
+                if (dateInputMax) {
+                    ctrl.element.datepicker('option', 'maxDate', dateInputMax);
+                }
 
                 // related date range input (from-to)
                 if (attrs.rangeInput) {
@@ -64,6 +80,29 @@
 
                         if (valid) {
                             date = new Date(pd[3], pd[2] - 1, pd[1]);
+
+                            // check min input date
+                            if (dateInputMin && date < dateInputMin) {
+                                valid = false;
+                            }
+
+                            // check max input date
+                            if (dateInputMax) {
+                                if (date > dateInputMax) {
+                                    valid = false;
+                                }
+
+                                // if max-days range is set, move max input to range end
+                                if (dateRangeMaxDays) {
+                                    dateInputMaxRange = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
+
+                                    if (ctrl.range.ctrl.timestampValue) {
+                                        if (date.getTime() - (60*60*24*dateRangeMaxDays*1000) > (ctrl.range.ctrl.timestampValue * 1000)) {
+                                            valid = false;
+                                        }
+                                    }
+                                }
+                            }
 
                             // apply related time input
                             if (ctrl.timeInput) {
@@ -98,7 +137,12 @@
                     if (ctrl.range) {
                         // update related date picker min/max
                         if (!ctrl.$error.date) {
+
                             ctrl.range.ctrl.element.datepicker('option', ctrl.range.type + 'Date', viewValue);
+
+                            if (ctrl.range.type == 'min' && dateInputMaxRange) {
+                                ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateInputMaxRange);
+                            }
                         }
 
                         // range validation
