@@ -15,7 +15,8 @@
         'ngx.ui.imageupload',
         'ngx.ui.lightbox',
         'ngx.ui.geomap',
-        'ngx.ui.addressInput'
+        'ngx.ui.addressInput',
+        'ngx.ui.textCurtain'
     ];
 
     var app = angular.module('ngxDemoApp', ['ngx']);
