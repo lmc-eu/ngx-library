@@ -1,13 +1,16 @@
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.dateInput', ['ngx.date']);
+    var module = angular.module('ngx.ui.dateInput', [
+        'ngx.date',
+        'ngx.dictionary'
+    ]);
 
     /**
      * Date input type
      * @todo range/time refactoring
      */
-    module.directive('ngxDateInput', ['$parse', 'ngxDate', function($parse, ngxDate) {
+    module.directive('ngxDateInput', ['$parse', 'ngxDate', 'ngxDictionary', function($parse, ngxDate, ngxDictionary) {
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -19,12 +22,12 @@
                     firstDay: 1,
                     showButtonPanel: false,
                     showMinute: false,
-                    closeText: 'Zavřít',
-                    prevText: 'Předchozí',
-                    nextText: 'Další',
-                    currentText: 'Nyní',
-                    monthNames: ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'],
-                    dayNamesMin: ['Ne','Po','Út','St','Čt','Pá','So'],
+                    closeText: ngxDictionary('NGX_UI_DATEINPUT_CLOSE'),
+                    prevText: ngxDictionary('NGX_UI_DATEINPUT_PREV'),
+                    nextText: ngxDictionary('NGX_UI_DATEINPUT_NEXT'),
+                    currentText: ngxDictionary('NGX_UI_DATEINPUT_NOW'),
+                    monthNames: ngxDictionary('NGX_UI_DATEINPUT_MONTHS'),
+                    dayNamesMin: ngxDictionary('NGX_UI_DATEINPUT_DAYS'),
                     onSelect: function(dateText) {
                         scope.$apply(function() {
                             ctrl.$setViewValue(dateText);
