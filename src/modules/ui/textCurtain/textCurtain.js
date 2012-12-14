@@ -1,7 +1,9 @@
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.textCurtain', []);
+    var module = angular.module('ngx.ui.textCurtain', [
+        'ngx.dictionary'
+    ]);
 
     /**
      * Text curtain
@@ -16,19 +18,19 @@
      * @param curtainText
      * @param curtainTextHide
      */
-    module.directive('ngxTextCurtain', function () {
+    module.directive('ngxTextCurtain', ['ngxDictionary', function (ngxDictionary) {
         return {
             compile: function (element, attrs) {
                 // vars from attrs
-                var defaultTx = angular.isDefined(attrs.curtainText) ? attrs.curtainText : 'show more';
-                var defaultTxHide = angular.isDefined(attrs.curtainTextHide) ? attrs.curtainTextHide : 'hide';
+                var defaultTx = angular.isDefined(attrs.curtainText) ? attrs.curtainText : ngxDictionary('NGX_UI_CURTAINTEXT_SHOW');
+                var defaultTxHide = angular.isDefined(attrs.curtainTextHide) ? attrs.curtainTextHide : ngxDictionary('NGX_UI_CURTAINTEXT_HIDE');
                 var minHeight = angular.isDefined(attrs.curtainMinHeight) ? parseInt(attrs.curtainMinHeight, 10) : null;
                 var minNumChars = angular.isDefined(attrs.curtainMinChars) ? attrs.curtainMinChars : 800;
                 var cHeight = angular.isDefined(attrs.curtainHeight) ? attrs.curtainHeight : "100px";
                 
                 // fixed vars
-                var button = $('<div class="showMoreDesc"><span><a>' + defaultTx + '</a></span></div>');
-                var bottomGradient = $('<div class="bottomGrad"></div>');
+                var button = $('<div class="show-more-desc"><span><a>' + defaultTx + '</a></span></div>');
+                var bottomGradient = $('<div class="bottom-grad"></div>');
                 var cMaxHeight;
                 var bodyTopPosition;
                 var elTopPosition;
@@ -36,7 +38,7 @@
                 element.ready(function() {
                     cMaxHeight = element.height();
                     if((minHeight && cMaxHeight > minHeight) || (element.text().length > minNumChars)) {
-                        element.addClass('shortDesc');
+                        element.addClass('short-desc');
                         element.css({
                             height: cHeight,
                             overflow: 'hidden'
@@ -49,7 +51,7 @@
                                     element.css({
                                         overflow: 'visible'
                                     });
-                                    element.find('.bottomGrad').remove();
+                                    element.find('.bottom-grad').remove();
                                     $(e.target).text(defaultTxHide);
                                 });
                             } else {
@@ -78,6 +80,6 @@
                 });
             }
         };
-    });
+    }]);
 
 })(window.angular, window.jQuery);
