@@ -29,6 +29,9 @@ grunt
 - AngularJS v1.0+
 - jQuery, jQuery UI - for some directives
 
+## Licence
+
+- MIT
 
 ## To do
 
