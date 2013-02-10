@@ -22,6 +22,7 @@
         'ngx.ui.scrollTo',
         'ngx.ui.smap',
         'ngx.ui.tagsInput',
+        'ngx.ui.textCurtain',
         'ngx.ui.timeInput',
         'ngx.ui.tooltip',
         'ngx.ui.translate',
