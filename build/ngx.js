@@ -1,6 +1,6 @@
 /**
  * NGX - extension library for AngularJS
- * @version v0.0.1 - 2012-10-20
+ * @version v0.2.1 - 2013-02-10
  * @link http://github.com/lmc-eu/ngx-library
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
@@ -29,6 +29,7 @@
         'ngx.ui.scrollTo',
         'ngx.ui.smap',
         'ngx.ui.tagsInput',
+        'ngx.ui.textCurtain',
         'ngx.ui.timeInput',
         'ngx.ui.tooltip',
         'ngx.ui.translate',
@@ -39,6 +40,28 @@
 
 })(window.angular);
 
+/**
+ * Missing ECMAScript Array functions
+ */
+(function(Array) {
+    'use strict';
+
+    if (!Array.prototype.indexOf) {
+        /**
+         * Searches the array for the specified item and returns its position
+         * @param search
+         * @return {Number}
+         */
+        Array.prototype.indexOf = function(search) {
+            for (var i = 0; i < this.length; i++) {
+                if (this[i] === search) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+    }
+})(window.Array);
 /**
  Head JS     The only script in your <HEAD>
  Copyright   Tero Piirainen (tipiirai)
@@ -706,12 +729,12 @@
 
     /**
      * Date validator (from phpjs.org)
-     * @param m
-     * @param d
-     * @param y
+     * @param year
+     * @param month
+     * @param day
      * @return {Boolean}
      */
-    ngxDate.check = function(m, d, y) {
+    ngxDate.check = function(year, month, day) {
         // http://kevin.vanzonneveld.net
         // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
         // +   improved by: Pyerre
@@ -724,7 +747,41 @@
         // *     returns 3: true
         // *     example 4: checkdate(1, 390, 2000);
         // *     returns 4: false
-        return m > 0 && m < 13 && y > 0 && y < 32768 && d > 0 && d <= (new Date(y, m, 0)).getDate();
+        return (month > 0 && month < 13 && year > 0 && year < 32768 && day > 0 && day <= (new Date(year, month, 0)).getDate());
+    };
+
+    /**
+     * Date parser
+     * Accepts date in format DD.MM.YYYY or placeholder string "today" or relative number of days +1d / -1d
+     * @param inputValue Date (DD.MM.YYYY) or relative date placeholder
+     * @return {Date}
+     */
+    ngxDate.parse =  function(inputValue) {
+        var r = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(inputValue);
+        var str = new RegExp('^([\\-|\\+]?)([0-9]+)d').exec(inputValue);
+        var now = new Date();
+
+        if (inputValue == 'today') {
+            // just return today's date
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+        } else if (r && ngxDate.check(r[3], r[2], r[1])) {
+            // parse exact date
+            return new Date(r[3], r[2] - 1, r[1]);
+        } else if (str) {
+            // parse relative date
+            var inc = str[2]*60*60*24*1000;
+            var timestamp = now.getTime();
+
+            if (str[1] == '-') {
+                timestamp -= inc;
+            } else {
+                timestamp += inc;
+            }
+
+            return new Date(timestamp);
+        }
+
+        return undefined;
     };
 
     angular.module('ngx.date', [])
@@ -746,6 +803,7 @@
 
         /**
          * Returns items by current language
+         * @param key
          * @param language
          */
         function ngxDictionary(key, language) {
@@ -790,58 +848,68 @@
         var loaded = [];
 
         /**
-         * Checks if file is already loaded
-         * @param file
-         * @return {Boolean}
-         */
-        function isLoaded(file) {
-            for (var i = 0; i < loaded.length; i++) {
-                if (loaded[i] === file) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
          * Loads external js/css files
          * @param files
          */
         return function(files, onload) {
-            var js = [],
-                css = [];
+            var queue = {
+                js: [],
+                css: []
+            };
 
+            // group files to load by type
             angular.forEach(typeof(files) === 'string' ? [files] : files, function(file) {
+                var type,
+                    force = false;
+
                 // add base path
                 if (!file.match(/^(\/|http)/)) {
                     file = ngxConfig.basePath + file;
                 }
 
-                // already loaded
-                if (isLoaded(file)) {
-                    return;
-                }
-
                 if (file.match(/\.css$/i)) {
-                    css.push(file);
+                    type = 'css';
                 } else if (file.match(/\.js$/i)) {
-                    js.push(file);
+                    type = 'js';
+                    force = (onload ? true : false);
                 } else {
                     throw new Error('File type not supported');
                 }
+
+                // already loaded
+                if (loaded.indexOf(file) >= 0 && !force) {
+                    return;
+                }
+
+                queue[type].push(file);
+                loaded.push(file);
             });
 
-            if (js.length) {
-                head.js.apply(this, js);
-                head.ready(onload);
-            } else {
-                onload();
-            }
+            // process queue
+            angular.forEach(queue, function(files, type) {
+                if (!files.length) {
+                    return;
+                }
+                switch (type) {
+                    case 'js':
+                        // handle onload callback with head.js
+                        if (onload) {
+                            files.push(onload);
+                            onload = null;
+                        }
+                        head.js.apply(this, files);
+                        break;
 
-            if (css.length) {
-                angular.forEach(css, function(file) {
-                    angular.element('head').append(angular.element('<link rel="stylesheet" type="text/css" href="' + file + '"></link>'));
-                });
+                    case 'css':
+                        angular.forEach(files, function(file) {
+                            angular.element('head').append(angular.element('<link rel="stylesheet" type="text/css" href="' + file + '"></link>'));
+                        });
+                        break;
+                }
+            });
+
+            if (onload) {
+                onload();
             }
         };
     }]);
@@ -1131,7 +1199,7 @@
 
 })(window.angular, window.jQuery, window);
 
-(function(angular, $, window) {
+(function(angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.addressInput', ['ngx.ui.smap', 'ngx.ui.geomap']);
@@ -1140,15 +1208,16 @@
      * Address input with autocomplete and reverse geocoding
      * @todo hacks cleanup
      */
-    module.directive('ngxAddressInput', ['$timeout', 'ngxSmap', function($timeout, ngxSmap) {
+    module.directive('ngxAddressInput', ['$timeout', '$window', 'ngxSmap', function($timeout, $window, ngxSmap) {
         return {
             require: 'ngModel',
             compile: function(element, attrs) {
                 var hasGeomap = angular.isDefined(attrs.geomap);
 
                 return function(scope, element, attrs, ctrl) {
-                    var strict,      // is strict? .. require address by street number
-                        geomap;
+                    var geomap,
+                        allowedTypes = (attrs.allowedTypes ? attrs.allowedTypes.replace(/[ ]+/g, '').split(',') : []),
+                        requiredTypes = (attrs.requiredTypes ? attrs.requiredTypes.replace(/[ ]+/g, '').split(',') : []);
 
                     // parse input value and set into model
                     ctrl.$parsers.push(function(data) {
@@ -1164,14 +1233,9 @@
 
                             element.val(data.label);
                         } else if (angular.isString(data) || angular.isUndefined(data)) {
-                            model = (strict ? undefined : { label: data });
+                            model = { label: data };
                         } else {
                             throw 'Invalid address data';
-                        }
-
-                        // valid by address number
-                        if (strict) {
-                            ctrl.$setValidity('number', model && model.number ? true : false);
                         }
 
                         return model;
@@ -1189,41 +1253,8 @@
                         }
                     });
 
-                    function setStrictMode(value) {
-                        if (strict === value) {
-                            return;
-                        }
-
-                        strict = value;
-
-                        // update validation state
-                        ctrl.$setValidity('number', !strict);
-                        found(true);
-
-                        // close possible opened autocomplete
-                        element.autocomplete('close');
-
-                        // force search when non-strict mode
-                        if (!strict) {
-                            $timeout(function() {
-                                element.autocomplete('search');
-                            }, 0);
-                        }
-                    }
-
-                    function found(count, byNumber) {
+                    function found(count) {
                         ctrl.$setValidity('found', angular.isNumber(count) ? (count > 0) : count);
-                        ctrl.$setValidity('found_number', angular.isDefined(byNumber) ? (angular.isNumber(byNumber) ? (byNumber > 0) : byNumber) : count);
-                    }
-
-                    // strict mode by default
-                    setStrictMode(true);
-
-                    // watch strict flag attribute expression
-                    if (attrs.strict) {
-                        scope.$watch(attrs.strict, function(value) {
-                            setStrictMode(value);
-                        });
                     }
 
                     ctrl.loading = false;
@@ -1265,6 +1296,10 @@
 
                             loading(false);
                             found(true);
+
+                            angular.forEach(requiredTypes, function (requiredType) {
+                                ctrl.$setValidity(requiredType, data && data[requiredType]);
+                            });
                         });
                     }
 
@@ -1287,28 +1322,15 @@
 
                             geomap.geocodeQuery(request.term, function(results) {
                                 var $results = [];
-                                var foundCount = results.length;
 
                                 angular.forEach(results, function(item) {
-                                    // ignore addresses without number in strict mode
-                                    if (strict && item.type !== 'number') {
-                                        return;
-                                    }
-
-                                    // ignore ČR in strict mode .. @hack
-                                    if (!strict && item.label.match(/Česká republika/)) {
-                                        return;
-                                    }
-
-                                    // allow only these address types
-                                    if (item.type === 'street' || item.type === 'city' || item.type === 'number' || item.type === 'country') {
+                                    // allow only address types defined in attribute
+                                    if (!allowedTypes.length || allowedTypes.indexOf(item.type) > -1) {
                                         $results.push(item);
                                     }
                                 });
 
-                                if (strict) {
-                                    found(foundCount, $results.length);
-                                }
+                                found($results.length);
 
                                 response($results);
                                 loading(false);
@@ -1322,7 +1344,7 @@
                         }
                     });
 
-                    $(window).click(function() {
+                    $($window).click(function() {
                         element.autocomplete('close');
                     });
                 };
@@ -1423,6 +1445,28 @@ window.CKEDITOR_BASEPATH = '';
                 element.hide();
                 ngxLoader(deps, function() {
                     element.show();
+                    var strokes = [
+                        [ window.CKEDITOR.CTRL + 90 /*Z*/, 'undo'],
+                        [ window.CKEDITOR.CTRL + 89 /*Y*/, 'redo' ],
+                        [ window.CKEDITOR.CTRL + window.CKEDITOR.SHIFT + 90 /*Z*/, 'redo' ]
+                    ];
+                    var items = attrs.toolbarItems.split(',');
+                    angular.forEach(attrs.toolbarItems.split(','), function(item) {
+                        if (item=="Bold") {
+                            strokes.push([window.CKEDITOR.CTRL + 66 /*B*/, 'bold']);
+                        }
+                        if (item=="Link") {
+                            strokes.push([window.CKEDITOR.CTRL + 76 /*B*/, 'link']);
+                        }
+                        if (item=="Italic") {
+                            strokes.push([window.CKEDITOR.CTRL + 73 /*I*/, 'italic' ]);
+                        }
+                        if (item=="Underline") {
+                            strokes.push([window.CKEDITOR.CTRL + 85 /*I*/, 'underline' ]);
+                        }
+                    });
+
+                    window.CKEDITOR.config.keystrokes = strokes;
                     // editor instance
                     var editor = window.CKEDITOR.replace(element[0], {
                         toolbar: (attrs.toolbarItems ? [attrs.toolbarItems.split(',')] : [['Bold', 'BulletedList', 'Link']]),
@@ -1470,13 +1514,16 @@ window.CKEDITOR_BASEPATH = '';
 (function(angular, $) {
     'use strict';
 
-    var module = angular.module('ngx.ui.dateInput', ['ngx.date']);
+    var module = angular.module('ngx.ui.dateInput', [
+        'ngx.date',
+        'ngx.dictionary'
+    ]);
 
     /**
      * Date input type
      * @todo range/time refactoring
      */
-    module.directive('ngxDateInput', ['$parse', 'ngxDate', function($parse, ngxDate) {
+    module.directive('ngxDateInput', ['$parse', 'ngxDate', 'ngxDictionary', function($parse, ngxDate, ngxDictionary) {
         return {
             require: 'ngModel',
             link: function(scope, element, attrs, ctrl) {
@@ -1488,12 +1535,12 @@ window.CKEDITOR_BASEPATH = '';
                     firstDay: 1,
                     showButtonPanel: false,
                     showMinute: false,
-                    closeText: 'Zavřít',
-                    prevText: 'Předchozí',
-                    nextText: 'Další',
-                    currentText: 'Nyní',
-                    monthNames: ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'],
-                    dayNamesMin: ['Ne','Po','Út','St','Čt','Pá','So'],
+                    closeText: ngxDictionary('NGX_UI_DATEINPUT_CLOSE'),
+                    prevText: ngxDictionary('NGX_UI_DATEINPUT_PREV'),
+                    nextText: ngxDictionary('NGX_UI_DATEINPUT_NEXT'),
+                    currentText: ngxDictionary('NGX_UI_DATEINPUT_NOW'),
+                    monthNames: ngxDictionary('NGX_UI_DATEINPUT_MONTHS'),
+                    dayNamesMin: ngxDictionary('NGX_UI_DATEINPUT_DAYS'),
                     onSelect: function(dateText) {
                         scope.$apply(function() {
                             ctrl.$setViewValue(dateText);
@@ -1503,6 +1550,21 @@ window.CKEDITOR_BASEPATH = '';
 
                 // store element reference into widget scope for future datepicker update
                 ctrl.element = element;
+
+                var dateRangeMaxDays = attrs.rangeMaxdays ? attrs.rangeMaxdays : undefined;
+                var dateInputMin = ngxDate.parse(attrs.min);
+                var dateInputMax = ngxDate.parse(attrs.max);
+                var dateInputMaxRange = null;
+
+                // set initial minimum date
+                if (dateInputMin) {
+                    ctrl.element.datepicker('option', 'minDate', dateInputMin);
+                }
+
+                // set initial maximum date
+                if (dateInputMax) {
+                    ctrl.element.datepicker('option', 'maxDate', dateInputMax);
+                }
 
                 // related date range input (from-to)
                 if (attrs.rangeInput) {
@@ -1529,10 +1591,33 @@ window.CKEDITOR_BASEPATH = '';
                     if (viewValue && ctrl.$dirty) {
                         // parse and check date
                         var pd = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(viewValue);
-                        valid = (pd && ngxDate.check(pd[2], pd[1], pd[3]));
+                        valid = (pd && ngxDate.check(pd[3], pd[2], pd[1]));
 
                         if (valid) {
                             date = new Date(pd[3], pd[2] - 1, pd[1]);
+
+                            // check min input date
+                            if (dateInputMin && date < dateInputMin) {
+                                valid = false;
+                            }
+
+                            // check max input date
+                            if (dateInputMax) {
+                                if (date > dateInputMax) {
+                                    valid = false;
+                                }
+
+                                // if max-days range is set, move max input to range end
+                                if (dateRangeMaxDays) {
+                                    dateInputMaxRange = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
+
+                                    if (ctrl.range.ctrl.timestampValue) {
+                                        if (date.getTime() - (60*60*24*dateRangeMaxDays*1000) > (ctrl.range.ctrl.timestampValue * 1000)) {
+                                            valid = false;
+                                        }
+                                    }
+                                }
+                            }
 
                             // apply related time input
                             if (ctrl.timeInput) {
@@ -1567,7 +1652,12 @@ window.CKEDITOR_BASEPATH = '';
                     if (ctrl.range) {
                         // update related date picker min/max
                         if (!ctrl.$error.date) {
+
                             ctrl.range.ctrl.element.datepicker('option', ctrl.range.type + 'Date', viewValue);
+
+                            if (ctrl.range.type == 'min' && dateInputMaxRange) {
+                                ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateInputMaxRange);
+                            }
                         }
 
                         // range validation
@@ -2068,6 +2158,7 @@ window.CKEDITOR_BASEPATH = '';
                             minWidth: parseInt(sourceScale[0], 10) + parseInt(resultScale[0], 10) + 70,
                             minHeight: parseInt(sourceScale[1] > resultScale[1] ? sourceScale[1] : resultScale[1], 10) + 50,
                             resizable: false,
+                            modal: (angular.isDefined(attrs.dialogModal) && attrs.dialogModal !== "false"),
                             title: config.dialogTitle,
                             buttons: [
                                 {
@@ -2151,6 +2242,7 @@ window.CKEDITOR_BASEPATH = '';
     }]);
 
 })(window.angular, window.jQuery, window);
+
 // IE8 support
 document.createElement('ngx-invalid');
 
@@ -2467,6 +2559,91 @@ document.createElement('ngx-invalid');
         };
     }]);
 })(window.angular, window.jQuery);
+(function(angular, $) {
+    'use strict';
+
+    var module = angular.module('ngx.ui.textCurtain', [
+        'ngx.dictionary'
+    ]);
+
+    /**
+     * Text curtain
+     * 
+     * checks attr curtainMinHeight for minimal height
+     * if don't exist checks attr curtainMinChars for minimal chars count
+     * than shrinks element to curtainHeight
+     * 
+     * @param curtainMinHeight min element height for collapse (number in px)
+     * @param curtainMinChars chars count for collapse
+     * @param curtainHeight height to collapse (with units)
+     * @param curtainText
+     * @param curtainTextHide
+     */
+    module.directive('ngxTextCurtain', ['ngxDictionary', function (ngxDictionary) {
+        return {
+            compile: function (element, attrs) {
+                // vars from attrs
+                var defaultTx = angular.isDefined(attrs.curtainText) ? attrs.curtainText : ngxDictionary('NGX_UI_CURTAINTEXT_SHOW');
+                var defaultTxHide = angular.isDefined(attrs.curtainTextHide) ? attrs.curtainTextHide : ngxDictionary('NGX_UI_CURTAINTEXT_HIDE');
+                var minHeight = angular.isDefined(attrs.curtainMinHeight) ? parseInt(attrs.curtainMinHeight, 10) : null;
+                var minNumChars = angular.isDefined(attrs.curtainMinChars) ? attrs.curtainMinChars : 800;
+                var cHeight = angular.isDefined(attrs.curtainHeight) ? attrs.curtainHeight : "100px";
+                
+                // fixed vars
+                var button = $('<div class="show-more-desc"><span><a>' + defaultTx + '</a></span></div>');
+                var bottomGradient = $('<div class="bottom-grad"></div>');
+                var cMaxHeight;
+                var bodyTopPosition;
+                var elTopPosition;
+
+                element.ready(function() {
+                    cMaxHeight = element.height();
+                    if((minHeight && cMaxHeight > minHeight) || (element.text().length > minNumChars)) {
+                        element.addClass('short-desc');
+                        element.css({
+                            height: cHeight,
+                            overflow: 'hidden'
+                        });
+                        element.prepend(bottomGradient);
+
+                        button.find('a').click(function (e) {
+                            if (element.css('overflow') == 'hidden') {
+                                element.animate({height: cMaxHeight + 20}, 600, function() {
+                                    element.css({
+                                        overflow: 'visible'
+                                    });
+                                    element.find('.bottom-grad').remove();
+                                    $(e.target).text(defaultTxHide);
+                                });
+                            } else {
+                                element.prepend(bottomGradient);
+
+                                bodyTopPosition = $('html, body').offset().top * -1;
+                                elTopPosition = element.offset().top;
+                                if(bodyTopPosition > elTopPosition) {
+                                    $('html, body').animate({
+                                        scrollTop: (elTopPosition - 20)
+                                    }, 'slow');
+                                }
+                                
+                                element.animate({height: cHeight}, 600, function() {
+                                    element.css({
+                                        overflow: 'hidden'
+                                    });
+                                    $(e.target).text(defaultTx);
+                                });    
+                            }
+                        });
+
+                        element.after(button);
+                        return true;
+                    }
+                });
+            }
+        };
+    }]);
+
+})(window.angular, window.jQuery);
 (function(angular) {
     'use strict';
 
@@ -2770,6 +2947,51 @@ document.createElement('ngx-invalid');
 (function(angular) {
     'use strict';
 
+    angular.module('ngx.ui.dateInput').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('cs', {
+            NGX_UI_DATEINPUT_NOW: 'Nyní',
+            NGX_UI_DATEINPUT_NEXT: 'Další',
+            NGX_UI_DATEINPUT_PREV: 'Předchozí',
+            NGX_UI_DATEINPUT_CLOSE: 'Zavřít',
+            NGX_UI_DATEINPUT_DAYS: ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'],
+            NGX_UI_DATEINPUT_MONTHS: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec']
+        });
+    }]);
+
+})(window.angular);
+(function(angular) {
+    'use strict';
+
+    angular.module('ngx.ui.dateInput').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('en', {
+            NGX_UI_DATEINPUT_NOW: 'Now',
+            NGX_UI_DATEINPUT_NEXT: 'Next',
+            NGX_UI_DATEINPUT_PREV: 'Previous',
+            NGX_UI_DATEINPUT_CLOSE: 'Close',
+            NGX_UI_DATEINPUT_DAYS: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            NGX_UI_DATEINPUT_MONTHS: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        });
+    }]);
+
+})(window.angular);
+(function(angular) {
+    'use strict';
+
+    angular.module('ngx.ui.dateInput').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('pl', {
+            NGX_UI_DATEINPUT_NOW: 'Teraz',
+            NGX_UI_DATEINPUT_NEXT: 'Następny',
+            NGX_UI_DATEINPUT_PREV: 'Poprzedni',
+            NGX_UI_DATEINPUT_CLOSE: 'Koniec',
+            NGX_UI_DATEINPUT_DAYS: ['Nie', 'Pon', 'Wto', 'Śro', 'Czw', 'Pią', 'Sob'],
+            NGX_UI_DATEINPUT_MONTHS: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']
+        });
+    }]);
+
+})(window.angular);
+(function(angular) {
+    'use strict';
+
     angular.module('ngx.ui.imageupload').run(['ngxDictionary', function(ngxDictionary) {
         ngxDictionary.addItems('cs', {
             NGX_UI_IMAGEUPLOAD_PREVIEW: 'náhled',
@@ -2806,3 +3028,55 @@ document.createElement('ngx-invalid');
 
 })(window.angular);
 
+
+(function(angular) {
+    'use strict';
+
+    angular.module('ngx.ui.imageupload').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('pl', {
+            NGX_UI_IMAGEUPLOAD_PREVIEW: 'podgląd',
+            NGX_UI_IMAGEUPLOAD_INPUT_DRAG: 'Upuścić obraz',
+            NGX_UI_IMAGEUPLOAD_INPUT_OR: 'lub możecie...',
+            NGX_UI_IMAGEUPLOAD_INPUT_BROWSE: 'wybrać z komputera',
+            NGX_UI_IMAGEUPLOAD_SCALE_INFO: 'maksymalne wymiary obrazu są {{resultWidth}} x {{resultHeight}}',
+            NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Wgraj',
+            NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Anulować',
+            NGX_UI_IMAGEUPLOAD_INVALID_IMAGE: 'Nieprawidłowy obraz',
+            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Błąd przy przetwarzaniu obrazu lub nieprawidłowy obraz'
+        });
+    }]);
+
+})(window.angular);
+(function(angular) {
+    'use strict';
+
+    angular.module('ngx.ui.textCurtain').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('cs', {
+            NGX_UI_CURTAINTEXT_SHOW: 'zobrazit více',
+            NGX_UI_CURTAINTEXT_HIDE: 'zobrazit méně'
+        });
+    }]);
+
+})(window.angular);
+(function(angular) {
+    'use strict';
+
+    angular.module('ngx.ui.textCurtain').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('en', {
+            NGX_UI_CURTAINTEXT_SHOW: 'show more',
+            NGX_UI_CURTAINTEXT_HIDE: 'hide'
+        });
+    }]);
+
+})(window.angular);
+(function(angular) {
+    'use strict';
+
+    angular.module('ngx.ui.textCurtain').run(['ngxDictionary', function(ngxDictionary) {
+        ngxDictionary.addItems('pl', {
+            NGX_UI_CURTAINTEXT_SHOW: 'pokaż więcej',
+            NGX_UI_CURTAINTEXT_HIDE: 'schowaj'
+        });
+    }]);
+
+})(window.angular);

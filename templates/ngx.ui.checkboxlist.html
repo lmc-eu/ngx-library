@@ -1,16 +1,18 @@
-<fieldset>
-	<legend>Example</legend>
-	<form name="form_checkboxList">
-		<label ng-repeat="(key, value) in checkboxlist.items" class="checkbox">
-			<input type="checkbox" name="checkbox" ng-model="checkboxlist.selected" value="{{key}}" ngx-checkboxlist min="1" max="3" />
-			{{value}}
-		</label>
-		<div ngx-invalid="form_checkboxList.checkbox min">
-			Check at least one item
-		</div>
-		<div ngx-invalid="form_checkboxList.checkbox max">
-			Check at most three items
-		</div>
-	</form>
-</fieldset>
-<pre>{{checkboxlist|json}}</pre>
+<div ng-controller="ngx.ui.checkboxlist">
+    <fieldset>
+        <legend>Example</legend>
+        <form name="form_checkboxList">
+            <label ng-repeat="(key, value) in checkboxlist.items" class="checkbox">
+                <input type="checkbox" name="checkbox" ng-model="checkboxlist.selected" value="{{key}}" ngx-checkboxlist min="1" max="3" />
+                {{value}}
+            </label>
+            <div ngx-invalid="form_checkboxList.checkbox min">
+                Check at least one item
+            </div>
+            <div ngx-invalid="form_checkboxList.checkbox max">
+                Check at most three items
+            </div>
+        </form>
+    </fieldset>
+    <pre>{{checkboxlist|json}}</pre>
+</div>
