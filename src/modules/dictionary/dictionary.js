@@ -14,9 +14,17 @@
          * Returns items by current language
          * @param key
          * @param language
+         * @param params array of string elements for replace %s, depends on order
          */
-        function ngxDictionary(key, language) {
-            return dictionary[language ? language : currentLanguage][key];
+        function ngxDictionary(key, language, params) {
+            var string = dictionary[language ? language : currentLanguage][key];
+            if(params !== undefined) {
+                var re = /%s/;
+                angular.forEach(params, function(param) {
+                    string = string.replace(re, param);
+                });
+            }
+            return string;
         }
 
         /**
