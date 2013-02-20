@@ -3,12 +3,14 @@ describe('ngx.dictionary', function() {
         en: {
             dictionary: 'dictionary',
             item: 'item',
-            test: 'should register items'
+            test: 'should register items',
+            replace: 'test %s'
         },
         cz: {
             dictionary: 'slovník',
             item: 'položka',
-            test: 'měl by zaregistrovat položky'
+            test: 'měl by zaregistrovat položky',
+            replace: 'test %s'
         }
     };
 
@@ -41,6 +43,11 @@ describe('ngx.dictionary', function() {
         expect(ngxDictionary('item')).toEqual(items.en.item);
         expect(ngxDictionary('test', 'cz')).toEqual(items.cz.test);
         expect(ngxDictionary('test', 'en')).toEqual(items.en.test);
+    }));
+
+    it('should return item and replace some placeholder', inject(function(ngxDictionary) {           
+        expect(ngxDictionary('replace', 'cz', ["příklad"])).toEqual("test příklad");
+        expect(ngxDictionary('replace', 'en', ["example"])).toEqual("test example");         
     }));
 
 });
