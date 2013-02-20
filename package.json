@@ -19,6 +19,7 @@
         "grunt-testacular": "~=0.2.0"
 	},
 	"scripts" : {
-		"test": "grunt"
+		"pretest": "grunt",
+        "test": "grunt testacularServer"
 	}
 }
