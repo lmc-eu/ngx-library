@@ -18,6 +18,7 @@ document.createElement('ngx-invalid');
                 var parts = (attrs.ngxInvalid ? attrs.ngxInvalid.split(' ') : []),
                     input = (attrs.input ? attrs.input : parts[0]),
                     errors = (attrs.error ? attrs.error : parts[1]),
+                    scrollable = (attrs.ngxScrollable !== undefined ? true : false),
                     watch = [];
 
                 scope.elementOffset = 0;
@@ -49,7 +50,7 @@ document.createElement('ngx-invalid');
 
                 scope.$watch(watch.join(' && '), function(value) {
                     element.toggle(value ? true : false);
-                    if(value === true) {
+                    if(value === true && scrollable) {
                         scope.elementOffset = $('.ngx-invalid:visible:eq(0)').offset();
                     }
                 });
