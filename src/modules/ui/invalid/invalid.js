@@ -1,7 +1,7 @@
 // IE8 support
 document.createElement('ngx-invalid');
 
-(function(angular, $) {
+(function(angular, $, window) {
     'use strict';
 
     var module = angular.module('ngx.ui.invalid', []);
@@ -44,7 +44,6 @@ document.createElement('ngx-invalid');
                 scope.$watch('elementOffset', function(value, oldvalue) {
                     if(value !== oldvalue && value !== null) {
                         window.scrollTo(0, value.top - 50);
-                        console.log(value.top - 50);
                     }
                 });
 
@@ -58,4 +57,4 @@ document.createElement('ngx-invalid');
         };
     });
 
-})(window.angular, window.jQuery);
+})(window.angular, window.jQuery, window);
