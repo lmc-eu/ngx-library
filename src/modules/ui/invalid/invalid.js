@@ -1,7 +1,7 @@
 // IE8 support
 document.createElement('ngx-invalid');
 
-(function(angular, $, window) {
+(function(angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.invalid', []);
@@ -9,7 +9,7 @@ document.createElement('ngx-invalid');
     /**
      * Input/Form invalid status
      */
-    module.directive('ngxInvalid', function() {
+    module.directive('ngxInvalid', ['$window', function($window) {
         return {
             restrict: 'EA',
             link: function(scope, element, attrs) {
@@ -43,7 +43,7 @@ document.createElement('ngx-invalid');
 
                 scope.$watch('elementOffset', function(value, oldvalue) {
                     if(value !== oldvalue && value !== null) {
-                        window.scrollTo(0, value.top - 50);
+                        $window.scrollTo(0, value.top - 50);
                     }
                 });
 
@@ -55,6 +55,6 @@ document.createElement('ngx-invalid');
                 });
             }
         };
-    });
+    }]);
 
-})(window.angular, window.jQuery, window);
+})(window.angular, window.jQuery);
