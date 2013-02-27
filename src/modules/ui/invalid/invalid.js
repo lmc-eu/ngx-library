@@ -1,7 +1,7 @@
 // IE8 support
 document.createElement('ngx-invalid');
 
-(function(angular) {
+(function(angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.invalid', []);
@@ -19,6 +19,8 @@ document.createElement('ngx-invalid');
                     input = (attrs.input ? attrs.input : parts[0]),
                     errors = (attrs.error ? attrs.error : parts[1]),
                     watch = [];
+
+                scope.elementOffset = 0;
 
                 // error types
                 if (errors) {
@@ -39,11 +41,21 @@ document.createElement('ngx-invalid');
                     watch.push(attrs.expression);
                 }
 
+                scope.$watch('elementOffset', function(value, oldvalue) {
+                    if(value !== oldvalue && value !== null) {
+                        window.scrollTo(0, value.top - 50);
+                        console.log(value.top - 50);
+                    }
+                });
+
                 scope.$watch(watch.join(' && '), function(value) {
                     element.toggle(value ? true : false);
+                    if(value === true) {
+                        scope.elementOffset = $('.ngx-invalid:visible:eq(0)').offset();
+                    }
                 });
             }
         };
     });
 
-})(window.angular);
+})(window.angular, window.jQuery);
