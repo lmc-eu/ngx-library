@@ -20,7 +20,8 @@
         'ngx.ui.lightbox',
         'ngx.ui.geomap',
         'ngx.ui.addressInput',
-        'ngx.ui.textCurtain'
+        'ngx.ui.textCurtain',
+        'ngx.ui.confirm'
     ];
 
     /**
