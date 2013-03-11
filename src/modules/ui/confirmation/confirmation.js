@@ -10,7 +10,7 @@
         return {
             restrict: "A",
             link: function(scope, element, attrs) {
-                var message = attrs.ngxConfirmationMessage ? attrs.ngxConfirmationMessage : ngxDictionary('NGX_UI_CONFIRMATION');
+                var message = attrs.confirmationMessage ? attrs.confirmationMessage : ngxDictionary('NGX_UI_CONFIRMATION');
                 element.bind('click', function(event) {
                     if(!$window.confirm(message)) {
                         event.preventDefault();
