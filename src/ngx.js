@@ -11,6 +11,7 @@
         'ngx.ui.addressInput',
         'ngx.ui.checkboxlist',
         'ngx.ui.ckeditor',
+        'ngx.ui.confirm',
         'ngx.ui.dateInput',
         'ngx.ui.dialog',
         'ngx.ui.gallery',
