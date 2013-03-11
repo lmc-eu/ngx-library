@@ -17,7 +17,7 @@
         'ngx.ui.geomap',
         'ngx.ui.addressInput',
         'ngx.ui.textCurtain',
-        'ngx.ui.confirmation'
+        'ngx.ui.confirm'
     ];
 
     var app = angular.module('ngxDemoApp', ['ngx']);
