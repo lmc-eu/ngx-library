@@ -6,22 +6,22 @@
      * @type {Array}
      */
     var modules = [
-        'ngx.ui.invalid',
-        'ngx.ui.validate',
-        'ngx.ui.scrollTo',
-        'ngx.ui.wwwInput',
-        'ngx.ui.dateInput',
-        'ngx.ui.hashtagInput',
-        'ngx.ui.checkboxlist',
-        'ngx.ui.tagsInput',
-        'ngx.ui.dialog',
-        'ngx.ui.wysiwyg',
-        'ngx.ui.imageupload',
-        'ngx.ui.lightbox',
-        'ngx.ui.geomap',
         'ngx.ui.addressInput',
+        'ngx.ui.checkboxlist',
+        'ngx.ui.confirm'        
+        'ngx.ui.dateInput',
+        'ngx.ui.dialog',
+        'ngx.ui.geomap',
+        'ngx.ui.hashtagInput',
+        'ngx.ui.imageupload',
+        'ngx.ui.invalid',
+        'ngx.ui.lightbox',
+        'ngx.ui.scrollTo',
+        'ngx.ui.tagsInput',
         'ngx.ui.textCurtain',
-        'ngx.ui.confirm'
+        'ngx.ui.validate',
+        'ngx.ui.wwwInput',
+        'ngx.ui.wysiwyg'
     ];
 
     /**
