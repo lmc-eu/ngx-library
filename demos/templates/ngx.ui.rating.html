@@ -1,0 +1,47 @@
+<div ng-controller="ngx.ui.rating">
+    <fieldset>
+        <legend>Rating directive</legend>
+
+        <h3>Basic usage</h3>
+        <pre>&lt;ngx-rating level="ratingLevel"&gt;&lt;/ngx-rating&gt;</pre>
+        <ngx-rating level="ratingLevel"></ngx-rating>
+
+        <h3>Custom symbol and clearable rating</h3>
+        <pre>&lt;ngx-rating level="ratingLevel2" symbol="$" clearable&gt;&lt;/ngx-rating&gt;</pre>
+        <ngx-rating level="ratingLevel2" symbol="$" clearable></ngx-rating>
+
+        <h3>Read only rating with changed number of &bdquo;stars&ldquo;</h3>
+        <pre>&lt;ngx-rating level="ratingLevel3" max="10" read-only&gt;&lt;/ngx-rating&gt;</pre>
+        <ngx-rating level="ratingLevel3" max="10" read-only></ngx-rating>
+
+        <h3>Change clear text</h3>
+        <pre>&lt;ngx-rating level="ratingLevel4" clearable clear-text="Your text"&gt;&lt;/ngx-rating&gt;</pre>
+        <ngx-rating level="ratingLevel4" clearable clear-text="Your text"></ngx-rating>
+
+        <h3>Custom image with changeOnHover enabled</h3>
+        <pre>&lt;style&gt;
+    .ngx-ui-rating-image li {
+        background: url('images/stars_18x18.png') 0 -18px no-repeat;
+        padding: 0;
+        width: 18px;
+        height: 18px;
+    }
+    .ngx-ui-rating-image li.ngx-rating-selected,
+    .ngx-ui-rating-image li.ngx-rating-hover {
+        background-position: 0 0;
+    }
+&lt;/style&gt;
+&lt;ngx-rating level="ratingLevel5" symbol="" change-on-hover&gt;&lt;/ngx-rating&gt;</pre>
+        <ngx-rating class="ngx-ui-rating-image" level="ratingLevel5" symbol="" change-on-hover></ngx-rating>
+
+        <h3>Watch level changes</h3>
+        <pre>// in controller
+$scope.ratingLevel6 = 3;
+$scope.$watch('ratingLevel6', function (level) {
+    // do your stuff
+});
+&lt;ngx-rating level="ratingLevel6" clearable&gt;&lt;/ngx-rating&gt;</pre>
+        <ngx-rating level="ratingLevel6" clearable></ngx-rating>
+        <pre ng-bind-html-unsafe="ratingLog"></pre>
+    </fieldset>
+</div>

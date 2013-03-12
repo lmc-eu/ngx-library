@@ -26,6 +26,20 @@
         return dst;
     };
 
+    /**
+     * If value is undefined return defaultValue otherwise return value.
+     * @param {*} value
+     * @param {*} defaultValue
+     * @returns {*}
+     */
+    ngxUtils.noUndefined = function (value, defaultValue) {
+        if (value !== undefined) {
+            return value;
+        }
+
+        return defaultValue;
+    };
+
     angular.module('ngx.utils', [])
        .value('ngxUtils', ngxUtils);
 

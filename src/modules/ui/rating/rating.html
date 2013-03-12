@@ -1,0 +1,5 @@
+<ul class="ngx-rating">
+    <li ng-repeat="style in styles" ng-class="style" ng-click="select($index)"
+        ng-mouseenter="enter($index)" ng-mouseleave="leave()">{{symbol}}</li>
+    <li ng-show="clearable"><a ng-click="select(null)">{{clearText}}</a></li>
+</ul>
