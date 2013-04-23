@@ -2,7 +2,7 @@
 	"author": "https://github.com/lmc-eu",
 	"name": "ngx-library",
 	"description": "NGX - extension library for AngularJS",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"homepage": "http://github.com/lmc-eu/ngx-library",
 	"repository": {
 		"type": "git",
