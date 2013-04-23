@@ -6,21 +6,23 @@
      * @type {Array}
      */
     var modules = [
-        'ngx.ui.invalid',
-        'ngx.ui.validate',
-        'ngx.ui.scrollTo',
-        'ngx.ui.wwwInput',
-        'ngx.ui.dateInput',
-        'ngx.ui.hashtagInput',
-        'ngx.ui.checkboxlist',
-        'ngx.ui.tagsInput',
-        'ngx.ui.dialog',
-        'ngx.ui.wysiwyg',
-        'ngx.ui.imageupload',
-        'ngx.ui.lightbox',
-        'ngx.ui.geomap',
         'ngx.ui.addressInput',
-        'ngx.ui.textCurtain'
+        'ngx.ui.checkboxlist',
+        'ngx.ui.confirm',
+        'ngx.ui.dateInput',
+        'ngx.ui.dialog',
+        'ngx.ui.geomap',
+        'ngx.ui.hashtagInput',
+        'ngx.ui.imageupload',
+        'ngx.ui.invalid',
+        'ngx.ui.lightbox',
+        'ngx.ui.rating',
+        'ngx.ui.scrollTo',
+        'ngx.ui.tagsInput',
+        'ngx.ui.textCurtain',
+        'ngx.ui.validate',
+        'ngx.ui.wwwInput',
+        'ngx.ui.wysiwyg'
     ];
 
     /**
@@ -152,6 +154,22 @@
         $scope.validateFavorites = function(movie, actor, later) {
             return (later ? true : (movie && actor));
         };
+    });
+
+    /**
+     * ngx.ui.rating demo controller
+     */
+    app.controller('ngx.ui.rating', function($scope) {
+        $scope.ratingLevel = 3;
+        $scope.ratingLevel2 = 2;
+        $scope.ratingLevel3 = 7;
+        $scope.ratingLevel4 = 3;
+        $scope.ratingLevel5 = 3;
+        $scope.ratingLevel6 = 3;
+        $scope.ratingLog = 'ratingLevel6 log:<br>';
+        $scope.$watch('ratingLevel6', function (level) {
+            $scope.ratingLog += '&bull; level ' + level + ' selected<br>';
+        })
     });
 
 })(window.angular, window);
