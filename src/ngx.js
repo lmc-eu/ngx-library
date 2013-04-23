@@ -20,6 +20,7 @@
         'ngx.ui.imageupload',
         'ngx.ui.invalid',
         'ngx.ui.lightbox',
+        'ngx.ui.rating',
         'ngx.ui.scrollTo',
         'ngx.ui.smap',
         'ngx.ui.tagsInput',
