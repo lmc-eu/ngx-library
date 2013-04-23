@@ -97,3 +97,13 @@ h1 {
 .ngx-ui-dateInput input[ngx-time-input] {
     width: 50px;
 }
+.ngx-ui-rating-image li {
+    background: url('images/stars_18x18.png') 0 -18px no-repeat;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+}
+.ngx-ui-rating-image li.ngx-rating-selected,
+.ngx-ui-rating-image li.ngx-rating-hover {
+    background-position: 0 0;
+}
