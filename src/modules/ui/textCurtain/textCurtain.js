@@ -1,4 +1,4 @@
-(function (angular, $, window) {
+(function (angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.textCurtain', [
@@ -47,8 +47,6 @@
                         });
                         element.prepend(bottomGradient);
 
-                        window.console.log(hideFalse);
-
                         button.find('a').click(function (e) {
                             if (element.css('overflow') == 'hidden') {
                                 element.animate({height: cMaxHeight + 20}, 600, function () {
@@ -91,4 +89,4 @@
         };
     }]);
 
-})(window.angular, window.jQuery, window);
+})(window.angular, window.jQuery);
