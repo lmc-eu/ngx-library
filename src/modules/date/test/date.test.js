@@ -2,6 +2,7 @@ describe('ngx.date', function() {
     beforeEach(module('ngx.date', 'ngx.config'));
 
     it('should format datetime', inject(function(ngxDate) {
+        ngxDate.ini_set('date.timezone', 'Europe/Prague');
         expect(ngxDate.format('Y-m-d', 1351375200)).toEqual('2012-10-28');
         expect(ngxDate.format('j.n.Y H:i:s O', 1348815030)).toEqual('28.9.2012 08:50:30 +0200');
     }));
