@@ -1,8 +1,14 @@
 module.exports = function(grunt) {
     // tasks
     grunt.loadTasks('build/tasks');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-recess');
-    grunt.loadNpmTasks('grunt-testacular');
+    grunt.loadNpmTasks('grunt-karma');
+    
 
     // configuration
     grunt.initConfig({
@@ -17,25 +23,30 @@ module.exports = function(grunt) {
         },
         concat: {
             dist: {
-                src: ['<banner:meta.banner>', 'src/ngx.js', 'src/deps/**/*.js', 'src/modules/**/!(lang|test)/*.js', 'src/modules/**/lang/*.js'],
+                src: ['<banner:meta.banner>', 'src/ngx.js', 'src/deps/ecmascript/*.js', 'src/deps/head.js/*.js', 'src/modules/**/!(lang|test)/*.js', 'src/modules/**/lang/*.js'],
                 dest: 'dist/ngx.js'
             }
         },
         clean: {
-            dist: ['dist/']
+            build: ['dist/']
         },
         copy: {
             dist: {
-                files: {
-                    'dist/templates/ui': ['src/modules/ui/**/*.html'],
-                    'dist/libs': ['libs/**']
-                }
+                files: [
+                    {expand: true, src: ['src/modules/ui/**/*.html'], dest: 'dist/templates/ui' },
+                    {expand: true, src: ['libs/**'], dest: 'dist/libs'}
+                ]
             }
         },
-        min: {
+        uglify: {
+            // Specify mangle: false to prevent changes to your variable and function names.
+            options: {
+                mangle: false
+            },          
             dist: {
-                src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-                dest: 'dist/ngx.min.js'
+              files: {
+                      'dist/ngx.min.js': ['dist/ngx.js']
+              }
             }
         },
         recess: {
@@ -47,19 +58,20 @@ module.exports = function(grunt) {
                 }
             },
             dist_min: {
-                src: '<config:recess.dist_css.dest>',
+                src:  'src/**/*.less',
                 dest: 'dist/styles/ngx.min.css',
                 options: {
+                    compile: true,
                     compress: true
                 }
             }
         },
-        lint: {
-            files: ['grunt.js', 'src/ngx.js', 'src/modules/**/*.js']
+        jshint: {
+            files: ['Gruntfile.js', 'src/ngx.js', 'src/modules/**/*.js']
         },
         watch: {
             scripts: {
-                files: ['grunt.js', 'src/*.js', 'src/**/*.js', 'test/**/*.js'],
+                files: ['Gruntfile.js', 'src/*.js', 'src/**/*.js', 'test/**/*.js'],
                 tasks: 'lint concat min testacularRun'
             },
             styles: {
@@ -83,6 +95,6 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', 'lint clean concat copy min recess');
+    grunt.registerTask('default', ['jshint', 'clean', 'concat', 'copy', 'uglify', 'recess']);
     grunt.registerTask('devel', 'testacularServer watch');
 };
