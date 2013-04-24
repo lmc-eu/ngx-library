@@ -20,6 +20,7 @@
     "karma": "~0.8.0",
     "istanbul": "~0.1.0",
     "jshint": "~1.1.0",
+    "phantomjs" : "~1.9.0",
     "grunt-cli": "~0.1.0",
     "grunt-contrib-concat": "~0.2.0",
     "grunt-contrib-uglify": "~0.2.0",
