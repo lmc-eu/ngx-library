@@ -83,18 +83,16 @@ module.exports = function(grunt) {
                 tasks: 'copy'
             }
         },
-        testacularServer: {
+        karma: {
             unit: {
-                configFile: 'test/unit/config.js'
+                configFile: 'test/unit/config.js',
+                runnerPort: 9999,
+                singleRun: true,
+                browsers: ['PhantomJS']                
             }
-        },
-        testacularRun: {
-            unit: {
-                runnerPort: 9100
-            }
-        }
+        }        
     });
 
     grunt.registerTask('default', ['jshint', 'clean', 'concat', 'copy', 'uglify', 'recess']);
-    grunt.registerTask('devel', 'testacularServer watch');
+    grunt.registerTask('devel', 'karma watch');
 };
