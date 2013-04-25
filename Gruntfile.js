@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-recess');
     grunt.loadNpmTasks('grunt-karma');
-    
+    grunt.loadNpmTasks('grunt-contrib-watch'); 
 
     // configuration
     grunt.initConfig({
@@ -72,15 +72,15 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['Gruntfile.js', 'src/*.js', 'src/**/*.js', 'test/**/*.js'],
-                tasks: 'lint concat min testacularRun'
+                tasks: ['lint', 'concat', 'min', 'testacularRun']
             },
             styles: {
                 files: ['src/**/*.less'],
-                tasks: 'recess'
+                tasks: ['recess']
             },
             templates: {
                 files: ['src/modules/**/*.html'],
-                tasks: 'copy'
+                tasks: ['copy']
             }
         },
         karma: {
@@ -94,5 +94,5 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', ['jshint', 'clean', 'concat', 'copy', 'uglify', 'recess']);
-    grunt.registerTask('devel', 'karma watch');
+    grunt.registerTask('devel', ['karma', 'watch']);
 };
