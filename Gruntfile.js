@@ -9,7 +9,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-recess');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-contrib-watch'); 
-
+    grunt.loadNpmTasks('grunt-release');
     // configuration
     grunt.initConfig({
         pkg: '<json:package.json>',
@@ -90,7 +90,12 @@ module.exports = function(grunt) {
                 singleRun: true,
                 browsers: ['PhantomJS']                
             }
-        }        
+        },
+        release: {
+            options: {
+              npm: false //default: true
+            }
+          }        
     });
 
     grunt.registerTask('default', ['jshint', 'clean', 'concat', 'copy', 'uglify', 'recess']);
