@@ -25,22 +25,23 @@ window.CKEDITOR_BASEPATH = '';
                         [ window.CKEDITOR.CTRL + 89 /*Y*/, 'redo' ],
                         [ window.CKEDITOR.CTRL + window.CKEDITOR.SHIFT + 90 /*Z*/, 'redo' ]
                     ];
+                    if (attrs.toolbarItems) {
                     var items = attrs.toolbarItems.split(',');
-                    angular.forEach(attrs.toolbarItems.split(','), function(item) {
-                        if (item=="Bold") {
-                            strokes.push([window.CKEDITOR.CTRL + 66 /*B*/, 'bold']);
-                        }
-                        if (item=="Link") {
-                            strokes.push([window.CKEDITOR.CTRL + 76 /*B*/, 'link']);
-                        }
-                        if (item=="Italic") {
-                            strokes.push([window.CKEDITOR.CTRL + 73 /*I*/, 'italic' ]);
-                        }
-                        if (item=="Underline") {
-                            strokes.push([window.CKEDITOR.CTRL + 85 /*I*/, 'underline' ]);
-                        }
-                    });
-
+                        angular.forEach(attrs.toolbarItems.split(','), function(item) {
+                            if (item=="Bold") {
+                                strokes.push([window.CKEDITOR.CTRL + 66 /*B*/, 'bold']);
+                            }
+                            if (item=="Link") {
+                                strokes.push([window.CKEDITOR.CTRL + 76 /*B*/, 'link']);
+                            }
+                            if (item=="Italic") {
+                                strokes.push([window.CKEDITOR.CTRL + 73 /*I*/, 'italic' ]);
+                            }
+                            if (item=="Underline") {
+                                strokes.push([window.CKEDITOR.CTRL + 85 /*I*/, 'underline' ]);
+                            }
+                        });
+                    }
                     window.CKEDITOR.config.keystrokes = strokes;
                     // editor instance
                     var editor = window.CKEDITOR.replace(element[0], {
