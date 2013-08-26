@@ -12,7 +12,7 @@
             NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Zrušit',
             NGX_UI_IMAGEUPLOAD_INVALID_IMAGE: 'Neplatný obrázek',
             NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Chyba při zpracování obrázku anebo neplatný obrázek',
-            NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE: 'Obrázek nesplňuje minimální rozměry'
+            NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE: 'Obrázek nesplňuje minimální rozměry. Minimální rozměry jsou: %sx%s.'
         });
     }]);
 

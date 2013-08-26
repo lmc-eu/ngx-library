@@ -87,7 +87,10 @@
                         imgNewHeight;
 
                     if (strict && !(resultScale[0] < sourceWidth && resultScale[1] < sourceHeight)) {
-                        window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE'));
+                        window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE', undefined, [
+                            resultScale[0],
+                            resultScale[1]
+                        ]));
                         return;
                     }
 
