@@ -78,11 +78,16 @@
                  * Image display handler (when image loaded)
                  * @param sourceImage
                  */
-                function showSourceImage(sourceImage) {
+                function showSourceImage(sourceImage, strict) {
                     var $sourceImage = $(sourceImage),
                         sourceWidth = ($sourceImage.data('width') ? $sourceImage.data('width') : sourceImage.width),
                         sourceHeight = ($sourceImage.data('height') ? $sourceImage.data('height') : sourceImage.height);
 
+                    if (strict && !(resultScale[0] < sourceWidth && resultScale[1] < sourceHeight)) {
+                        window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE'));
+                        return;
+                    }
+                    
                     // set isSource flag
                     scope.isSource = (sourceImage ? true : false);
 
@@ -269,7 +274,7 @@
                             $(image).hide();
 
                             image.onload = function() {
-                                showSourceImage(this);
+                                showSourceImage(this, $element.attr('source-strict'));
                                 scope.$apply();
                             };
                             image.onerror = function() {
