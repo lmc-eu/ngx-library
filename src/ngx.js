@@ -22,6 +22,7 @@
         'ngx.ui.lightbox',
         'ngx.ui.rating',
         'ngx.ui.scrollTo',
+        'ngx.ui.scrollToInvalid',
         'ngx.ui.smap',
         'ngx.ui.tagsInput',
         'ngx.ui.textCurtain',
