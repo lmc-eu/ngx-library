@@ -58,6 +58,7 @@
                     resultImage,
                     resultCanvas = $('<canvas/>')[0],   // result canvas for cropping
                     resultFixed,
+                    checkMinSize,
                     resultMime;
 
                 // HTML5 feature detection
@@ -78,10 +79,20 @@
                  * Image display handler (when image loaded)
                  * @param sourceImage
                  */
-                function showSourceImage(sourceImage) {
+                function showSourceImage(sourceImage, strict) {
                     var $sourceImage = $(sourceImage),
                         sourceWidth = ($sourceImage.data('width') ? $sourceImage.data('width') : sourceImage.width),
-                        sourceHeight = ($sourceImage.data('height') ? $sourceImage.data('height') : sourceImage.height);
+                        sourceHeight = ($sourceImage.data('height') ? $sourceImage.data('height') : sourceImage.height),
+                        imgNewWidth,
+                        imgNewHeight;
+
+                    if (strict && !(resultScale[0] < sourceWidth && resultScale[1] < sourceHeight)) {
+                        window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE', undefined, [
+                            resultScale[0],
+                            resultScale[1]
+                        ]));
+                        return;
+                    }
 
                     // set isSource flag
                     scope.isSource = (sourceImage ? true : false);
@@ -150,6 +161,25 @@
                             cropOptions.aspectRatio = (resultScale[0] / resultScale[1]);
                         }
 
+                        if (checkMinSize) {
+                            imgNewWidth = sourceWidth;
+                            imgNewHeight = sourceHeight;
+                            if((sourceWidth > sourceScale[0]) || (sourceHeight > sourceScale[1])) {
+                                if(sourceWidth > sourceHeight) {
+                                    imgNewWidth = sourceScale[0];
+                                    imgNewHeight = sourceHeight / (sourceWidth / sourceScale[0]);
+                                } else {
+                                    imgNewWidth = sourceWidth / (sourceHeight / sourceScale[1]);
+                                    imgNewHeight = sourceScale[1];
+                                }
+                            }
+
+                            var widthScale = resultScale[0] / (sourceWidth / imgNewWidth),
+                                heightScale = resultScale[1] / (sourceHeight / imgNewHeight);
+
+                            cropOptions.minSize = [widthScale, heightScale];
+                        }
+
                         // destroy previously created Jcrop
                         var jcrop = $sourceImage.data('Jcrop');
                         if (jcrop) {
@@ -181,6 +211,7 @@
                     sourceScale = (config.sourceScale || '400x400').split('x');
                     resultScale = (config.resultScale || '215x125').split('x');
                     resultFixed = !angular.isUndefined(config.resultFixed);
+                    checkMinSize = !angular.isUndefined(config.checkMinSize);
                     resultMime = 'image/' + ((config.resultFormat || '').match(/^jpe?g$/) ? 'jpeg' : 'png');
                     thumbScale = (config.resultThumbScale || undefined);
 
@@ -269,7 +300,7 @@
                             $(image).hide();
 
                             image.onload = function() {
-                                showSourceImage(this);
+                                showSourceImage(this, $element.attr('source-strict'));
                                 scope.$apply();
                             };
                             image.onerror = function() {
