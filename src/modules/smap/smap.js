@@ -55,7 +55,7 @@
                 if (typeof(coords) === 'object') {
                     // convert into SMap.Coords
                     if (!coords.toWGS84) {
-                        return SMap.Coords.fromWGS84(coords.lon !== undefined ? coords.lon : coords[0], coords.lon !== undefined ? coords.lat : coords[1]);
+                        return SMap.Coords.fromWGS84(coords.lon !== undefined ? coords.lon : coords[0], coords.lat !== undefined ? coords.lat : coords[1]);
                     } else {
                         return coords;
                     }
