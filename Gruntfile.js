@@ -33,8 +33,8 @@ module.exports = function(grunt) {
         copy: {
             dist: {
                 files: [
-                    {expand: true, src: ['src/modules/ui/**/*.html'], dest: 'dist/templates/ui' },
-                    {expand: true, src: ['libs/**'], dest: 'dist/libs'}
+                    {expand: true, cwd: 'src/modules/ui/', src: ['**/*.html'], dest: 'dist/templates/ui/' },
+                    {expand: true, cwd: 'libs/', src: ['**'], dest: 'dist/libs'}
                 ]
             }
         },
