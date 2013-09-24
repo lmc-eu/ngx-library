@@ -11,7 +11,8 @@
             NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Submit',
             NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Cancel',
             NGX_UI_IMAGEUPLOAD_INVALID_IMAGE: 'Invalid image',
-            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Error processing image or invalid image'
+            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Error processing image or invalid image',
+            NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE: 'Image does not meet the minimum dimensions. Minimum dimensions are: %sx%s.'
         });
     }]);
 

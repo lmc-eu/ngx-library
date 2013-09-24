@@ -11,7 +11,8 @@
             NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Wgraj',
             NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Anulować',
             NGX_UI_IMAGEUPLOAD_INVALID_IMAGE: 'Nieprawidłowy obraz',
-            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Błąd przy przetwarzaniu obrazu lub nieprawidłowy obraz'
+            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Błąd przy przetwarzaniu obrazu lub nieprawidłowy obraz',
+            NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE: 'Obraz nie spełnia minimalne wymiary. Minimalne wymiary: %sx%s.'
         });
     }]);
 
