@@ -13,26 +13,26 @@
             require: 'ngModel',
             scope: false,
             link: function(scope, element, attrs, ctrl) {
-            	
-            	var id = attrs.ngModel,
-	                required = angular.isDefined(attrs.required),
-	                minCount = (attrs.min ? parseInt(attrs.min, 10) : null),
-	                maxCount = (attrs.max ? parseInt(attrs.max, 10) : null);
-            	
-            	// 'lists'-variable in parent scope, so not app-global
+
+            var id = attrs.ngModel,
+                    required = angular.isDefined(attrs.required),
+                    minCount = (attrs.min ? parseInt(attrs.min, 10) : null),
+                    maxCount = (attrs.max ? parseInt(attrs.max, 10) : null);
+
+                // 'lists'-variable in parent scope, so not app-global
                 if (!scope.$parent.checkboxListMainStore) {
-                	scope.$parent.checkboxListMainStore = {};
+                     scope.$parent.checkboxListMainStore = {};
                 }
                 if (!scope.$parent.checkboxListMainStore[id]) {
-                	 scope.$parent.checkboxListMainStore[id] = {
+                     scope.$parent.checkboxListMainStore[id] = {
                         ctrl: [],
                         list: {}
                     };
                 }
                 
                 // this is the controll object for a single inputfield
-            	var checkboxControl = scope.$parent.checkboxListMainStore[id];
-            	
+                var checkboxControl = scope.$parent.checkboxListMainStore[id];
+
                 ctrl.value = $interpolate(element.val())(scope);
 
                 checkboxControl.ctrl.push(ctrl);
