@@ -1,10 +1,3 @@
-/**
- * NGX - extension library for AngularJS
- * @version v0.2.2 - 2013-04-23
- * @link http://github.com/lmc-eu/ngx-library
- * @license MIT License, http://www.opensource.org/licenses/MIT
- */
-
 (function(angular) {
     'use strict';
 
@@ -64,6 +57,8 @@
         };
     }
 })(window.Array);
+/* Missing window.console failback */
+if(!window.console){var names=["log","debug","info","warn","error","assert","dir","dirxml","group","groupEnd","time","timeEnd","count","trace","profile","profileEnd"];window.console={};for(var i=0;i<names.length;++i){window.console[names[i]]=function(){}}}
 /**
  Head JS     The only script in your <HEAD>
  Copyright   Tero Piirainen (tipiirai)
@@ -490,6 +485,42 @@
     'use strict';
 
     var ngxDate = {};
+
+
+    ngxDate.ini_set = function (varname, newvalue) {
+      // http://kevin.vanzonneveld.net
+      // +   original by: Brett Zamir (http://brett-zamir.me)
+      // %        note 1: This will not set a global_value or access level for the ini item
+      // *     example 1: ini_set('date.timezone', 'America/Chicago');
+      // *     returns 1: 'Asia/Hong_Kong'
+
+      var oldval = '',
+        that = this;
+      this.php_js = this.php_js || {};
+      this.php_js.ini = this.php_js.ini || {};
+      this.php_js.ini[varname] = this.php_js.ini[varname] || {};
+      oldval = this.php_js.ini[varname].local_value;
+
+      var _setArr = function (oldval) { // Although these are set individually, they are all accumulated
+        if (typeof oldval === 'undefined') {
+          that.php_js.ini[varname].local_value = [];
+        }
+        that.php_js.ini[varname].local_value.push(newvalue);
+      };
+
+      switch (varname) {
+      case 'extension':
+        if (typeof this.dl === 'function') {
+          this.dl(newvalue); // This function is only experimental in php.js
+        }
+        _setArr(oldval, newvalue);
+        break;
+      default:
+        this.php_js.ini[varname].local_value = newvalue;
+        break;
+      }
+      return oldval;
+    };
 
     /**
      * Date formatter
@@ -982,7 +1013,7 @@
                 if (typeof(coords) === 'object') {
                     // convert into SMap.Coords
                     if (!coords.toWGS84) {
-                        return SMap.Coords.fromWGS84(coords.lon !== undefined ? coords.lon : coords[0], coords.lon !== undefined ? coords.lat : coords[1]);
+                        return SMap.Coords.fromWGS84(coords.lon !== undefined ? coords.lon : coords[0], coords.lat !== undefined ? coords.lat : coords[1]);
                     } else {
                         return coords;
                     }
@@ -1372,26 +1403,37 @@
      * @todo refactoring
      */
     module.directive('ngxCheckboxlist', ['$interpolate', function($interpolate) {
-        var lists = {};
+//        var lists = {}; // evil global state causing bugs!
         return {
             require: 'ngModel',
+            scope: false,
             link: function(scope, element, attrs, ctrl) {
-                var id = attrs.ngModel,
+
+            var id = attrs.ngModel,
                     required = angular.isDefined(attrs.required),
                     minCount = (attrs.min ? parseInt(attrs.min, 10) : null),
                     maxCount = (attrs.max ? parseInt(attrs.max, 10) : null);
 
-                ctrl.value = $interpolate(element.val())(scope);
-
-                if (!lists[id]) {
-                    lists[id] = {
+                // 'lists'-variable in parent scope, so not app-global
+                if (!scope.$parent.checkboxListMainStore) {
+                     scope.$parent.checkboxListMainStore = {};
+                }
+                if (!scope.$parent.checkboxListMainStore[id]) {
+                     scope.$parent.checkboxListMainStore[id] = {
                         ctrl: [],
                         list: {}
                     };
                 }
-                lists[id].ctrl.push(ctrl);
-                lists[id].list[ctrl.value] = attrs.title;
-                ctrl.list = lists[id].list;
+                
+                // this is the controll object for a single inputfield
+                var checkboxControl = scope.$parent.checkboxListMainStore[id];
+
+                ctrl.value = $interpolate(element.val())(scope);
+
+                checkboxControl.ctrl.push(ctrl);
+                checkboxControl.list[ctrl.value] = attrs.title;
+                ctrl.list = checkboxControl.list;
+
 
                 function setValidity(values) {
                     ctrl.$setValidity('required', required ? values.length > 0 : true);
@@ -1402,13 +1444,15 @@
                 ctrl.$parsers.push(function() {
                     var values = [];
 
-                    angular.forEach(lists[id].ctrl, function(ctrl) {
+                    angular.forEach(checkboxControl.ctrl, function(ctrl) {
                         if (ctrl.$viewValue) {
                             values.push(ctrl.value);
                         }
                     });
 
                     setValidity(values);
+                    
+                    
                     return values;
                 });
 
@@ -1432,6 +1476,7 @@
     }]);
 
 })(window.angular);
+
 
 // initialize CKEditor base path global variable
 window.CKEDITOR_BASEPATH = '';
@@ -1460,22 +1505,23 @@ window.CKEDITOR_BASEPATH = '';
                         [ window.CKEDITOR.CTRL + 89 /*Y*/, 'redo' ],
                         [ window.CKEDITOR.CTRL + window.CKEDITOR.SHIFT + 90 /*Z*/, 'redo' ]
                     ];
+                    if (attrs.toolbarItems) {
                     var items = attrs.toolbarItems.split(',');
-                    angular.forEach(attrs.toolbarItems.split(','), function(item) {
-                        if (item=="Bold") {
-                            strokes.push([window.CKEDITOR.CTRL + 66 /*B*/, 'bold']);
-                        }
-                        if (item=="Link") {
-                            strokes.push([window.CKEDITOR.CTRL + 76 /*B*/, 'link']);
-                        }
-                        if (item=="Italic") {
-                            strokes.push([window.CKEDITOR.CTRL + 73 /*I*/, 'italic' ]);
-                        }
-                        if (item=="Underline") {
-                            strokes.push([window.CKEDITOR.CTRL + 85 /*I*/, 'underline' ]);
-                        }
-                    });
-
+                        angular.forEach(attrs.toolbarItems.split(','), function(item) {
+                            if (item=="Bold") {
+                                strokes.push([window.CKEDITOR.CTRL + 66 /*B*/, 'bold']);
+                            }
+                            if (item=="Link") {
+                                strokes.push([window.CKEDITOR.CTRL + 76 /*B*/, 'link']);
+                            }
+                            if (item=="Italic") {
+                                strokes.push([window.CKEDITOR.CTRL + 73 /*I*/, 'italic' ]);
+                            }
+                            if (item=="Underline") {
+                                strokes.push([window.CKEDITOR.CTRL + 85 /*I*/, 'underline' ]);
+                            }
+                        });
+                    }
                     window.CKEDITOR.config.keystrokes = strokes;
                     // editor instance
                     var editor = window.CKEDITOR.replace(element[0], {
@@ -2023,6 +2069,7 @@ window.CKEDITOR_BASEPATH = '';
                     resultImage,
                     resultCanvas = $('<canvas/>')[0],   // result canvas for cropping
                     resultFixed,
+                    checkMinSize,
                     resultMime;
 
                 // HTML5 feature detection
@@ -2043,10 +2090,20 @@ window.CKEDITOR_BASEPATH = '';
                  * Image display handler (when image loaded)
                  * @param sourceImage
                  */
-                function showSourceImage(sourceImage) {
+                function showSourceImage(sourceImage, strict) {
                     var $sourceImage = $(sourceImage),
                         sourceWidth = ($sourceImage.data('width') ? $sourceImage.data('width') : sourceImage.width),
-                        sourceHeight = ($sourceImage.data('height') ? $sourceImage.data('height') : sourceImage.height);
+                        sourceHeight = ($sourceImage.data('height') ? $sourceImage.data('height') : sourceImage.height),
+                        imgNewWidth,
+                        imgNewHeight;
+
+                    if (strict && !(resultScale[0] < sourceWidth && resultScale[1] < sourceHeight)) {
+                        window.alert(ngxDictionary('NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE', undefined, [
+                            resultScale[0],
+                            resultScale[1]
+                        ]));
+                        return;
+                    }
 
                     // set isSource flag
                     scope.isSource = (sourceImage ? true : false);
@@ -2115,6 +2172,25 @@ window.CKEDITOR_BASEPATH = '';
                             cropOptions.aspectRatio = (resultScale[0] / resultScale[1]);
                         }
 
+                        if (checkMinSize) {
+                            imgNewWidth = sourceWidth;
+                            imgNewHeight = sourceHeight;
+                            if((sourceWidth > sourceScale[0]) || (sourceHeight > sourceScale[1])) {
+                                if(sourceWidth > sourceHeight) {
+                                    imgNewWidth = sourceScale[0];
+                                    imgNewHeight = sourceHeight / (sourceWidth / sourceScale[0]);
+                                } else {
+                                    imgNewWidth = sourceWidth / (sourceHeight / sourceScale[1]);
+                                    imgNewHeight = sourceScale[1];
+                                }
+                            }
+
+                            var widthScale = resultScale[0] / (sourceWidth / imgNewWidth),
+                                heightScale = resultScale[1] / (sourceHeight / imgNewHeight);
+
+                            cropOptions.minSize = [widthScale, heightScale];
+                        }
+
                         // destroy previously created Jcrop
                         var jcrop = $sourceImage.data('Jcrop');
                         if (jcrop) {
@@ -2146,6 +2222,7 @@ window.CKEDITOR_BASEPATH = '';
                     sourceScale = (config.sourceScale || '400x400').split('x');
                     resultScale = (config.resultScale || '215x125').split('x');
                     resultFixed = !angular.isUndefined(config.resultFixed);
+                    checkMinSize = !angular.isUndefined(config.checkMinSize);
                     resultMime = 'image/' + ((config.resultFormat || '').match(/^jpe?g$/) ? 'jpeg' : 'png');
                     thumbScale = (config.resultThumbScale || undefined);
 
@@ -2234,7 +2311,7 @@ window.CKEDITOR_BASEPATH = '';
                             $(image).hide();
 
                             image.onload = function() {
-                                showSourceImage(this);
+                                showSourceImage(this, $element.attr('source-strict'));
                                 scope.$apply();
                             };
                             image.onerror = function() {
@@ -2730,7 +2807,7 @@ document.createElement('ngx-invalid');
         };
     }]);
 })(window.angular, window.jQuery);
-(function(angular, $) {
+(function (angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.textCurtain', [
@@ -2739,16 +2816,17 @@ document.createElement('ngx-invalid');
 
     /**
      * Text curtain
-     * 
+     *
      * checks attr curtainMinHeight for minimal height
      * if don't exist checks attr curtainMinChars for minimal chars count
      * than shrinks element to curtainHeight
-     * 
+     *
      * @param curtainMinHeight min element height for collapse (number in px)
      * @param curtainMinChars chars count for collapse
      * @param curtainHeight height to collapse (with units)
      * @param curtainText
      * @param curtainTextHide
+     * @param curtainHide hide text will be removed
      */
     module.directive('ngxTextCurtain', ['ngxDictionary', function (ngxDictionary) {
         return {
@@ -2757,9 +2835,10 @@ document.createElement('ngx-invalid');
                 var defaultTx = angular.isDefined(attrs.curtainText) ? attrs.curtainText : ngxDictionary('NGX_UI_CURTAINTEXT_SHOW');
                 var defaultTxHide = angular.isDefined(attrs.curtainTextHide) ? attrs.curtainTextHide : ngxDictionary('NGX_UI_CURTAINTEXT_HIDE');
                 var minHeight = angular.isDefined(attrs.curtainMinHeight) ? parseInt(attrs.curtainMinHeight, 10) : null;
+                var hideFalse = angular.isDefined(attrs.curtainHideFalse) ? true : false;
                 var minNumChars = angular.isDefined(attrs.curtainMinChars) ? attrs.curtainMinChars : 800;
                 var cHeight = angular.isDefined(attrs.curtainHeight) ? attrs.curtainHeight : "100px";
-                
+
                 // fixed vars
                 var button = $('<div class="show-more-desc"><span><a>' + defaultTx + '</a></span></div>');
                 var bottomGradient = $('<div class="bottom-grad"></div>');
@@ -2767,9 +2846,9 @@ document.createElement('ngx-invalid');
                 var bodyTopPosition;
                 var elTopPosition;
 
-                element.ready(function() {
+                element.ready(function () {
                     cMaxHeight = element.height();
-                    if((minHeight && cMaxHeight > minHeight) || (element.text().length > minNumChars)) {
+                    if ((minHeight && cMaxHeight > minHeight) || (element.text().length > minNumChars)) {
                         element.addClass('short-desc');
                         element.css({
                             height: cHeight,
@@ -2779,30 +2858,35 @@ document.createElement('ngx-invalid');
 
                         button.find('a').click(function (e) {
                             if (element.css('overflow') == 'hidden') {
-                                element.animate({height: cMaxHeight + 20}, 600, function() {
+                                element.animate({height: cMaxHeight + 20}, 600, function () {
                                     element.css({
                                         overflow: 'visible'
                                     });
                                     element.find('.bottom-grad').remove();
                                     $(e.target).text(defaultTxHide);
+                                    if (hideFalse) {
+                                        element.next('.show-more-desc').remove();
+                                    }
                                 });
                             } else {
                                 element.prepend(bottomGradient);
 
                                 bodyTopPosition = $('html, body').offset().top * -1;
                                 elTopPosition = element.offset().top;
-                                if(bodyTopPosition > elTopPosition) {
+                                if (bodyTopPosition > elTopPosition) {
                                     $('html, body').animate({
                                         scrollTop: (elTopPosition - 20)
                                     }, 'slow');
                                 }
-                                
-                                element.animate({height: cHeight}, 600, function() {
+
+                                element.animate({height: cHeight}, 600, function () {
                                     element.css({
                                         overflow: 'hidden'
                                     });
+
                                     $(e.target).text(defaultTx);
-                                });    
+
+                                });
                             }
                         });
 
@@ -3217,7 +3301,8 @@ document.createElement('ngx-invalid');
             NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Nahrát',
             NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Zrušit',
             NGX_UI_IMAGEUPLOAD_INVALID_IMAGE: 'Neplatný obrázek',
-            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Chyba při zpracování obrázku anebo neplatný obrázek'
+            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Chyba při zpracování obrázku anebo neplatný obrázek',
+            NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE: 'Obrázek nesplňuje minimální rozměry. Minimální rozměry jsou: %sx%s.'
         });
     }]);
 
@@ -3237,7 +3322,8 @@ document.createElement('ngx-invalid');
             NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Submit',
             NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Cancel',
             NGX_UI_IMAGEUPLOAD_INVALID_IMAGE: 'Invalid image',
-            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Error processing image or invalid image'
+            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Error processing image or invalid image',
+            NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE: 'Image does not meet the minimum dimensions. Minimum dimensions are: %sx%s.'
         });
     }]);
 
@@ -3257,7 +3343,8 @@ document.createElement('ngx-invalid');
             NGX_UI_IMAGEUPLOAD_DIALOG_SUBMIT: 'Wgraj',
             NGX_UI_IMAGEUPLOAD_DIALOG_CANCEL: 'Anulować',
             NGX_UI_IMAGEUPLOAD_INVALID_IMAGE: 'Nieprawidłowy obraz',
-            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Błąd przy przetwarzaniu obrazu lub nieprawidłowy obraz'
+            NGX_UI_IMAGEUPLOAD_PROCESS_ERROR: 'Błąd przy przetwarzaniu obrazu lub nieprawidłowy obraz',
+            NGX_UI_IMAGEUPLOAD_INCORRECT_IMAGE_SIZE: 'Obraz nie spełnia minimalne wymiary. Minimalne wymiary: %sx%s.'
         });
     }]);
 
