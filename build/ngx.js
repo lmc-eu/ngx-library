@@ -22,6 +22,7 @@
         'ngx.ui.lightbox',
         'ngx.ui.rating',
         'ngx.ui.scrollTo',
+        'ngx.ui.scrollToInvalid',
         'ngx.ui.smap',
         'ngx.ui.tagsInput',
         'ngx.ui.textCurtain',
@@ -2649,6 +2650,33 @@ document.createElement('ngx-invalid');
 
 })(window.angular, window.jQuery);
 
+(function (angular, $) {
+    'use strict';
+
+    var module = angular.module('ngx.ui.scrollToInvalid', []);
+
+    /**
+     * first ngx invalid element visibility
+     */
+    module.directive('ngxScrollToInvalid', ['$window', function ($window) {
+        return {
+            link: function (scope, element) {
+                element.bind('click', function () {
+                    setTimeout(function() {
+                        var visibleInvalid = $('.ngx-invalid:visible');
+                        if (visibleInvalid.length > 0) {
+                            var previousElement = visibleInvalid.eq(0).prevAll('input, textarea, select'),
+                                height = (previousElement.length === 0) ? 50 : previousElement.height() + 20;
+                            $window.scrollTo(0, visibleInvalid.eq(0).offset().top - height);
+                        }
+                    });
+                });
+            }
+        };
+    }]);
+
+})(window.angular, window.jQuery);
+
 (function(angular) {
     'use strict';
 
@@ -2899,7 +2927,7 @@ document.createElement('ngx-invalid');
     }]);
 
 })(window.angular, window.jQuery);
-(function(angular) {
+(function(angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.timeInput', []);
@@ -2938,8 +2966,8 @@ document.createElement('ngx-invalid');
                         });
                     }
                 }).focus(function() {
-                        element.autocomplete('search', element.val());
-                    });
+                    element.autocomplete('search', ($.inArray(element.val(), values) === -1) ? '' : element.val());
+                });
 
                 ctrl.$parsers.push(function(value) {
                     ctrl.hours = undefined;
@@ -2968,7 +2996,7 @@ document.createElement('ngx-invalid');
         };
     }]);
 
-})(window.angular);
+})(window.angular, window.jQuery);
 
 (function(angular, $) {
     'use strict';
