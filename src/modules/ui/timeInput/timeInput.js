@@ -1,4 +1,4 @@
-(function(angular) {
+(function(angular, $) {
     'use strict';
 
     var module = angular.module('ngx.ui.timeInput', []);
@@ -37,8 +37,8 @@
                         });
                     }
                 }).focus(function() {
-                        element.autocomplete('search', element.val());
-                    });
+                    element.autocomplete('search', ($.inArray(element.val(), values) === -1) ? '' : element.val());
+                });
 
                 ctrl.$parsers.push(function(value) {
                     ctrl.hours = undefined;
@@ -67,4 +67,4 @@
         };
     }]);
 
-})(window.angular);
+})(window.angular, window.jQuery);
