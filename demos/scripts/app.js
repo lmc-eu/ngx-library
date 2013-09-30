@@ -18,6 +18,7 @@
         'ngx.ui.lightbox',
         'ngx.ui.rating',
         'ngx.ui.scrollTo',
+        'ngx.ui.scrollToInvalid',
         'ngx.ui.tagsInput',
         'ngx.ui.textCurtain',
         'ngx.ui.validate',
