@@ -77,7 +77,7 @@
 
                     if (viewValue && ctrl.$dirty) {
                         // parse and check date
-                        var pd = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(viewValue);
+                        var pd = new RegExp('^([0-9]{1,2})\\. ?([0-9]{1,2})\\. ?([0-9]{4})').exec(viewValue);
                         valid = (pd && ngxDate.check(pd[3], pd[2], pd[1]));
 
                         if (valid) {
