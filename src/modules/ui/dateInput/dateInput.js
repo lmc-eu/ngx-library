@@ -71,91 +71,93 @@
 
                 // parse value, validate and set into model as timestamp
                 ctrl.$parsers.push(function(viewValue) {
-                    // datetime validation
-                    var date,
-                        valid = true;
+                    if (angular.isDefined(viewValue)) {
+                        // datetime validation
+                        var date,
+                            valid = true;
 
-                    if (viewValue && ctrl.$dirty) {
-                        // parse and check date
-                        var pd = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(viewValue);
-                        valid = (pd && ngxDate.check(pd[3], pd[2], pd[1]));
+                        if (viewValue && ctrl.$dirty) {
+                            // parse and check date
+                            var pd = new RegExp('^([0-9]{1,2}). ?([0-9]{1,2}). ?([0-9]{4})').exec(viewValue);
+                            valid = (pd && ngxDate.check(pd[3], pd[2], pd[1]));
 
-                        if (valid) {
-                            date = new Date(pd[3], pd[2] - 1, pd[1]);
+                            if (valid) {
+                                date = new Date(pd[3], pd[2] - 1, pd[1]);
 
-                            // check min input date
-                            if (dateInputMin && date < dateInputMin) {
-                                valid = false;
-                            }
-
-                            // check max input date
-                            if (dateInputMax) {
-                                if (date > dateInputMax) {
+                                // check min input date
+                                if (dateInputMin && date < dateInputMin) {
                                     valid = false;
                                 }
 
-                                // if max-days range is set, move max input to range end
-                                if (dateRangeMaxDays) {
-                                    dateInputMaxRange = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
+                                // check max input date
+                                if (dateInputMax) {
+                                    if (date > dateInputMax) {
+                                        valid = false;
+                                    }
 
-                                    if (ctrl.range.ctrl.timestampValue) {
-                                        if (date.getTime() - (60*60*24*dateRangeMaxDays*1000) > (ctrl.range.ctrl.timestampValue * 1000)) {
-                                            valid = false;
+                                    // if max-days range is set, move max input to range end
+                                    if (dateRangeMaxDays) {
+                                        dateInputMaxRange = new Date(date.getTime() + (60*60*24*dateRangeMaxDays*1000));
+
+                                        if (ctrl.range.ctrl.timestampValue) {
+                                            if (date.getTime() - (60*60*24*dateRangeMaxDays*1000) > (ctrl.range.ctrl.timestampValue * 1000)) {
+                                                valid = false;
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            // apply related time input
-                            if (ctrl.timeInput) {
-                                if (ctrl.timeInput.$valid) {
-                                    var hours = ctrl.timeInput.hours;
-                                    var minutes = ctrl.timeInput.minutes;
+                                // apply related time input
+                                if (ctrl.timeInput) {
+                                    if (ctrl.timeInput.$valid) {
+                                        var hours = ctrl.timeInput.hours;
+                                        var minutes = ctrl.timeInput.minutes;
 
-                                    // when in range (as max) and has no time .. set time to 23:59
-                                    if (ctrl.range && ctrl.range.type === 'max' && hours === undefined) {
-                                        hours = 23;
-                                        minutes = 59;
+                                        // when in range (as max) and has no time .. set time to 23:59
+                                        if (ctrl.range && ctrl.range.type === 'max' && hours === undefined) {
+                                            hours = 23;
+                                            minutes = 59;
+                                        }
+
+                                        if (hours !== undefined) {
+                                            date.setHours(hours);
+                                            date.setMinutes(minutes);
+                                        }
+                                    } else {
+                                        valid = false;
                                     }
-
-                                    if (hours !== undefined) {
-                                        date.setHours(hours);
-                                        date.setMinutes(minutes);
-                                    }
-                                } else {
-                                    valid = false;
                                 }
                             }
                         }
-                    }
 
-                    // model contains ISO date
-                    var modelValue = (date && valid ? ngxDate.format('Y-m-d', date) : undefined);
+                        // model contains ISO date
+                        var modelValue = (date && valid ? ngxDate.format('Y-m-d', date) : undefined);
 
-                    ctrl.timestampValue = (date && valid ? date.getTime() / 1000 : undefined);
-                    ctrl.$setValidity('date', valid);
+                        ctrl.timestampValue = (date && valid ? date.getTime() / 1000 : undefined);
+                        ctrl.$setValidity('date', valid);
 
-                    // date range
-                    if (ctrl.range) {
-                        // update related date picker min/max
-                        if (!ctrl.$error.date) {
+                        // date range
+                        if (ctrl.range) {
+                            // update related date picker min/max
+                            if (!ctrl.$error.date) {
 
-                            ctrl.range.ctrl.element.datepicker('option', ctrl.range.type + 'Date', viewValue);
+                                ctrl.range.ctrl.element.datepicker('option', ctrl.range.type + 'Date', viewValue);
 
-                            if (ctrl.range.type == 'min' && dateInputMaxRange) {
-                                ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateInputMaxRange);
+                                if (ctrl.range.type == 'min' && dateInputMaxRange) {
+                                    ctrl.range.ctrl.element.datepicker('option', 'maxDate', dateInputMaxRange);
+                                }
                             }
+
+                            // range validation
+                            var min = (ctrl.range.type === 'min' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
+                            var max = (ctrl.range.type === 'max' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
+                            valid = (min && max ? (min <= max) : true);
+                            ctrl.$setValidity('range', valid);
+                            ctrl.range.ctrl.$setValidity('range', valid);
                         }
 
-                        // range validation
-                        var min = (ctrl.range.type === 'min' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
-                        var max = (ctrl.range.type === 'max' ? ctrl.timestampValue : ctrl.range.ctrl.timestampValue);
-                        valid = (min && max ? (min <= max) : true);
-                        ctrl.$setValidity('range', valid);
-                        ctrl.range.ctrl.$setValidity('range', valid);
+                        return modelValue;
                     }
-
-                    return modelValue;
                 });
             }
         };
