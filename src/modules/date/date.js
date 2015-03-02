@@ -323,16 +323,16 @@
             return new Date(r[3], r[2] - 1, r[1]);
         } else if (str) {
             // parse relative date
-            var inc = str[2]*60*60*24*1000;
-            var timestamp = now.getTime();
+            var days = parseInt(str[2]);
+            var date = now.getDate();
 
             if (str[1] == '-') {
-                timestamp -= inc;
+                date -= days;
             } else {
-                timestamp += inc;
+                date += days;
             }
 
-            return new Date(timestamp);
+            return new Date(now.getFullYear(), now.getMonth(), date, 0, 0, 0, 0);
         }
 
         return undefined;
