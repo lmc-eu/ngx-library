@@ -323,7 +323,7 @@
             return new Date(r[3], r[2] - 1, r[1]);
         } else if (str) {
             // parse relative date
-            var days = parseInt(str[2]);
+            var days = parseInt(str[2], 10);
             var date = now.getDate();
 
             if (str[1] == '-') {
