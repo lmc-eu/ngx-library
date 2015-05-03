@@ -1,4 +1,6 @@
-# ngx-library
+# [INACTIVE] ngx-library
+
+## Sorry, this project is no longer maintained and developed.
 
 Simple extension library for [AngularJS] used in LMC projects. Mostly UI components, inspired by [Angular-UI] project.
 
